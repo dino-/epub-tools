@@ -3,9 +3,13 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 import Control.Monad.State
+import Data.Either
 import Data.Map
 import Data.Maybe
+import HSH.Command
 import Prelude hiding ( lookup )
+import System.Environment
+--import System.Posix.Process
 import Text.Regex
 
 
@@ -53,6 +57,14 @@ parseLine line = do
 
 main :: IO ()
 main = do
+   paths <- getArgs
+
+   result <- tryEC $ run $ "lrf-meta " ++ (head paths)
+   either (print) (putStrLn) result
+
+   putStrLn "\ndone"
+
+{-
    allLines <- liftM lines getContents
 
    let result = execState (mapM parseLine allLines) []
@@ -61,3 +73,4 @@ main = do
    print $ take 5 result
 
    return ()
+-}
