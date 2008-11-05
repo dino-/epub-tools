@@ -1,15 +1,11 @@
 #! /usr/bin/env runhaskell
 
-{-# LANGUAGE FlexibleContexts #-}
-
-import Control.Monad.State
 import Data.Either
-import Data.Map
+import Data.Map hiding ( map )
 import Data.Maybe
 import HSH.Command
 import Prelude hiding ( lookup )
 import System.Environment
---import System.Posix.Process
 import Text.Regex
 
 
@@ -41,18 +37,8 @@ parseTag line =
       [key, val] -> Just (key, val)
 
 
-parseLine :: (MonadState [Map String String] m) => String -> m ()
-
-parseLine "-----" = do
-   rs <- get
-   put (empty:rs)
-
-parseLine line = do
-   let p = parseTag line
-   unless (p == Nothing) $ do
-      (r:rs) <- get
-      let r' = (\(Just (k, v)) -> insert k v r) p
-      put (r':rs)
+parseBook :: String -> Map String String
+parseBook raw = fromList $ catMaybes $ map parseTag $ lines raw
 
 
 main :: IO ()
@@ -60,17 +46,7 @@ main = do
    paths <- getArgs
 
    result <- tryEC $ run $ "lrf-meta " ++ (head paths)
-   either (print) (putStrLn) result
+   --either (print) (putStrLn) result
+   either (print) (print . parseBook) result
 
    putStrLn "\ndone"
-
-{-
-   allLines <- liftM lines getContents
-
-   let result = execState (mapM parseLine allLines) []
-   --print result
-   --print $ head result
-   print $ take 5 result
-
-   return ()
--}
