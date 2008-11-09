@@ -160,6 +160,30 @@ titleFsfMag (prefix:rest) =
    titleMag ((prefix ++ "Magazine"):rest)
 
 
+titleAeonMag (numWord:_) = "AeonMagazine" ++ (num numWord)
+   where
+      num "One"       = "01"
+      num "Two"       = "02"
+      num "Three"     = "03"
+      num "Four"      = "04"
+      num "Five"      = "05"
+      num "Six"       = "06"
+      num "Seven"     = "07"
+      num "Eight"     = "08"
+      num "Nine"      = "09"
+      num "Ten"       = "10"
+      num "Eleven"    = "11"
+      num "Twelve"    = "12"
+      num "Thirteen"  = "13"
+      num "Fourteen"  = "14"
+      num "Fifteen"   = "15"
+      num "Sixteen"   = "16"
+      num "Seventeen" = "17"
+      num "Eighteen"  = "18"
+      num "Nineteen"  = "19"
+      num "Twenty"    = "20"
+
+
 titleMag (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
@@ -216,6 +240,7 @@ authorPatterns =
 
 titlePatterns =
    [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
+   , ( "^A[eE]on ([^ ]+)$", titleAeonMag )
    , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMag )
    , ( "(.*)", titleSimple )
    ]
