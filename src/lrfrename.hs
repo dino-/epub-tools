@@ -156,6 +156,10 @@ authorSingle (rest:last:_) = last' ++ rest' ++ "-"
 titleSimple (old:_) = foldl (flip id) old nameFilters
 
 
+titleFsfMag (prefix:rest) =
+   titleMag ((prefix ++ "Magazine"):rest)
+
+
 titleMag (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
@@ -211,7 +215,8 @@ authorPatterns =
 
 
 titlePatterns =
-   [ ( "(.*) ([^ ]+) ([0-9]{4})$", titleMag )
+   [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
+   , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMag )
    , ( "(.*)", titleSimple )
    ]
 
