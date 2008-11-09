@@ -156,10 +156,6 @@ authorSingle (rest:last:_) = last' ++ rest' ++ "-"
 titleSimple (old:_) = foldl (flip id) old nameFilters
 
 
-titleFsfMag (prefix:rest) =
-   titleMag ((prefix ++ "Magazine"):rest)
-
-
 titleAeonMag (numWord:_) = "AeonMagazine" ++ (num numWord)
    where
       num "One"       = "01"
@@ -184,7 +180,11 @@ titleAeonMag (numWord:_) = "AeonMagazine" ++ (num numWord)
       num "Twenty"    = "20"
 
 
-titleMag (prefix:month:year:_) =
+titleFsfMag (prefix:rest) =
+   titleMagYM ((prefix ++ "Magazine"):rest)
+
+
+titleMagYM (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
       prefix' = foldl (flip id) prefix nameFilters
@@ -207,6 +207,9 @@ titleMag (prefix:month:year:_) =
       monthNum "November"           = "11"
       monthNum "December"           = "12"
       monthNum x                    = x
+
+
+titleMagInterzone (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
 
 
 format :: [(String, ([String] -> String))] -> String -> String
@@ -241,7 +244,8 @@ authorPatterns =
 titlePatterns =
    [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
    , ( "^A[eE]on ([^ ]+)$", titleAeonMag )
-   , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMag )
+   , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
+   , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
    , ( "(.*)", titleSimple )
    ]
 
