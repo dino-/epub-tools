@@ -6,7 +6,7 @@ import Control.Monad.Error
 import Data.Char
 import Data.Either
 import Data.List hiding ( lookup )
-import Data.Map hiding ( map )
+import Data.Map hiding ( filter, map )
 import Data.Maybe
 import HSH.Command
 import Prelude hiding ( lookup )
@@ -126,6 +126,7 @@ l k m = fromMaybe ("[ERROR no key: " ++ k ++ "]") $ lookup k m
 nameFilters :: [(String -> String)]
 nameFilters =
    [ (\s -> subRegex (mkRegex "[.',\\?();#]") s "")
+   , filter (/= '"')
    , (\s -> subRegex (mkRegex "]") s "")
    , (\s -> subRegex (mkRegex "\\*") s "")
    , (\s -> subRegex (mkRegex "!") s "")
