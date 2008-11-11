@@ -16,6 +16,17 @@ import Text.Printf
 import Text.Regex
 
 
+type LR a = (ErrorT String IO) a
+
+
+runLR :: ErrorT e m a -> m (Either e a)
+runLR = runErrorT
+
+
+type Fields = Map String String
+
+
+{- Anybody need this?
 allKeys :: [String]
 allKeys =
    [ "File"
@@ -35,6 +46,7 @@ allKeys =
    , "Title"
    , "Title.reading"
    ]
+-}
 
 
 parseLine :: String -> Maybe (String, String)
@@ -44,7 +56,7 @@ parseLine line =
       [key, val] -> Just (key, val)
 
 
-parseMeta :: String -> String -> Map String String
+parseMeta :: String -> String -> Fields
 parseMeta path raw = fromList $ catMaybes $ map parseLine allLines
    where
       allLines = ("File: " ++ path) : (lines raw)
@@ -61,66 +73,35 @@ extractMeta path = do
       Right output -> return output
 
 
-parseFile :: (MonadIO m) => 
-   String -> m (Either String (Map String String))
-parseFile path = runErrorT $ do
+parseFile :: (MonadIO m, MonadError String m) => String -> m Fields
+parseFile path = do
    output <- extractMeta path
    return $ parseMeta path output
 
 
-catRights = foldr f []
+displayVerbose :: (PrintfArg t, PrintfType u) => Fields -> t -> u
+displayVerbose fs newPath = printf "%s | %s | %s"
+   newPath
+   (lookupErrMsg "Author" fs)
+   (lookupErrMsg "Title" fs)
+
    where
-      f e es = case e of
-         Right x -> x : es
-         _       -> es
+      lookupErrMsg k m = fromMaybe 
+         ("[ERROR displayVerbose: missing key: " ++ k ++ "]")
+         $ lookup k m
 
 
-display1 fs = putStrLn $ author ++ " | " ++ title
-   where
-      author = l "Author" fs
-      title = l "Title" fs
+constructNewPath :: (MonadError String m) => Fields -> m String
+constructNewPath fs = do
+   newAuthor <- liftM (format authorPatterns) $ lookupE "Author" fs
+   newTitle <- liftM (format titlePatterns) $ lookupE "Title" fs
+   return $ newAuthor ++ newTitle ++ ".lrf"
 
 
-{-
-display2 fs = printf "%s | %s | %s | %s-%s\n"
-   (takeFileName $ l "File" fs)
-   author
-   title
-   (fromMaybe "[FAILED]" $ newAuthor author)
-   (newTitle title)
-   where
-      author = l "Author" fs
-      title = l "Title" fs
--}
-
-
-display3 (Left msg) = putStrLn msg
-
-display3 (Right fs) = printf "%s | %s | %s | %s%s\n"
-   (takeFileName $ l "File" fs)
-   author
-   title
-   (format authorPatterns author)
-   (format titlePatterns title)
-   where
-      author = l "Author" fs
-      title = l "Title" fs
-
-
-display4 (Left msg) = putStrLn msg
-
-display4 (Right fs) = printf "%s%s | %s | %s | %s\n"
-   (format authorPatterns author)
-   (format titlePatterns title)
-   author
-   title
-   (takeFileName $ l "File" fs)
-   where
-      author = l "Author" fs
-      title = l "Title" fs
-
-
-l k m = fromMaybe ("[ERROR no key: " ++ k ++ "]") $ lookup k m
+lookupE :: (MonadError String m) => String -> Map String a -> m a
+lookupE k m = case (lookup k m) of
+   Nothing -> throwError $ "[ERROR missing key: " ++ k ++ "]"
+   Just v -> return v
 
 
 nameFilters :: [(String -> String)]
@@ -251,18 +232,26 @@ titlePatterns =
    ]
 
 
+processBook :: FilePath -> IO ()
+processBook path = do
+   result <- runLR $ do
+      fs <- parseFile path
+      np <- constructNewPath fs
+      return (fs, np)
+
+   let report = either
+         (\errmsg -> addPath errmsg)
+         (\(fields, newPath) -> addPath (displayVerbose fields newPath))
+         result
+
+   putStrLn report
+
+   where
+      addPath :: String -> String
+      addPath s = printf "%s (%s)" s (takeFileName path)
+
+
 main :: IO ()
 main = do
    paths <- getArgs
-
-   results <- mapM parseFile paths
-   --mapM_ (either putStrLn ((mapM_ print) . toList)) results
-   --mapM_ (either putStrLn print) results
-
-   --let good = catRights results
-   --mapM_ display2 good
-
-   --mapM_ display3 results
-
-   --mapM_ (\p -> parseFile p >>= display3) paths
-   mapM_ (\p -> parseFile p >>= display4) paths
+   mapM_ processBook paths
