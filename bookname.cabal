@@ -1,0 +1,24 @@
+name:                bookname
+cabal-version:       >= 1.2
+version:             0.1
+build-type:          Simple
+license:             BSD3
+license-file:        LICENSE
+copyright:           2008 Dino Morelli 
+author:              Dino Morelli 
+maintainer:          Dino Morelli <dino@ui3.info>
+stability:           experimental
+--homepage:            http://ui3.info/d/proj/bookname.html
+synopsis:            Rename ebook files based on meta information
+description:         
+   Command-line utility for renaming/moving ebook files based on metadata
+   contained within the file. Works for these formats: Sony LRF. Written
+   in Haskell.
+category:            Unclassified
+tested-with:         GHC>=6.8.2
+
+executable           bookname
+   main-is:          bookname.hs
+   build-depends:    base, containers, filepath, HSH, mtl, regex-compat
+   ghc-options:      -Wall
+   hs-source-dirs:   src
