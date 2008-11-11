@@ -206,6 +206,7 @@ titlePatterns =
    ]
 
 
+lookupErrMsg :: String -> Fields -> String
 lookupErrMsg k m = fromMaybe 
    ("[ERROR missing key: " ++ k ++ "]")
    $ lookup k m
@@ -222,6 +223,7 @@ formatF :: Fields -> String
 formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
 
 
+makeOutput :: Fields -> String -> String -> String
 makeOutput fields newPath oldPath =
    oldPath ++ " -> " ++ newPath ++ (additional verbose)
    where
