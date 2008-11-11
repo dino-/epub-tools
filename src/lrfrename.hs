@@ -26,29 +26,6 @@ runLR = runErrorT
 type Fields = Map String String
 
 
-{- Anybody need this?
-allKeys :: [String]
-allKeys =
-   [ "File"
-   , "Author"
-   , "Author.reading"
-   , "BookID"
-   , "Category"
-   , "Classification"
-   , "CreationDate"
-   , "Creator"
-   , "FreeText"
-   , "Label"
-   , "Language"
-   , "SumPage"
-   , "Producer"
-   , "Publisher"
-   , "Title"
-   , "Title.reading"
-   ]
--}
-
-
 parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "(.*): (.*)") line) of
