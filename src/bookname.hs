@@ -4,7 +4,6 @@
 
 import Control.Monad.Error
 import Data.Char
-import Data.Either
 import Data.List hiding ( lookup )
 import Data.Map hiding ( filter, map )
 import Data.Maybe
