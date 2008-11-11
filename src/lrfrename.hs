@@ -119,26 +119,31 @@ nameFilters =
    ]
 
 
+capFirstAndDeSpace :: String -> String
 capFirstAndDeSpace s = concat $ map capFirst $ words s
    where capFirst (first:rest) = (toUpper first) : rest
 
 
+authorDouble :: [String] -> String
 authorDouble (_:last1:_:last2:_) = last1' ++ "_" ++ last2' ++ "-"
    where
       last1' = foldl (flip id) last1 nameFilters
       last2' = foldl (flip id) last2 nameFilters
 
 
+authorSingle :: [String] -> String
 authorSingle (rest:last:_) = last' ++ rest' ++ "-"
    where
       last' = foldl (flip id) last nameFilters
       rest' = foldl (flip id) rest nameFilters
 
 
+titleSimple :: [String] -> String
 titleSimple (old:_) = foldl (flip id) old nameFilters
 
 
-titleAeonMag (numWord:_) = "AeonMagazine" ++ (num numWord)
+titleMagAeon :: [String] -> String
+titleMagAeon (numWord:_) = "AeonMagazine" ++ (num numWord)
    where
       num "One"       = "01"
       num "Two"       = "02"
@@ -162,10 +167,12 @@ titleAeonMag (numWord:_) = "AeonMagazine" ++ (num numWord)
       num "Twenty"    = "20"
 
 
+titleFsfMag :: [String] -> String
 titleFsfMag (prefix:rest) =
    titleMagYM ((prefix ++ "Magazine"):rest)
 
 
+titleMagYM :: [String] -> String
 titleMagYM (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
@@ -191,6 +198,7 @@ titleMagYM (prefix:month:year:_) =
       monthNum x                    = x
 
 
+titleMagInterzone :: [String] -> String
 titleMagInterzone (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
 
 
@@ -208,6 +216,7 @@ format patterns author = formatter $ fromJust matchResult
             patterns
 
 
+authorPatterns :: [(String, [String] -> String)]
 authorPatterns =
    [ ( "Dell Magazine.*", const "" )
    , ( ".* Authors", const "" )
@@ -223,9 +232,10 @@ authorPatterns =
    ]
 
 
+titlePatterns :: [(String, [String] -> String)]
 titlePatterns =
    [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
-   , ( "^A[eE]on ([^ ]+)$", titleAeonMag )
+   , ( "^A[eE]on ([^ ]+)$", titleMagAeon )
    , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
    , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
    , ( "(.*)", titleSimple )
