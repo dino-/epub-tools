@@ -15,7 +15,7 @@ import Text.Printf
 import Text.Regex
 
 
-type BN a = (ErrorT String IO) a
+--type BN a = (ErrorT String IO) a
 
 
 runBN :: ErrorT e m a -> m (Either e a)
