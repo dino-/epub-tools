@@ -242,13 +242,18 @@ titlePatterns =
    ]
 
 
+{- Process an individual LRF book file
+-}
 processBook :: FilePath -> IO ()
 processBook path = do
+   -- Parse the LRF file and build new filepath as a potentially
+   -- error-producing computation
    result <- runLR $ do
       fs <- parseFile path
       np <- constructNewPath fs
       return (fs, np)
 
+   -- Turn the result of above into a displayable message for the user
    let report = either
          (\errmsg -> addPath errmsg)
          (\(fields, newPath) -> addPath (displayVerbose fields newPath))
