@@ -16,11 +16,11 @@ import Text.Printf
 import Text.Regex
 
 
-type LR a = (ErrorT String IO) a
+type BN a = (ErrorT String IO) a
 
 
-runLR :: ErrorT e m a -> m (Either e a)
-runLR = runErrorT
+runBN :: ErrorT e m a -> m (Either e a)
+runBN = runErrorT
 
 
 type Fields = Map String String
@@ -237,7 +237,7 @@ processBook :: FilePath -> IO ()
 processBook path = do
    -- Parse the LRF file and build new filepath as a potentially
    -- error-producing computation
-   result <- runLR $ do
+   result <- runBN $ do
       fs <- parseFile path
       np <- constructNewPath fs
       return (fs, np)
