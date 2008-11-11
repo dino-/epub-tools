@@ -79,18 +79,6 @@ parseFile path = do
    return $ parseMeta path output
 
 
-displayVerbose :: (PrintfArg t, PrintfType u) => Fields -> t -> u
-displayVerbose fs newPath = printf "%s | %s | %s"
-   newPath
-   (lookupErrMsg "Author" fs)
-   (lookupErrMsg "Title" fs)
-
-   where
-      lookupErrMsg k m = fromMaybe 
-         ("[ERROR displayVerbose: missing key: " ++ k ++ "]")
-         $ lookup k m
-
-
 constructNewPath :: (MonadError String m) => Fields -> m String
 constructNewPath fs = do
    newAuthor <- liftM (format authorPatterns) $ lookupE "Author" fs
@@ -242,6 +230,30 @@ titlePatterns =
    ]
 
 
+lookupErrMsg k m = fromMaybe 
+   ("[ERROR missing key: " ++ k ++ "]")
+   $ lookup k m
+
+
+formatATF :: (PrintfType u) => Fields -> u
+formatATF fields = printf "\n   %s | %s | %s"
+   (lookupErrMsg "Author" fields)
+   (lookupErrMsg "Title" fields)
+   (lookupErrMsg "FreeText" fields)
+
+
+formatF :: Fields -> String
+formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
+
+
+makeOutput fields newPath oldPath =
+   oldPath ++ " -> " ++ newPath ++ (additional verbose)
+   where
+      additional False = ""
+      --additional True  = formatF fields
+      additional True  = formatATF fields
+
+
 {- Process an individual LRF book file
 -}
 processBook :: FilePath -> IO ()
@@ -256,14 +268,18 @@ processBook path = do
    -- Turn the result of above into a displayable message for the user
    let report = either
          (\errmsg -> addPath errmsg)
-         (\(fields, newPath) -> addPath (displayVerbose fields newPath))
+         (\(fields, newPath) -> makeOutput fields newPath path)
          result
 
    putStrLn report
 
    where
       addPath :: String -> String
-      addPath s = printf "%s (%s)" s (takeFileName path)
+      addPath s = printf "%s (%s)" s path
+
+
+verbose = True
+--verbose = False
 
 
 main :: IO ()
