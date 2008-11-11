@@ -101,10 +101,10 @@ authorDouble _ = undefined
 
 
 authorSingle :: [String] -> String
-authorSingle (rest:last:_) = last' ++ rest' ++ "-"
+authorSingle (origRest:origLast:_) = newLast ++ newRest ++ "-"
    where
-      last' = foldl (flip id) last nameFilters
-      rest' = foldl (flip id) rest nameFilters
+      newLast = foldl (flip id) origLast nameFilters
+      newRest = foldl (flip id) origRest nameFilters
 authorSingle _ = undefined
 
 
