@@ -44,8 +44,8 @@ extractMeta ::
 extractMeta path = do
    result <- liftIO $ tryEC $ run $ "lrf-meta " ++ path
    case result of
-      Left ps -> throwError $ 
-         "[ERROR file " ++ path ++ " is probably not an LRF file]"
+      Left ps -> throwError $ "[ERROR lrf-meta " ++ (show ps) ++ 
+         " This is probably not an LRF file.]"
       Right output -> return output
 
 
