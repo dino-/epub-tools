@@ -28,8 +28,10 @@ type Fields = Map String String
 parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "(.*): (.*)") line) of
-      [_  , "" ] -> Nothing
-      [key, val] -> Just (key, val)
+      (_:"":_)    -> Nothing
+      (key:val:_) -> Just (key, val)
+      [_]         -> Nothing
+      []          -> Nothing
 
 
 parseMeta :: String -> String -> Fields
@@ -85,7 +87,9 @@ nameFilters =
 
 capFirstAndDeSpace :: String -> String
 capFirstAndDeSpace s = concat $ map capFirst $ words s
-   where capFirst (first:rest) = (toUpper first) : rest
+   where
+      capFirst (first:rest) = (toUpper first) : rest
+      capFirst _ = undefined
 
 
 authorDouble :: [String] -> String
@@ -93,6 +97,7 @@ authorDouble (_:last1:_:last2:_) = last1' ++ "_" ++ last2' ++ "-"
    where
       last1' = foldl (flip id) last1 nameFilters
       last2' = foldl (flip id) last2 nameFilters
+authorDouble _ = undefined
 
 
 authorSingle :: [String] -> String
@@ -100,10 +105,12 @@ authorSingle (rest:last:_) = last' ++ rest' ++ "-"
    where
       last' = foldl (flip id) last nameFilters
       rest' = foldl (flip id) rest nameFilters
+authorSingle _ = undefined
 
 
 titleSimple :: [String] -> String
 titleSimple (old:_) = foldl (flip id) old nameFilters
+titleSimple _ = undefined
 
 
 titleMagAeon :: [String] -> String
@@ -129,11 +136,14 @@ titleMagAeon (numWord:_) = "AeonMagazine" ++ (num numWord)
       num "Eighteen"  = "18"
       num "Nineteen"  = "19"
       num "Twenty"    = "20"
+      num x           = "[ERROR titleMagAeon " ++ x ++ "]"
+titleMagAeon _ = undefined
 
 
 titleFsfMag :: [String] -> String
 titleFsfMag (prefix:rest) =
    titleMagYM ((prefix ++ "Magazine"):rest)
+titleFsfMag _ = undefined
 
 
 titleMagYM :: [String] -> String
@@ -159,11 +169,13 @@ titleMagYM (prefix:month:year:_) =
       monthNum "October-November"   = "10_11"
       monthNum "November"           = "11"
       monthNum "December"           = "12"
-      monthNum x                    = x
+      monthNum x                    = "[ERROR titleMagYM " ++ x ++ "]"
+titleMagYM _ = undefined
 
 
 titleMagInterzone :: [String] -> String
 titleMagInterzone (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
+titleMagInterzone _ = undefined
 
 
 format :: [(String, ([String] -> String))] -> String -> String
