@@ -14,6 +14,8 @@ import System.FilePath
 import Text.Printf
 import Text.Regex
 
+import BookName.Opts
+
 
 --type BN a = (ErrorT String IO) a
 
@@ -274,5 +276,7 @@ verbose = True
 
 main :: IO ()
 main = do
-   paths <- getArgs
+   --paths <- getArgs
+   (opts, paths) <- getArgs >>= parseOpts
+   print opts  -- FIXME
    mapM_ processBook paths
