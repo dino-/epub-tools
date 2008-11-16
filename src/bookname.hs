@@ -5,12 +5,13 @@
 import Control.Monad.Error
 import Data.Char
 import Data.List hiding ( lookup )
-import Data.Map hiding ( filter, map )
+import Data.Map hiding ( filter, map, null )
 import Data.Maybe
 import HSH.Command
 import Prelude hiding ( lookup )
 import System.Environment
 import System.FilePath
+import System.Posix.Files ( rename )
 import Text.Printf
 import Text.Regex
 
@@ -20,7 +21,7 @@ import BookName.Opts
 --type BN a = (ErrorT String IO) a
 
 
-runBN :: ErrorT e m a -> m (Either e a)
+runBN :: (ErrorT e m) a -> m (Either e a)
 runBN = runErrorT
 
 
@@ -237,46 +238,45 @@ formatF :: Fields -> String
 formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
 
 
-makeOutput :: Fields -> String -> String -> String
-makeOutput fields newPath oldPath =
-   oldPath ++ " -> " ++ newPath ++ (additional verbose)
+makeOutput :: Options -> Fields -> String -> String -> String
+makeOutput opts fields oldPath newPath =
+   oldPath ++ " -> " ++ newPath ++ 
+      ((additional (optVerbose opts)) fields)
    where
-      additional False = ""
-      --additional True  = formatF fields
-      additional True  = formatATF fields
+      additional Nothing  = const ""
+      additional (Just 1) = formatF
+      additional _        = formatATF
 
 
 {- Process an individual LRF book file
 -}
-processBook :: FilePath -> IO ()
-processBook path = do
-   -- Parse the LRF file and build new filepath as a potentially
-   -- error-producing computation
+processBook :: Options -> FilePath -> IO ()
+processBook opts oldPath = do
    result <- runBN $ do
-      fs <- parseFile path
-      np <- constructNewPath fs
-      return (fs, np)
+      fields <- parseFile oldPath
+      newPath <- constructNewPath fields
+      unless (optNoAction opts) $ liftIO $ rename oldPath newPath
+      return (fields, newPath)
 
-   -- Turn the result of above into a displayable message for the user
    let report = either
          (\errmsg -> addPath errmsg)
-         (\(fields, newPath) -> makeOutput fields newPath path)
+         (\(fields, newPath) -> 
+            makeOutput opts fields oldPath newPath)
          result
 
    putStrLn report
 
    where
       addPath :: String -> String
-      addPath s = printf "%s (%s)" s path
-
-
-verbose = True
---verbose = False
+      addPath s = printf "%s (%s)" s oldPath
 
 
 main :: IO ()
 main = do
-   --paths <- getArgs
    (opts, paths) <- getArgs >>= parseOpts
-   print opts  -- FIXME
-   mapM_ processBook paths
+
+   if ((optHelp opts) || (null paths))
+      then putStrLn usageText
+      else do
+         when (optNoAction opts) (putStrLn "No-action specified")
+         mapM_ (processBook opts) paths

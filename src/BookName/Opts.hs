@@ -14,6 +14,7 @@ import System.Console.GetOpt
 
 data Options = Options
    { optHelp :: Bool
+   , optNoAction :: Bool
    , optVerbose :: Maybe Int
    }
 
@@ -21,18 +22,19 @@ data Options = Options
 defaultOptions :: Options
 defaultOptions = Options
    { optHelp = False
+   , optNoAction = False
    , optVerbose = Nothing
    }
 
 
 options :: [OptDescr (Options -> Options)]
 options =
---   [ Option ['n'] ["no-action"]
---      (NoArg (\opts -> opts { optNoAction = True } )) 
---      "Display what would be done, but do nothing"
    [ Option ['h'] ["help"] 
       (NoArg (\opts -> opts { optHelp = True } ))
       "This help text"
+   , Option ['n'] ["no-action"]
+      (NoArg (\opts -> opts { optNoAction = True } )) 
+      "Display what would be done, but do nothing"
    , Option ['v'] ["verbose"]
       ( OptArg
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
