@@ -60,10 +60,19 @@ parseFile path = do
    return $ parseMeta path output
 
 
+extractYear :: Maybe String -> String
+extractYear Nothing   = ""
+extractYear (Just ft) =
+   case (matchRegex (mkRegex ".*([0-9]{4}).*") ft) of
+      Just (y:_) -> '_' : y
+      _          -> ""
+
+
 constructNewPath :: (MonadError String m) => Fields -> m String
 constructNewPath fs = do
-   newAuthor <- liftM (format authorPatterns) $ lookupE "Author" fs
-   newTitle <- liftM (format titlePatterns) $ lookupE "Title" fs
+   newAuthor <- liftM formatAuthor $ lookupE "Author" fs
+   let year = extractYear $ lookup "FreeText" fs
+   newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
    return $ newAuthor ++ newTitle ++ ".lrf"
 
 
@@ -111,13 +120,13 @@ authorSingle (origRest:origLast:_) = newLast ++ newRest ++ "-"
 authorSingle _ = undefined
 
 
-titleSimple :: [String] -> String
-titleSimple (old:_) = foldl (flip id) old nameFilters
-titleSimple _ = undefined
+titleSimple :: String -> [String] -> String
+titleSimple year (old:_) = (foldl (flip id) old nameFilters) ++ year
+titleSimple _ _ = undefined
 
 
-titleMagAeon :: [String] -> String
-titleMagAeon (numWord:_) = "AeonMagazine" ++ (num numWord)
+titleMagAeon :: String -> [String] -> String
+titleMagAeon _ (numWord:_) = "AeonMagazine" ++ (num numWord)
    where
       num "One"       = "01"
       num "Two"       = "02"
@@ -140,17 +149,17 @@ titleMagAeon (numWord:_) = "AeonMagazine" ++ (num numWord)
       num "Nineteen"  = "19"
       num "Twenty"    = "20"
       num x           = "[ERROR titleMagAeon " ++ x ++ "]"
-titleMagAeon _ = undefined
+titleMagAeon _ _ = undefined
 
 
-titleFsfMag :: [String] -> String
-titleFsfMag (prefix:rest) =
-   titleMagYM ((prefix ++ "Magazine"):rest)
-titleFsfMag _ = undefined
+titleFsfMag :: String -> [String] -> String
+titleFsfMag _ (prefix:rest) =
+   titleMagYM "foo" ((prefix ++ "Magazine"):rest)
+titleFsfMag _ _ = undefined
 
 
-titleMagYM :: [String] -> String
-titleMagYM (prefix:month:year:_) =
+titleMagYM :: String -> [String] -> String
+titleMagYM _ (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
       prefix' = foldl (flip id) prefix nameFilters
@@ -173,16 +182,16 @@ titleMagYM (prefix:month:year:_) =
       monthNum "November"           = "11"
       monthNum "December"           = "12"
       monthNum x                    = "[ERROR titleMagYM " ++ x ++ "]"
-titleMagYM _ = undefined
+titleMagYM _ _ = undefined
 
 
-titleMagInterzone :: [String] -> String
-titleMagInterzone (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
-titleMagInterzone _ = undefined
+titleMagInterzone :: String -> [String] -> String
+titleMagInterzone _ (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
+titleMagInterzone _ _ = undefined
 
 
-format :: [(String, ([String] -> String))] -> String -> String
-format patterns author = formatter $ fromJust matchResult
+formatAuthor :: String -> String
+formatAuthor author = formatter $ fromJust matchResult
    where
       (matchResult, formatter) =
          foldr f (Nothing, const "") mkMatchExprs
@@ -192,33 +201,45 @@ format patterns author = formatter $ fromJust matchResult
 
       mkMatchExprs =
          map (\(re, i) -> (matchRegex (mkRegex re) author, i))
-            patterns
+            authorPatterns
+
+      authorPatterns :: [(String, [String] -> String)]
+      authorPatterns =
+         [ ( "Dell Magazine.*", const "" )
+         , ( ".* Authors", const "" )
+         , ( "Spilogale.*", const "" )
+         , ( "Vander Neut Publications.*", const "" )
+         , ( "Crystalline Sphere Publishing.*", const "" )
+         , ( "(.*) ([^ ]+) and (.*) ([^ ]+)", authorDouble )
+         , ( "(.*)(Anonymous)", authorSingle )
+         , ( "(.*) ([^ ]+ III)$", authorSingle )
+         , ( "(.*) ([^ ]+ Jr\\.)$", authorSingle )
+         , ( "(.*) (St\\. [^ ]+)$", authorSingle )
+         , ( "(.*) ([^ ]+)$", authorSingle )
+         ]
 
 
-authorPatterns :: [(String, [String] -> String)]
-authorPatterns =
-   [ ( "Dell Magazine.*", const "" )
-   , ( ".* Authors", const "" )
-   , ( "Spilogale.*", const "" )
-   , ( "Vander Neut Publications.*", const "" )
-   , ( "Crystalline Sphere Publishing.*", const "" )
-   , ( "(.*) ([^ ]+) and (.*) ([^ ]+)", authorDouble )
-   , ( "(.*)(Anonymous)", authorSingle )
-   , ( "(.*) ([^ ]+ III)$", authorSingle )
-   , ( "(.*) ([^ ]+ Jr\\.)$", authorSingle )
-   , ( "(.*) (St\\. [^ ]+)$", authorSingle )
-   , ( "(.*) ([^ ]+)$", authorSingle )
-   ]
+formatTitle :: String -> String -> String
+formatTitle year author = formatter year $ fromJust matchResult
+   where
+      (matchResult, formatter) =
+         foldr f (Nothing, (\_ _ -> "")) mkMatchExprs
 
+      f (Nothing, _) y = y
+      f x            _ = x
 
-titlePatterns :: [(String, [String] -> String)]
-titlePatterns =
-   [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
-   , ( "^A[eE]on ([^ ]+)$", titleMagAeon )
-   , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
-   , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
-   , ( "(.*)", titleSimple )
-   ]
+      mkMatchExprs =
+         map (\(re, i) -> (matchRegex (mkRegex re) author, i))
+            titlePatterns
+
+      titlePatterns :: [(String, String -> [String] -> String)]
+      titlePatterns =
+         [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
+         , ( "^A[eE]on ([^ ]+)$", titleMagAeon )
+         , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
+         , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
+         , ( "(.*)", titleSimple )
+         ]
 
 
 lookupErrMsg :: String -> Fields -> String
