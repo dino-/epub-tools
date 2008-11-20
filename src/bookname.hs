@@ -3,7 +3,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 import Control.Monad.Error
-import Data.Char
 import Data.List hiding ( lookup )
 import Data.Map hiding ( filter, map, null )
 import Data.Maybe
@@ -15,6 +14,8 @@ import System.Posix.Files ( rename )
 import Text.Printf
 import Text.Regex
 
+import BookName
+import BookName.Format.Simple
 import BookName.Opts
 
 
@@ -23,9 +24,6 @@ import BookName.Opts
 
 runBN :: (ErrorT e m) a -> m (Either e a)
 runBN = runErrorT
-
-
-type Fields = Map String String
 
 
 parseLine :: String -> Maybe (String, String)
@@ -60,69 +58,22 @@ parseFile path = do
    return $ parseMeta path output
 
 
-extractYear :: Maybe String -> String
-extractYear Nothing   = ""
-extractYear (Just ft) =
-   case (matchRegex (mkRegex ".*([0-9]{4}).*") ft) of
-      Just (y:_) -> '_' : y
-      _          -> ""
-
-
 constructNewPath :: (MonadError String m) => Fields -> m String
 constructNewPath fs = do
-   newAuthor <- liftM formatAuthor $ lookupE "Author" fs
-   let year = extractYear $ lookup "FreeText" fs
-   newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
+   --newAuthor <- liftM formatAuthor $ lookupE "Author" fs
+   let fmtGeneric = Simple fs  -- FIXME
+   newAuthor <- formatAuthor fmtGeneric
+   --let year = extractYear $ lookup "FreeText" fs
+   --newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
+   newTitle <- formatTitle fmtGeneric
    return $ newAuthor ++ newTitle ++ ".lrf"
 
 
-lookupE :: (MonadError String m) => String -> Map String a -> m a
-lookupE k m = case (lookup k m) of
-   Nothing -> throwError $ "[ERROR missing key: " ++ k ++ "]"
-   Just v -> return v
-
-
-nameFilters :: [(String -> String)]
-nameFilters =
-   [ (\s -> subRegex (mkRegex "[.',\\?();#]") s "")
-   , filter (/= '"')
-   , (\s -> subRegex (mkRegex "]") s "")
-   , (\s -> subRegex (mkRegex "\\*") s "")
-   , (\s -> subRegex (mkRegex "!") s "")
-   , (\s -> subRegex (mkRegex "-") s " ")
-   , (\s -> subRegex (mkRegex "\\[") s "_")
-   , (\s -> subRegex (mkRegex "^The ") s "")
-   , (\s -> subRegex (mkRegex "&") s " And ")
-   , capFirstAndDeSpace
-   ]
-
-
-capFirstAndDeSpace :: String -> String
-capFirstAndDeSpace s = concat $ map capFirst $ words s
-   where
-      capFirst (first:rest) = (toUpper first) : rest
-      capFirst _ = undefined
-
-
-authorDouble :: [String] -> String
-authorDouble (_:last1:_:last2:_) = last1' ++ "_" ++ last2' ++ "-"
-   where
-      last1' = foldl (flip id) last1 nameFilters
-      last2' = foldl (flip id) last2 nameFilters
-authorDouble _ = undefined
-
-
-authorSingle :: [String] -> String
-authorSingle (origRest:origLast:_) = newLast ++ newRest ++ "-"
-   where
-      newLast = foldl (flip id) origLast nameFilters
-      newRest = foldl (flip id) origRest nameFilters
-authorSingle _ = undefined
-
-
+{-
 titleSimple :: String -> [String] -> String
-titleSimple year (old:_) = (foldl (flip id) old nameFilters) ++ year
+titleSimple year (old:_) = (foldl (flip id) old commonFilters) ++ year
 titleSimple _ _ = undefined
+-}
 
 
 titleMagAeon :: String -> [String] -> String
@@ -162,7 +113,7 @@ titleMagYM :: String -> [String] -> String
 titleMagYM _ (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
-      prefix' = foldl (flip id) prefix nameFilters
+      prefix' = foldl (flip id) prefix commonFilters
       monthNum "January"            = "01"
       monthNum "January-February"   = "01_02"
       monthNum "February"           = "02"
@@ -190,6 +141,7 @@ titleMagInterzone _ (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
 titleMagInterzone _ _ = undefined
 
 
+{-
 formatAuthor :: String -> String
 formatAuthor author = formatter $ fromJust matchResult
    where
@@ -240,6 +192,7 @@ formatTitle year author = formatter year $ fromJust matchResult
          , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
          , ( "(.*)", titleSimple )
          ]
+-}
 
 
 lookupErrMsg :: String -> Fields -> String
