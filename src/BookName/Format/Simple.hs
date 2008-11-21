@@ -10,7 +10,7 @@ import Data.Maybe
 import Prelude hiding ( lookup )
 import Text.Regex
 
-import BookName
+import BookName ( Fields, commonFilters, extractYear, lookupE )
 
 
 formatSimple :: (MonadError String m) => Fields -> m String
