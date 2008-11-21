@@ -58,24 +58,6 @@ parseFile path = do
    return $ parseMeta path output
 
 
-constructNewPath :: (MonadError String m) => Fields -> m String
-constructNewPath fs = do
-   --newAuthor <- liftM formatAuthor $ lookupE "Author" fs
-   let fmtGeneric = Simple fs  -- FIXME
-   newAuthor <- formatAuthor fmtGeneric
-   --let year = extractYear $ lookup "FreeText" fs
-   --newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
-   newTitle <- formatTitle fmtGeneric
-   return $ newAuthor ++ newTitle ++ ".lrf"
-
-
-{-
-titleSimple :: String -> [String] -> String
-titleSimple year (old:_) = (foldl (flip id) old commonFilters) ++ year
-titleSimple _ _ = undefined
--}
-
-
 titleMagAeon :: String -> [String] -> String
 titleMagAeon _ (numWord:_) = "AeonMagazine" ++ (num numWord)
    where
@@ -222,13 +204,19 @@ makeOutput opts fields oldPath newPath =
       additional _        = formatATF
 
 
+formatters :: [Fields -> ErrorT String IO String]
+formatters = [ formatSimple ]
+
+
 {- Process an individual LRF book file
 -}
 processBook :: Options -> FilePath -> IO ()
 processBook opts oldPath = do
    result <- runBN $ do
       fields <- parseFile oldPath
-      newPath <- constructNewPath fields
+      newPath <- foldr mplus 
+         (throwError "No suitable formatter found!") $
+         map (\f -> f fields) formatters
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (fields, newPath)
 

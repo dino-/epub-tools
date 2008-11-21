@@ -10,10 +10,6 @@ import Prelude hiding ( lookup )
 import Text.Regex
 
 
-class Format a where
-   formatAuthor, formatTitle :: (MonadError String m) => a -> m String
-
-
 type Fields = Map String String
 
 

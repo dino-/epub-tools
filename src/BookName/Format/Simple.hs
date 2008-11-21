@@ -1,7 +1,10 @@
+{-# LANGUAGE FlexibleContexts #-}
+
 module BookName.Format.Simple
+   ( formatSimple )
    where
 
-import Control.Monad
+import Control.Monad.Error
 import Data.Map hiding ( map )
 import Data.Maybe
 import Prelude hiding ( lookup )
@@ -10,15 +13,12 @@ import Text.Regex
 import BookName
 
 
-newtype Simple = Simple Fields
-
-
-instance Format Simple where
-   formatAuthor (Simple fs) =
-      liftM formatAuthor' $ lookupE "Author" fs
-   formatTitle (Simple fs) = do
-      let year = extractYear $ lookup "FreeText" fs
-      liftM (formatTitle' year) $ lookupE "Title" fs
+formatSimple :: (MonadError String m) => Fields -> m String
+formatSimple fs = do
+   newAuthor <- liftM formatAuthor $ lookupE "Author" fs
+   let year = extractYear $ lookup "FreeText" fs
+   newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
+   return $ newAuthor ++ newTitle ++ ".lrf"
 
 
 authorSingle :: [String] -> String
@@ -37,8 +37,19 @@ authorDouble (_:last1:_:last2:_) = last1' ++ "_" ++ last2' ++ "-"
 authorDouble _ = undefined
 
 
-formatAuthor' :: String -> String
-formatAuthor' author = formatter $ fromJust matchResult
+authorPatterns :: [(String, [String] -> String)]
+authorPatterns =
+   [ ( "(.*) ([^ ]+) and (.*) ([^ ]+)", authorDouble )
+   , ( "(.*)(Anonymous)", authorSingle )
+   , ( "(.*) ([^ ]+ III)$", authorSingle )
+   , ( "(.*) ([^ ]+ Jr\\.)$", authorSingle )
+   , ( "(.*) (St\\. [^ ]+)$", authorSingle )
+   , ( "(.*) ([^ ]+)$", authorSingle )
+   ]
+
+
+formatAuthor :: String -> String
+formatAuthor author = formatter $ fromJust matchResult
    where
       (matchResult, formatter) =
          foldr f (Nothing, const "") mkMatchExprs
@@ -50,24 +61,20 @@ formatAuthor' author = formatter $ fromJust matchResult
          map (\(re, i) -> (matchRegex (mkRegex re) author, i))
             authorPatterns
 
-      authorPatterns :: [(String, [String] -> String)]
-      authorPatterns =
-         [ ( "(.*) ([^ ]+) and (.*) ([^ ]+)", authorDouble )
-         , ( "(.*)(Anonymous)", authorSingle )
-         , ( "(.*) ([^ ]+ III)$", authorSingle )
-         , ( "(.*) ([^ ]+ Jr\\.)$", authorSingle )
-         , ( "(.*) (St\\. [^ ]+)$", authorSingle )
-         , ( "(.*) ([^ ]+)$", authorSingle )
-         ]
-
 
 titleSimple :: String -> [String] -> String
 titleSimple year (old:_) = (foldl (flip id) old commonFilters) ++ year
 titleSimple _ _ = undefined
 
 
-formatTitle' :: String -> String -> String
-formatTitle' year author = formatter year $ fromJust matchResult
+titlePatterns :: [(String, String -> [String] -> String)]
+titlePatterns =
+   [ ( "(.*)", titleSimple )
+   ]
+
+
+formatTitle :: String -> String -> String
+formatTitle year author = formatter year $ fromJust matchResult
    where
       (matchResult, formatter) =
          foldr f (Nothing, (\_ _ -> "")) mkMatchExprs
@@ -78,8 +85,3 @@ formatTitle' year author = formatter year $ fromJust matchResult
       mkMatchExprs =
          map (\(re, i) -> (matchRegex (mkRegex re) author, i))
             titlePatterns
-
-      titlePatterns :: [(String, String -> [String] -> String)]
-      titlePatterns =
-         [ ( "(.*)", titleSimple )
-         ]
