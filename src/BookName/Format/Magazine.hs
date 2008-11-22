@@ -97,10 +97,17 @@ titleMagInterzone _ (prefix:num:_) = prefix ++ "SFFMagazine" ++ num
 titleMagInterzone _ _ = undefined
 
 
+titleMagGUD :: String -> [String] -> String
+titleMagGUD _ (prefix:season:year:_) = prefix' ++ "_" ++ year ++ season
+   where prefix' = foldl (flip id) prefix commonFilters
+titleMagGUD _ _ = undefined
+
+
 titlePatterns :: [(String, String -> [String] -> String)]
 titlePatterns =
    [ ( "^(FSF).* ([^ ]+) ([0-9]{4})$", titleFsfMag )
    , ( "^A[eE]on ([^ ]+)$", titleMagAeon )
    , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
+   , ( "^(GUD.*) :: ([^ ]+) ([0-9]+)$", titleMagGUD )
    , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
    ]
