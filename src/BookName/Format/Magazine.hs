@@ -7,19 +7,17 @@ module BookName.Format.Magazine
 import Control.Monad.Error
 import Data.List hiding ( lookup )
 import Data.Map hiding ( map )
-import Data.Maybe
 import Prelude hiding ( lookup )
-import Text.Regex
 
-import BookName ( Fields, commonFilters, extractYear, lookupE )
+import BookName ( Fields, commonFilters, extractYear, 
+   formatAuthor, formatTitle, lookupE )
 
 
 formatMagazine :: (MonadError String m) => Fields -> m String
 formatMagazine fs = do
-   --throwError "mag format failed!"  -- FIXME
-   newAuthor <- liftM formatAuthor $ lookupE "Author" fs
+   newAuthor <- lookupE "Author" fs >>= formatAuthor authorPatterns
    let year = extractYear $ lookup "FreeText" fs
-   newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
+   newTitle <- lookupE "Title" fs >>= formatTitle titlePatterns year
    return $ newAuthor ++ newTitle ++ ".lrf"
 
 
@@ -31,20 +29,6 @@ authorPatterns =
    , ( "Vander Neut Publications.*", const "" )
    , ( "Crystalline Sphere Publishing.*", const "" )
    ]
-
-
-formatAuthor :: String -> String
-formatAuthor author = formatter $ fromJust matchResult
-   where
-      (matchResult, formatter) =
-         foldr f (Nothing, const "") mkMatchExprs
-
-      f (Nothing, _) y = y
-      f x            _ = x
-
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, i))
-            authorPatterns
 
 
 titleMagAeon :: String -> [String] -> String
@@ -119,17 +103,3 @@ titlePatterns =
    , ( "^(Interzone)[^0-9]*([0-9]+)$", titleMagInterzone )
    , ( "(.*) ([^ ]+) ([0-9]{4})$", titleMagYM )
    ]
-
-
-formatTitle :: String -> String -> String
-formatTitle year author = formatter year $ fromJust matchResult
-   where
-      (matchResult, formatter) =
-         foldr f (Nothing, (\_ _ -> "")) mkMatchExprs
-
-      f (Nothing, _) y = y
-      f x            _ = x
-
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, i))
-            titlePatterns

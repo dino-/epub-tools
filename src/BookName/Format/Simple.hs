@@ -6,18 +6,17 @@ module BookName.Format.Simple
 
 import Control.Monad.Error
 import Data.Map hiding ( map )
-import Data.Maybe
 import Prelude hiding ( lookup )
-import Text.Regex
 
-import BookName ( Fields, commonFilters, extractYear, lookupE )
+import BookName ( Fields, commonFilters, extractYear, 
+   formatAuthor, formatTitle, lookupE )
 
 
 formatSimple :: (MonadError String m) => Fields -> m String
 formatSimple fs = do
-   newAuthor <- liftM formatAuthor $ lookupE "Author" fs
+   newAuthor <- lookupE "Author" fs >>= formatAuthor authorPatterns
    let year = extractYear $ lookup "FreeText" fs
-   newTitle <- liftM (formatTitle year) $ lookupE "Title" fs
+   newTitle <- lookupE "Title" fs >>= formatTitle titlePatterns year
    return $ newAuthor ++ newTitle ++ ".lrf"
 
 
@@ -48,20 +47,6 @@ authorPatterns =
    ]
 
 
-formatAuthor :: String -> String
-formatAuthor author = formatter $ fromJust matchResult
-   where
-      (matchResult, formatter) =
-         foldr f (Nothing, const "") mkMatchExprs
-
-      f (Nothing, _) y = y
-      f x            _ = x
-
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, i))
-            authorPatterns
-
-
 titleSimple :: String -> [String] -> String
 titleSimple year (old:_) = (foldl (flip id) old commonFilters) ++ year
 titleSimple _ _ = undefined
@@ -71,17 +56,3 @@ titlePatterns :: [(String, String -> [String] -> String)]
 titlePatterns =
    [ ( "(.*)", titleSimple )
    ]
-
-
-formatTitle :: String -> String -> String
-formatTitle year author = formatter year $ fromJust matchResult
-   where
-      (matchResult, formatter) =
-         foldr f (Nothing, (\_ _ -> "")) mkMatchExprs
-
-      f (Nothing, _) y = y
-      f x            _ = x
-
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, i))
-            titlePatterns
