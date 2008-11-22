@@ -97,7 +97,7 @@ processBook opts oldPath = do
       fields <- parseFile oldPath
       --liftIO $ print fields
       newPath <- foldr mplus 
-         (throwError "No suitable formatter found!") $
+         (throwError "[ERROR No formatter found]") $
          map (\f -> f fields) formatters
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (fields, newPath)
