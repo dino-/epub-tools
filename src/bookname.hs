@@ -95,6 +95,7 @@ processBook :: Options -> FilePath -> IO ()
 processBook opts oldPath = do
    result <- runBN $ do
       fields <- parseFile oldPath
+      --liftIO $ print fields
       newPath <- foldr mplus 
          (throwError "No suitable formatter found!") $
          map (\f -> f fields) formatters
