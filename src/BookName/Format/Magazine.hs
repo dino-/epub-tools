@@ -77,6 +77,7 @@ titleMagYM _ (prefix:month:year:_) =
       monthNum "April-May"          = "04_05"
       monthNum "May"                = "05"
       monthNum "June"               = "06"
+      monthNum "June/July"          = "06_07"
       monthNum "July"               = "07"
       monthNum "July-August"        = "07_08"
       monthNum "Jul-Aug"            = "07_08"
