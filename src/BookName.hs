@@ -29,7 +29,7 @@ capFirstAndDeSpace s = concat $ map capFirst $ words s
 
 commonFilters :: [(String -> String)]
 commonFilters =
-   [ (\s -> subRegex (mkRegex "[.',\\?();#]") s "")
+   [ (\s -> subRegex (mkRegex "[.',\\?();#:]") s "")
    , filter (/= '"')
    , (\s -> subRegex (mkRegex "]") s "")
    , (\s -> subRegex (mkRegex "\\*") s "")
