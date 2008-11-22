@@ -28,7 +28,7 @@ runBN = runErrorT
 
 parseLine :: String -> Maybe (String, String)
 parseLine line =
-   case (fromJust $ matchRegex (mkRegex "(.*): (.*)") line) of
+   case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
       (_:"":_)    -> Nothing
       (key:val:_) -> Just (key, val)
       [_]         -> Nothing
