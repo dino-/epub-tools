@@ -26,6 +26,10 @@ runBN :: (ErrorT e m) a -> m (Either e a)
 runBN = runErrorT
 
 
+formatters :: [Fields -> ErrorT String IO String]
+formatters = [ formatMagazine, formatSimple ]
+
+
 parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
@@ -83,10 +87,6 @@ makeOutput opts fields oldPath newPath =
       additional Nothing  = const ""
       additional (Just 1) = formatF
       additional _        = formatATF
-
-
-formatters :: [Fields -> ErrorT String IO String]
-formatters = [ formatMagazine, formatSimple ]
 
 
 {- Process an individual LRF book file
