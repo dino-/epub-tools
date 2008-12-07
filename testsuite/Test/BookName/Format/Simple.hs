@@ -28,10 +28,10 @@ testSimpleAll = TestList
    [ testNoAuthor
    , testNoTitle
    , testAllPunctuation
-   , testWithThe
    , testAuthorThird
    , testAuthorJr
    , testAuthorSt
+   , testWithThe
    ]
 
 
@@ -67,18 +67,6 @@ testAllPunctuation = TestCase $
          , "Title: The *crazy*: Sand-box. Of Smedley's discontent, fear & Malnourishment? (Maybe not!); [Part #2]"
          ]
       expected = "MorelliDino-CrazySandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2_2008.lrf"
-
-
-testWithThe :: Test
-testWithThe = TestCase $
-   assertNewName "testWithThe" lrfMeta expected
-   where
-      lrfMeta =
-         [ "Author: Kate Wilhelm"
-         , "FreeText: 1974 Kate Wilhelm"
-         , "Title: The Hounds"
-         ]
-      expected = "WilhelmKate-Hounds_1974.lrf"
 
 
 testAuthorThird :: Test
@@ -117,3 +105,15 @@ testAuthorSt = TestCase $
          , "Title: Budget Cuts"
          ]
       expected = "StClairJennifer-BudgetCuts_2004.lrf"
+
+
+testWithThe :: Test
+testWithThe = TestCase $
+   assertNewName "testWithThe" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Kate Wilhelm"
+         , "FreeText: 1974 Kate Wilhelm"
+         , "Title: The Hounds"
+         ]
+      expected = "WilhelmKate-Hounds_1974.lrf"
