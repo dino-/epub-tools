@@ -31,6 +31,7 @@ testSimpleAll = TestList
    , testNoFreeText
    , testAllPunctuation
    , testAuthorDouble
+   , testAuthorAnon
    , testAuthorThird
    , testAuthorJr
    , testAuthorSt
@@ -106,6 +107,19 @@ testAuthorDouble = TestCase $
          ]
       expected =
          "Hoek_Cat-AskDrStupidCompendium_1993.lrf"
+
+
+testAuthorAnon :: Test
+testAuthorAnon = TestCase $
+   assertNewName "testAuthorAnon" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Anonymous"
+         , "FreeText: "
+         , "Title: Science Fiction Stories By Unknown Authors"
+         ]
+      expected =
+         "Anonymous-ScienceFictionStoriesByUnknownAuthors.lrf"
 
 
 testAuthorThird :: Test
