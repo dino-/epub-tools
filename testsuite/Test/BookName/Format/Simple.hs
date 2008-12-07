@@ -27,6 +27,8 @@ testSimpleAll :: Test
 testSimpleAll = TestList
    [ testNoAuthor
    , testNoTitle
+   , testNoPubYear
+   , testNoFreeText
    , testAllPunctuation
    , testAuthorDouble
    , testAuthorThird
@@ -56,6 +58,29 @@ testNoTitle = TestCase $
          , "FreeText: Doesn't matter"
          ]
       expected = "[ERROR missing key: Title]"
+
+
+testNoPubYear :: Test
+testNoPubYear = TestCase $
+   assertNewName "testNoPubYear" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Jim James"
+         , "FreeText: No date here!"
+         , "Title: A Timeless Story"
+         ]
+      expected = "JamesJim-ATimelessStory.lrf"
+
+
+testNoFreeText :: Test
+testNoFreeText = TestCase $
+   assertNewName "testNoFreeText" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Jim James"
+         , "Title: A Timeless Story"
+         ]
+      expected = "JamesJim-ATimelessStory.lrf"
 
 
 testAllPunctuation :: Test
