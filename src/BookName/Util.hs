@@ -4,9 +4,7 @@ module BookName.Util
    where
 
 import Control.Monad.Error
---import Data.Map hiding ( filter, map )
 import Data.Map
---import Prelude hiding ( lookup )
 
 
 --type BN a = (ErrorT String IO) a

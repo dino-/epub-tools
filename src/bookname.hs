@@ -18,13 +18,6 @@ import BookName.Opts
 import BookName.Util
 
 
---type BN a = (ErrorT String IO) a
-
-
---runBN :: (ErrorT e m) a -> m (Either e a)
---runBN = runErrorT
-
-
 formatters :: [Fields -> ErrorT String IO String]
 formatters = [ formatMagazine, formatSimple ]
 
