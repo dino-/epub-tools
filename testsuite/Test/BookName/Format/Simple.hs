@@ -28,6 +28,7 @@ testSimpleAll = TestList
    [ testNoAuthor
    , testNoTitle
    , testAllPunctuation
+   , testAuthorDouble
    , testAuthorThird
    , testAuthorJr
    , testAuthorSt
@@ -67,6 +68,19 @@ testAllPunctuation = TestCase $
          , "Title: The *crazy*: Sand-box. Of Smedley's discontent, fear & Malnourishment? (Maybe not!); [Part #2]"
          ]
       expected = "MorelliDino-CrazySandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2_2008.lrf"
+
+
+testAuthorDouble :: Test
+testAuthorDouble = TestCase $
+   assertNewName "testAuthorDouble" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Ren Hoek and Stimpson J. Cat"
+         , "FreeText: 1993 Spumco"
+         , "Title: The Ask Dr. Stupid Compendium"
+         ]
+      expected =
+         "Hoek_Cat-AskDrStupidCompendium_1993.lrf"
 
 
 testAuthorThird :: Test
