@@ -9,8 +9,9 @@ import Data.List hiding ( lookup )
 import Data.Map hiding ( map )
 import Prelude hiding ( lookup )
 
-import BookName ( Fields, commonFilters, extractYear, 
+import BookName.Format.Util ( commonFilters, extractYear, 
    formatAuthor, formatTitle, lookupE )
+import BookName.Util
 
 
 formatMagazine :: (MonadError String m) => Fields -> m String

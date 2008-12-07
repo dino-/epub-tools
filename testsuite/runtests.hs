@@ -6,7 +6,7 @@ module Main
    where
 
 import Test.HUnit
-import TestSimple
+import Test.BookName.Format.Simple
 
 
 main :: IO Counts
@@ -15,5 +15,5 @@ main = runTestTT tests
 
 tests :: Test
 tests = TestList
-   [ TestLabel "testSimple" testSimple
+   [ testSimpleAll
    ]

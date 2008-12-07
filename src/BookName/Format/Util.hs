@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName
+module BookName.Format.Util
    where
 
 import Control.Monad.Error

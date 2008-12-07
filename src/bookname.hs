@@ -5,61 +5,28 @@
 import Control.Monad.Error
 import Data.Map hiding ( filter, map, null )
 import Data.Maybe
-import HSH.Command
 import Prelude hiding ( lookup )
 import System.Environment
 import System.FilePath
 import System.Posix.Files ( rename )
 import Text.Printf
-import Text.Regex
 
-import BookName
+import BookName.Extract
 import BookName.Format.Magazine
 import BookName.Format.Simple
 import BookName.Opts
+import BookName.Util
 
 
 --type BN a = (ErrorT String IO) a
 
 
-runBN :: (ErrorT e m) a -> m (Either e a)
-runBN = runErrorT
+--runBN :: (ErrorT e m) a -> m (Either e a)
+--runBN = runErrorT
 
 
 formatters :: [Fields -> ErrorT String IO String]
 formatters = [ formatMagazine, formatSimple ]
-
-
-parseLine :: String -> Maybe (String, String)
-parseLine line =
-   case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
-      (_:"":_)    -> Nothing
-      (key:val:_) -> Just (key, val)
-      [_]         -> Nothing
-      []          -> Nothing
-
-
-parseMeta :: String -> String -> Fields
-parseMeta path raw = fromList $ catMaybes $ map parseLine allLines
-   where
-      allLines = ("File: " ++ path) : (lines raw)
-
-
-extractMeta ::
-   (MonadIO m, RunResult (IO a), MonadError [Char] m) =>
-   String -> m a
-extractMeta path = do
-   result <- liftIO $ tryEC $ run $ "lrf-meta " ++ path
-   case result of
-      Left ps -> throwError $ "[ERROR lrf-meta " ++ (show ps) ++ 
-         " This is probably not an LRF file.]"
-      Right output -> return output
-
-
-parseFile :: (MonadIO m, MonadError String m) => String -> m Fields
-parseFile path = do
-   output <- extractMeta path
-   return $ parseMeta path output
 
 
 lookupErrMsg :: String -> Fields -> String

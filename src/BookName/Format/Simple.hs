@@ -8,8 +8,9 @@ import Control.Monad.Error
 import Data.Map hiding ( map )
 import Prelude hiding ( lookup )
 
-import BookName ( Fields, commonFilters, extractYear, 
+import BookName.Format.Util ( commonFilters, extractYear, 
    formatAuthor, formatTitle, lookupE )
+import BookName.Util
 
 
 formatSimple :: (MonadError String m) => Fields -> m String
