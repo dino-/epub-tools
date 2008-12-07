@@ -29,6 +29,8 @@ testSimpleAll = TestList
    , testNoTitle
    , testAllPunctuation
    , testWithThe
+   , testAuthorThird
+   , testAuthorJr
    , testAuthorSt
    ]
 
@@ -77,6 +79,32 @@ testWithThe = TestCase $
          , "Title: The Hounds"
          ]
       expected = "WilhelmKate-Hounds_1974.lrf"
+
+
+testAuthorThird :: Test
+testAuthorThird = TestCase $
+   assertNewName "testAuthorThird" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Thurston Howell III"
+         , "FreeText: 1974, SS Minnow Unltd."
+         , "Title: My Life as a Deserted Island Playboy"
+         ]
+      expected =
+         "HowellIIIThurston-MyLifeAsADesertedIslandPlayboy_1974.lrf"
+
+
+testAuthorJr :: Test
+testAuthorJr = TestCase $
+   assertNewName "testAuthorJr" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Jonas Venture Jr."
+         , "FreeText: 2008, Venture Industries"
+         , "Title: The Venture Legacy"
+         ]
+      expected =
+         "VentureJrJonas-VentureLegacy_2008.lrf"
 
 
 testAuthorSt :: Test
