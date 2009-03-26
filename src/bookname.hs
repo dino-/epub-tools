@@ -4,18 +4,18 @@
 
 import Control.Monad.Error
 import Data.Map hiding ( filter, map, null )
-import Data.Maybe
+import Data.Maybe ( fromMaybe )
 import Prelude hiding ( lookup )
-import System.Environment
+import System.Environment ( getArgs )
 import System.FilePath
 import System.Posix.Files ( rename )
 import Text.Printf
 
-import BookName.Extract
-import BookName.Format.Magazine
-import BookName.Format.Simple
-import BookName.Opts
-import BookName.Util
+import BookName.Extract ( parseFile )
+import BookName.Format.Magazine ( formatMagazine )
+import BookName.Format.Simple ( formatSimple )
+import BookName.Opts ( Options (..), parseOpts, usageText )
+import BookName.Util ( Fields, runBN )
 
 
 formatters :: [Fields -> ErrorT String IO String]

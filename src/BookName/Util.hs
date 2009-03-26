@@ -1,6 +1,9 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Util
+   ( runBN
+   , Fields
+   )
    where
 
 import Control.Monad.Error
