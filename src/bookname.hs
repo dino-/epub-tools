@@ -8,6 +8,9 @@ import Data.Maybe ( fromMaybe )
 import Prelude hiding ( lookup )
 import System.Environment ( getArgs )
 import System.FilePath
+import System.IO ( BufferMode ( NoBuffering )
+                 , hSetBuffering, stdout, stderr 
+                 )
 import System.Posix.Files ( rename )
 import Text.Printf
 
@@ -86,6 +89,9 @@ processBook opts oldPath = do
 
 main :: IO ()
 main = do
+   -- No buffering, it messes with the order of output
+   mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
+
    (opts, paths) <- getArgs >>= parseOpts
 
    if ((optHelp opts) || (null paths))
