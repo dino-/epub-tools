@@ -28,6 +28,10 @@ lookupErrMsg k m = fromMaybe
    $ lookup k m
 
 
+{- Format a set of book fields into a line containing author, title,
+   and FreeText
+   This is used for verbose output.
+-}
 formatATF :: (PrintfType u) => Fields -> u
 formatATF fields = printf "\n   %s | %s | %s"
    (lookupErrMsg "Author" fields)
@@ -35,10 +39,15 @@ formatATF fields = printf "\n   %s | %s | %s"
    (lookupErrMsg "FreeText" fields)
 
 
+{- Format a set of book fields into a line containing the FreeText
+   This is used for verbose output.
+-}
 formatF :: Fields -> String
 formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
 
 
+{- Format a line of output for a book that was processed
+-}
 makeOutput :: Options -> Fields -> String -> String -> String
 makeOutput opts fields oldPath newPath =
    oldPath ++ " -> " ++ newPath ++ 
