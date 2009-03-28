@@ -4,10 +4,9 @@
 
 import Control.Monad.Error
 import Data.Map hiding ( filter, map, null )
-import Data.Maybe ( fromMaybe )
+import Data.Maybe ( fromJust, fromMaybe )
 import Prelude hiding ( lookup )
 import System.Environment ( getArgs )
-import System.FilePath
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdout, stderr 
                  )
@@ -51,11 +50,12 @@ formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
 
 {- Format a line of output for a book that was processed
 -}
-makeOutput :: Options -> Fields -> String -> String -> String
-makeOutput opts fields oldPath newPath =
+makeOutput :: Options -> Fields -> String -> String
+makeOutput opts fields newPath =
    oldPath ++ " -> " ++ newPath ++ 
       ((additional (optVerbose opts)) fields)
    where
+      oldPath = fromJust $ lookup "File" fields
       additional Nothing  = const ""
       additional (Just 1) = formatF
       additional _        = formatATF
@@ -63,10 +63,11 @@ makeOutput opts fields oldPath newPath =
 
 {- Process an individual LRF book file
 -}
-processBook :: Options -> FilePath -> IO ()
-processBook opts oldPath = do
+processBook :: Options -> ErrorT String IO Fields -> IO ()
+processBook opts parseFileAction = do
    result <- runBN $ do
-      fields <- parseFile oldPath
+      fields <- parseFileAction
+      let oldPath = fromJust $ lookup "File" fields
       --liftIO $ print fields
       newPath <- foldr mplus 
          (throwError "[ERROR No formatter found]") $
@@ -75,16 +76,12 @@ processBook opts oldPath = do
       return (fields, newPath)
 
    let report = either
-         (\errmsg -> addPath errmsg)
+         id
          (\(fields, newPath) -> 
-            makeOutput opts fields oldPath newPath)
+            makeOutput opts fields newPath)
          result
 
    putStrLn report
-
-   where
-      addPath :: String -> String
-      addPath s = printf "%s (%s)" s oldPath
 
 
 main :: IO ()
@@ -98,4 +95,5 @@ main = do
       then putStrLn usageText
       else do
          when (optNoAction opts) (putStrLn "No-action specified")
-         mapM_ (processBook opts) paths
+         let parseFileActions = map parseFile paths
+         mapM_ (processBook opts) parseFileActions

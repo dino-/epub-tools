@@ -10,6 +10,7 @@ import Control.Monad.Error
 import Data.Map hiding ( map )
 import Data.Maybe
 import HSH.Command
+import Text.Printf
 import Text.Regex
 
 import BookName.Util
@@ -34,10 +35,11 @@ extractMeta ::
    (MonadIO m, RunResult (IO a), MonadError [Char] m) =>
    String -> m a
 extractMeta path = do
-   result <- liftIO $ tryEC $ run $ "lrf-meta " ++ path
+   let app = "lrf-meta"
+   result <- liftIO $ tryEC $ run ((printf "%s %s" app path) :: String)
    case result of
-      Left ps -> throwError $ "[ERROR lrf-meta " ++ (show ps) ++ 
-         " This is probably not an LRF file.]"
+      Left ps -> throwError $
+         printf "[ERROR %s  path: %s  status: %s]" app path (show ps)
       Right output -> return output
 
 
