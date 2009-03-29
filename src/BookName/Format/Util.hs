@@ -20,6 +20,17 @@ lookupE k m = case (lookup k m) of
    Just v -> return v
 
 
+{- Convenience function to make a regex replacer for a given pattern 
+   and replacement string. Helps by doing the 'flip' of str and rpl
+   so you can partial eval.
+-}
+repl :: String -> String -> String -> String
+repl re rpl str = subRegex (mkRegex re) str rpl
+
+
+{- Transforms a string like this:
+      "the quick brown fox" -> "TheQuickBrownFox"
+-}
 capFirstAndDeSpace :: String -> String
 capFirstAndDeSpace s = concat $ map capFirst $ words s
    where
@@ -27,27 +38,35 @@ capFirstAndDeSpace s = concat $ map capFirst $ words s
       capFirst _ = undefined
 
 
+{- A set of common string filters that apply to any and all parts
+   of every single string we process in this project.
+-}
 commonFilters :: [(String -> String)]
 commonFilters =
-   [ (\s -> subRegex (mkRegex "[.',\\?();#:]") s "")
+   [ repl "[.',\\?();#:]" ""
    , filter (/= '"')
-   , (\s -> subRegex (mkRegex "]") s "")
-   , (\s -> subRegex (mkRegex "\\*") s "")
-   , (\s -> subRegex (mkRegex "!") s "")
-   , (\s -> subRegex (mkRegex "-") s " ")
-   , (\s -> subRegex (mkRegex "\\[") s "_")
-   , (\s -> subRegex (mkRegex "^The ") s "")
-   , (\s -> subRegex (mkRegex "&") s " And ")
+   , repl "]"             ""
+   , repl "\\*"           ""
+   , repl "!"             ""
+   , repl "-"             " "
+   , repl "\\["           "_"
+   , repl "^The "         ""
+   , repl "&"             " And "
    , capFirstAndDeSpace
    ]
 
 
+{- Pull from a (Just String) the first occurrance of a 4-digit 
+   year-shaped substring. Or evaluate to ""
+   Successful year strings will be prefixed like: "_2009", which
+   is the format we need them in generated file paths.
+-}
 extractYear :: Maybe String -> String
 extractYear Nothing   = ""
 extractYear (Just ft) =
    case (matchRegex (mkRegex ".*([0-9]{4}).*") ft) of
-      Just (y:_) -> '_' : y
-      _          -> ""
+      Just (year:_) -> '_' : year
+      _             -> ""
 
 
 formatAuthor :: (MonadError String m) =>
