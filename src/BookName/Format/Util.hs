@@ -11,9 +11,6 @@ import Prelude hiding ( lookup )
 import Text.Regex
 
 
-type Fields = Map String String
-
-
 lookupE :: (MonadError String m) => String -> Map String a -> m a
 lookupE k m = case (lookup k m) of
    Nothing -> throwError $ "[ERROR missing key: " ++ k ++ "]"
