@@ -75,7 +75,7 @@ processBook opts parseFileAction = do
       let oldPath = fromJust $ lookup "File" fields
       --liftIO $ print fields
       newPath <- foldr mplus 
-         (throwError "[ERROR No formatter found]") $
+         (throwError $ printf "%s [ERROR No formatter found]" oldPath) $
          map (\f -> f fields) formatters
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (fields, newPath)
