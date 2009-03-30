@@ -8,6 +8,7 @@ module Main
 import Test.HUnit
 import Test.BookName.Format.AuthorBasic
 import Test.BookName.Format.MagDell
+import Test.BookName.Format.MagNemesis
 
 
 main :: IO Counts
@@ -18,4 +19,5 @@ tests :: Test
 tests = TestList
    [ testAuthorBasic
    , testMagDell
+   , testMagNemesis
    ]
