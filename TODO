@@ -1,11 +1,5 @@
-- Decouple loading the book fields from the rest of processing the book.
-
-- Put unit testing framework in place
-
 - Need to reinstate those negative "simple" tests. They do a lot of testing for difficult titles (which is commonFilters)
 
-- Factor out common things in unit tests (like assertNewName)
-
-- Factor out common things in formatters (like fmt* guts, formatAuthor, formatTitle)
-
 - Put BSD3 licensing info on all source files and anything else that's relevant
+
+- Extract the file extension from the File: key in Fields
