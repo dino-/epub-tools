@@ -13,6 +13,7 @@ import Text.Printf
 
 import BookName.Extract ( parseFile )
 import BookName.Format.AuthorBasic ( fmtAuthorBasic )
+import BookName.Format.AuthorDouble ( fmtAuthorDouble )
 import BookName.Format.MagDell ( fmtMagDell )
 import BookName.Format.MagNemesis ( fmtMagNemesis )
 import BookName.Opts ( Options (..), parseOpts, usageText )
@@ -20,7 +21,12 @@ import BookName.Util ( Fields, runBN )
 
 
 formatters :: [Fields -> ErrorT String IO String]
-formatters = [ fmtMagDell, fmtMagNemesis, fmtAuthorBasic ]
+formatters =
+   [ fmtMagDell
+   , fmtMagNemesis
+   , fmtAuthorDouble
+   , fmtAuthorBasic
+   ]
 
 
 lookupErrMsg :: String -> Fields -> String

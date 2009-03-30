@@ -7,6 +7,7 @@ module Main
 
 import Test.HUnit
 import Test.BookName.Format.AuthorBasic
+import Test.BookName.Format.AuthorDouble
 import Test.BookName.Format.MagDell
 import Test.BookName.Format.MagNemesis
 
@@ -18,6 +19,7 @@ main = runTestTT tests
 tests :: Test
 tests = TestList
    [ testAuthorBasic
+   , testAuthorDouble
    , testMagDell
    , testMagNemesis
    ]
