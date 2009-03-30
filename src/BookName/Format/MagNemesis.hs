@@ -12,7 +12,9 @@ import BookName.Util ( Fields )
 
 
 fmtMagNemesis :: (MonadError String m) => Fields -> m String
-fmtMagNemesis = format "Stephen Adams" (const "") "(Nemesis Mag)azine #([0-9]+).*" title
+fmtMagNemesis = format
+   "Stephen Adams" (const "")
+   "(Nemesis Mag)azine #([0-9]+).*" title
 
 
 title :: String -> [String] -> String
