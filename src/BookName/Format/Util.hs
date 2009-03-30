@@ -97,6 +97,14 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
    Nothing -> throwError "formatTitle failed"
 
 
+{- This is the main work performing function that's called by every 
+   formatter. It expects to see a regexp pattern and format function 
+   for both author and title parts of the book info. And then the map 
+   of fields from a book.
+   If the pattern matches, the resulting list of match results is sent 
+   to the supplied format function. If any of this fails, the entire 
+   action throws.
+-}
 format :: (MonadError String m) =>
           String
           -> ([String] -> String)
