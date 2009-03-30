@@ -6,6 +6,7 @@ module Main
    where
 
 import Test.HUnit
+import Test.BookName.Format.Anonymous
 import Test.BookName.Format.AuthorBasic
 import Test.BookName.Format.AuthorDouble
 import Test.BookName.Format.MagDell
@@ -18,7 +19,8 @@ main = runTestTT tests
 
 tests :: Test
 tests = TestList
-   [ testAuthorBasic
+   [ testAnonymous
+   , testAuthorBasic
    , testAuthorDouble
    , testMagDell
    , testMagNemesis

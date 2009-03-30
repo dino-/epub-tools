@@ -12,10 +12,11 @@ import System.Posix.Files ( rename )
 import Text.Printf
 
 import BookName.Extract ( parseFile )
-import BookName.Format.AuthorBasic ( fmtAuthorBasic )
-import BookName.Format.AuthorDouble ( fmtAuthorDouble )
-import BookName.Format.MagDell ( fmtMagDell )
-import BookName.Format.MagNemesis ( fmtMagNemesis )
+import BookName.Format.Anonymous
+import BookName.Format.AuthorBasic
+import BookName.Format.AuthorDouble
+import BookName.Format.MagDell
+import BookName.Format.MagNemesis
 import BookName.Opts ( Options (..), parseOpts, usageText )
 import BookName.Util ( Fields, runBN )
 
@@ -25,6 +26,7 @@ formatters =
    [ fmtMagDell
    , fmtMagNemesis
    , fmtAuthorDouble
+   , fmtAnonymous
    , fmtAuthorBasic
    ]
 
