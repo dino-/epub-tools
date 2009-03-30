@@ -13,13 +13,13 @@ import Text.Printf
 
 import BookName.Extract ( parseFile )
 import BookName.Format.AuthorBasic ( fmtAuthorBasic )
-import BookName.Format.MagAnalog ( fmtMagAnalog )
+import BookName.Format.MagDell ( fmtMagDell )
 import BookName.Opts ( Options (..), parseOpts, usageText )
 import BookName.Util ( Fields, runBN )
 
 
 formatters :: [Fields -> ErrorT String IO String]
-formatters = [ fmtMagAnalog, fmtAuthorBasic ]
+formatters = [ fmtMagDell, fmtAuthorBasic ]
 
 
 lookupErrMsg :: String -> Fields -> String

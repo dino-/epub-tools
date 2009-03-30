@@ -7,7 +7,7 @@ module Main
 
 import Test.HUnit
 import Test.BookName.Format.AuthorBasic
-import Test.BookName.Format.MagAnalog
+import Test.BookName.Format.MagDell
 
 
 main :: IO Counts
@@ -17,5 +17,5 @@ main = runTestTT tests
 tests :: Test
 tests = TestList
    [ testAuthorBasic
-   , testMagAnalog
+   , testMagDell
    ]

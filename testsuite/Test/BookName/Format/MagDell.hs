@@ -2,19 +2,19 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module Test.BookName.Format.MagAnalog
-   ( testMagAnalog )
+module Test.BookName.Format.MagDell
+   ( testMagDell )
    where
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.MagAnalog
+import BookName.Format.MagDell
 import Test.BookName.Format.Util ( assertNewName )
 
 
-testMagAnalog :: Test
-testMagAnalog = TestCase $
-   assertNewName "testMagAnalog" fmtMagAnalog lrfMeta expected
+testMagDell :: Test
+testMagDell = TestCase $
+   assertNewName "testMagDell" fmtMagDell lrfMeta expected
    where
       lrfMeta =
          [ "Author: Dell Magazine Authors"

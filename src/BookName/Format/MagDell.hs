@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagAnalog
-   ( fmtMagAnalog )
+module BookName.Format.MagDell
+   ( fmtMagDell )
    where
 
 import Control.Monad.Error
@@ -11,8 +11,8 @@ import BookName.Format.Util ( commonFilters, format )
 import BookName.Util ( Fields )
 
 
-fmtMagAnalog :: (MonadError String m) => Fields -> m String
-fmtMagAnalog = format "Dell Magazine.*" (const "") "(.*) ([^ ]+) ([0-9]{4})$" titleMagYM
+fmtMagDell :: (MonadError String m) => Fields -> m String
+fmtMagDell = format "Dell Magazine.*" (const "") "(.*) ([^ ]+) ([0-9]{4})$" titleMagYM
 
 
 -- FIXME This will be factored out later
