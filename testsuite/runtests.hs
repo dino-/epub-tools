@@ -10,6 +10,7 @@ import Test.BookName.Format.Anonymous
 import Test.BookName.Format.AuthorBasic
 import Test.BookName.Format.AuthorDouble
 import Test.BookName.Format.MagAeon
+import Test.BookName.Format.MagApex
 import Test.BookName.Format.MagDell
 import Test.BookName.Format.MagNemesis
 
@@ -24,6 +25,7 @@ tests = TestList
    , testAuthorBasic
    , testAuthorDouble
    , testMagAeon
+   , testMagApex
    , testMagDell
    , testMagNemesis
    ]

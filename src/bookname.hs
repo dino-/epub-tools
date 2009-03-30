@@ -16,6 +16,7 @@ import BookName.Format.Anonymous
 import BookName.Format.AuthorBasic
 import BookName.Format.AuthorDouble
 import BookName.Format.MagAeon
+import BookName.Format.MagApex
 import BookName.Format.MagDell
 import BookName.Format.MagNemesis
 import BookName.Opts ( Options (..), parseOpts, usageText )
@@ -27,6 +28,7 @@ formatters =
    [ fmtMagDell
    , fmtMagNemesis
    , fmtMagAeon
+   , fmtMagApex
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorBasic
