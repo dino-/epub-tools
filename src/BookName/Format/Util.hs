@@ -1,14 +1,14 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( filterCommon, format, titleSimple )
+   ( filterCommon, format, authorSingle, titleSimple )
    where
 
 import Control.Monad.Error
 import Data.Char
 import Data.List ( foldl' )
 import Data.Map hiding ( filter, map )
-import Prelude hiding ( lookup )
+import Prelude hiding ( last, lookup )
 import Text.Printf
 import Text.Regex
 
@@ -122,6 +122,14 @@ format authorPat authorFmt titlePat titleFmt fs = do
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
    return $ newAuthor ++ newTitle ++ ".lrf"
+
+
+{- A common simple formatter for many book authors
+-}
+authorSingle :: [String] -> String
+authorSingle (rest:last:_) =
+   printf "%s%s-" (filterCommon last) (filterCommon rest)
+authorSingle _             = undefined
 
 
 {- A common simple formatter for many book titles. Handles year too.

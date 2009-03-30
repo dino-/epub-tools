@@ -5,21 +5,18 @@ module BookName.Format.AuthorBasic
    where
 
 import Control.Monad.Error
-import Prelude hiding ( last )
-import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format, titleSimple )
+import BookName.Format.Util
+   ( format
+   , authorSingle, titleSimple
+   )
 import BookName.Util ( Fields )
 
 
 fmtAuthorBasic :: (MonadError String m) => Fields -> m String
-fmtAuthorBasic = format "(.*) ([^ ]+)$" authorSingle "(.*)" titleSimple
-
-
-authorSingle :: [String] -> String
-authorSingle (rest:last:_) = 
-   printf "%s%s-" (filterCommon last) (filterCommon rest)
-authorSingle _             = undefined
+fmtAuthorBasic = format
+   "(.*) ([^ ]+)$" authorSingle
+   "(.*)" titleSimple
 
 
 {-
