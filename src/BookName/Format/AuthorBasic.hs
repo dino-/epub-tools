@@ -5,8 +5,10 @@ module BookName.Format.AuthorBasic
    where
 
 import Control.Monad.Error
+import Prelude hiding ( last )
+import Text.Printf
 
-import BookName.Format.Util ( commonFilters, format )
+import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
@@ -15,11 +17,9 @@ fmtAuthorBasic = format "(.*) ([^ ]+)$" authorSingle "(.*)" titleSimple
 
 
 authorSingle :: [String] -> String
-authorSingle (origRest:origLast:_) = newLast ++ newRest ++ "-"
-   where
-      newLast = foldl (flip id) origLast commonFilters
-      newRest = foldl (flip id) origRest commonFilters
-authorSingle _ = undefined
+authorSingle (rest:last:_) = 
+   printf "%s%s-" (filterCommon last) (filterCommon rest)
+authorSingle _             = undefined
 
 
 {-
@@ -44,8 +44,8 @@ authorPatterns =
 
 
 titleSimple :: String -> [String] -> String
-titleSimple year (old:_) = (foldl (flip id) old commonFilters) ++ year
-titleSimple _ _ = undefined
+titleSimple year (old:_) = printf "%s%s" (filterCommon old) year
+titleSimple _ _          = undefined
 
 
 {-

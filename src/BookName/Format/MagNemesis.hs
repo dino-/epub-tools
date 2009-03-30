@@ -7,7 +7,7 @@ module BookName.Format.MagNemesis
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( commonFilters, format )
+import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
@@ -16,7 +16,6 @@ fmtMagNemesis = format "Stephen Adams" (const "") "(Nemesis Mag)azine #([0-9]+).
 
 
 title :: String -> [String] -> String
-title _ (name:issue:_) = printf "%s%03d" nameCleaned (read issue :: Int)
-   where
-      nameCleaned = foldl (flip id) name commonFilters
+title _ (name:issue:_) =
+   printf "%s%03d" (filterCommon name) (read issue :: Int)
 title _ _              = undefined

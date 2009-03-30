@@ -1,11 +1,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( commonFilters, format )
+   ( filterCommon, format )
    where
 
 import Control.Monad.Error
 import Data.Char
+import Data.List ( foldl' )
 import Data.Map hiding ( filter, map )
 import Prelude hiding ( lookup )
 import Text.Regex
@@ -53,6 +54,13 @@ commonFilters =
    , repl "&"             " And "
    , capFirstAndDeSpace
    ]
+
+
+{- Utility function to apply the above commonFilters to a string,
+   giving you back the transformed string
+-}
+filterCommon :: String -> String
+filterCommon s = foldl' (flip id) s commonFilters
 
 
 {- Pull from a (Just String) the first occurrance of a 4-digit 

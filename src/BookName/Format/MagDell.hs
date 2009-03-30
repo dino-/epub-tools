@@ -7,7 +7,7 @@ module BookName.Format.MagDell
 import Control.Monad.Error
 import Data.List ( isPrefixOf )
 
-import BookName.Format.Util ( commonFilters, format )
+import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
@@ -22,7 +22,7 @@ titleMagYM :: String -> [String] -> String
 titleMagYM _ (prefix:month:year:_) =
    prefix' ++ year ++ "-" ++ (monthNum month)
    where
-      prefix' = foldl (flip id) prefix commonFilters
+      prefix' = filterCommon prefix
       monthNum "January"            = "01"
       monthNum "January-February"   = "01_02"
       monthNum "February"           = "02"
