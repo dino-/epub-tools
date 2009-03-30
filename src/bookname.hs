@@ -15,6 +15,7 @@ import BookName.Extract ( parseFile )
 import BookName.Format.Anonymous
 import BookName.Format.AuthorBasic
 import BookName.Format.AuthorDouble
+import BookName.Format.MagAeon
 import BookName.Format.MagDell
 import BookName.Format.MagNemesis
 import BookName.Opts ( Options (..), parseOpts, usageText )
@@ -25,6 +26,7 @@ formatters :: [Fields -> ErrorT String IO String]
 formatters =
    [ fmtMagDell
    , fmtMagNemesis
+   , fmtMagAeon
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorBasic
