@@ -2,4 +2,10 @@
 
 - Put unit testing framework in place
 
+- Need to reinstate those negative "simple" tests. They do a lot of testing for difficult titles (which is commonFilters)
+
+- Factor out common things in unit tests (like assertNewName)
+
+- Factor out common things in formatters (like fmt* guts, formatAuthor, formatTitle)
+
 - Put BSD3 licensing info on all source files and anything else that's relevant
