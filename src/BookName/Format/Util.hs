@@ -1,6 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
+   ( lookupE
+   , commonFilters
+   , extractYear
+   )
    where
 
 import Control.Monad.Error
@@ -66,6 +70,7 @@ extractYear (Just ft) =
       _             -> ""
 
 
+{-
 formatAuthor :: (MonadError String m) =>
    [(String, [String] -> a)] -> String -> m a
 formatAuthor authorPatterns author = do
@@ -100,3 +105,4 @@ formatTitle titlePatterns year author = do
       mkMatchExprs =
          map (\(re, i) -> (matchRegex (mkRegex re) author, Just i))
             titlePatterns
+-}
