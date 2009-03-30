@@ -13,8 +13,15 @@ import Test.BookName.Format.Util ( assertNewName )
 
 
 testMagDell :: Test
-testMagDell = TestCase $
-   assertNewName "testMagDell" fmtMagDell lrfMeta expected
+testMagDell = TestList
+   [ testAnalog
+   , testAsimovs
+   ]
+
+
+testAnalog :: Test
+testAnalog = TestCase $
+   assertNewName "Analog" fmtMagDell lrfMeta expected
    where
       lrfMeta =
          [ "Author: Dell Magazine Authors"
@@ -22,3 +29,15 @@ testMagDell = TestCase $
          , "FreeText: 2003 by Dell Magazines"
          ]
       expected = "AnalogSFF2003-07_08.lrf"
+
+
+testAsimovs :: Test
+testAsimovs = TestCase $
+   assertNewName "Asimovs" fmtMagDell lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Dell Magazine Authors"
+         , "Title: Asimov's SF, August 2003"
+         , "FreeText: 2003 by Dell Magazines"
+         ]
+      expected = "AsimovsSF2003-08.lrf"
