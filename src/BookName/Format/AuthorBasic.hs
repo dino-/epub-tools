@@ -8,7 +8,7 @@ import Control.Monad.Error
 import Prelude hiding ( last )
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format )
+import BookName.Format.Util ( filterCommon, format, titleSimple )
 import BookName.Util ( Fields )
 
 
@@ -39,18 +39,5 @@ authorPatterns =
    , ( "(.*) ([^ ]+ Jr\\.)$", authorSingle )
    , ( "(.*) (St\\. [^ ]+)$", authorSingle )
    , ( "(.*) ([^ ]+)$", authorSingle )
-   ]
--}
-
-
-titleSimple :: String -> [String] -> String
-titleSimple year (old:_) = printf "%s%s" (filterCommon old) year
-titleSimple _ _          = undefined
-
-
-{-
-titlePatterns :: [(String, String -> [String] -> String)]
-titlePatterns =
-   [ ( "(.*)", titleSimple )
    ]
 -}

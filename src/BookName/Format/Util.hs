@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( filterCommon, format )
+   ( filterCommon, format, titleSimple )
    where
 
 import Control.Monad.Error
@@ -9,6 +9,7 @@ import Data.Char
 import Data.List ( foldl' )
 import Data.Map hiding ( filter, map )
 import Prelude hiding ( lookup )
+import Text.Printf
 import Text.Regex
 
 import BookName.Util ( Fields )
@@ -121,3 +122,10 @@ format authorPat authorFmt titlePat titleFmt fs = do
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
    return $ newAuthor ++ newTitle ++ ".lrf"
+
+
+{- A common simple formatter for many book titles. Handles year too.
+-}
+titleSimple :: String -> [String] -> String
+titleSimple year (old:_) = printf "%s%s" (filterCommon old) year
+titleSimple _ _          = undefined
