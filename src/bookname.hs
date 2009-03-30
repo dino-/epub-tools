@@ -12,14 +12,14 @@ import System.Posix.Files ( rename )
 import Text.Printf
 
 import BookName.Extract ( parseFile )
---import BookName.Format.Magazine ( formatMagazine )
 import BookName.Format.AuthorBasic ( fmtAuthorBasic )
+import BookName.Format.MagAnalog ( fmtMagAnalog )
 import BookName.Opts ( Options (..), parseOpts, usageText )
 import BookName.Util ( Fields, runBN )
 
 
 formatters :: [Fields -> ErrorT String IO String]
-formatters = [ fmtAuthorBasic ]
+formatters = [ fmtMagAnalog, fmtAuthorBasic ]
 
 
 lookupErrMsg :: String -> Fields -> String

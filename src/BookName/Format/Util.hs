@@ -1,18 +1,16 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( lookupE
-   , commonFilters
-   , extractYear
-   )
+   ( commonFilters, format )
    where
 
 import Control.Monad.Error
 import Data.Char
 import Data.Map hiding ( filter, map )
-import Data.Maybe
 import Prelude hiding ( lookup )
 import Text.Regex
+
+import BookName.Util ( Fields )
 
 
 lookupE :: (MonadError String m) => String -> Map String a -> m a
@@ -70,39 +68,40 @@ extractYear (Just ft) =
       _             -> ""
 
 
-{-
 formatAuthor :: (MonadError String m) =>
-   [(String, [String] -> a)] -> String -> m a
-formatAuthor authorPatterns author = do
-   let (matchResult, formatter) =
-         foldr f (Nothing, Nothing) mkMatchExprs
-   case formatter of
-      Nothing -> throwError "No handler found"
-      Just g -> return $ g $ fromJust matchResult
-
-   where
-      f (Nothing, _) y = y
-      f x            _ = x
-
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, Just i))
-            authorPatterns
+               String
+               -> ([String] -> String)
+               -> String
+               -> m String
+formatAuthor re f s = case matchRegex (mkRegex re) s of
+   Just xs -> return $ f xs
+   Nothing -> throwError "formatAuthor failed"
 
 
-formatTitle :: (MonadError String m) => 
-   [(String, String -> [String] -> a)] -> String -> String -> m a
-formatTitle titlePatterns year author = do
-   let (matchResult, formatter) =
-         foldr f (Nothing, Nothing) mkMatchExprs
-   case formatter of
-      Nothing -> throwError "No handler found"
-      Just g -> return $ g year $ fromJust matchResult
+formatTitle :: (MonadError String m) =>
+               String
+               -> (String -> [String] -> String)
+               -> String
+               -> String
+               -> m String
+formatTitle re f year s = case matchRegex (mkRegex re) s of
+   Just xs -> return $ f year xs
+   Nothing -> throwError "formatTitle failed"
 
-   where
-      f (Nothing, _) y = y
-      f x            _ = x
 
-      mkMatchExprs =
-         map (\(re, i) -> (matchRegex (mkRegex re) author, Just i))
-            titlePatterns
--}
+format :: (MonadError String m) =>
+          String
+          -> ([String] -> String)
+          -> String
+          -> (String -> [String] -> String)
+          -> Fields
+          -> m String
+format authorPat authorFmt titlePat titleFmt fs = do
+   oldAuthor <- lookupE "Author" fs
+   newAuthor <- formatAuthor authorPat authorFmt oldAuthor
+
+   oldTitle <- lookupE "Title" fs
+   let year = extractYear $ lookup "FreeText" fs
+   newTitle <- formatTitle titlePat titleFmt year oldTitle
+
+   return $ newAuthor ++ newTitle ++ ".lrf"

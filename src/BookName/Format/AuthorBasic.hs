@@ -5,34 +5,13 @@ module BookName.Format.AuthorBasic
    where
 
 import Control.Monad.Error
-import Data.Map hiding ( map )
-import Prelude hiding ( lookup )
-import Text.Regex ( matchRegex, mkRegex )
 
-import BookName.Format.Util ( commonFilters, extractYear, lookupE )
-import BookName.Util
+import BookName.Format.Util ( commonFilters, format )
+import BookName.Util ( Fields )
 
 
 fmtAuthorBasic :: (MonadError String m) => Fields -> m String
-fmtAuthorBasic fs = do
-   oldAuthor <- lookupE "Author" fs
-   newAuthor <- formatAuthor "(.*) ([^ ]+)$" authorSingle oldAuthor
-
-   oldTitle <- lookupE "Title" fs
-   let year = extractYear $ lookup "FreeText" fs
-   newTitle <- formatTitle "(.*)" titleSimple year oldTitle
-
-   return $ newAuthor ++ newTitle ++ ".lrf"
-
-
-formatAuthor re f s = case matchRegex (mkRegex re) s of
-   Just xs -> return $ f xs
-   Nothing -> throwError "formatAuthor failed"
-
-
-formatTitle re f year s = case matchRegex (mkRegex re) s of
-   Just xs -> return $ f year xs
-   Nothing -> throwError "formatTitle failed"
+fmtAuthorBasic = format "(.*) ([^ ]+)$" authorSingle "(.*)" titleSimple
 
 
 authorSingle :: [String] -> String

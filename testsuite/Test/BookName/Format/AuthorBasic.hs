@@ -6,25 +6,15 @@ module Test.BookName.Format.AuthorBasic
    ( testAuthorBasic )
    where
 
-import Test.HUnit ( Test (..), assertEqual )
-import Test.HUnit.Base ( Assertion )
+import Test.HUnit ( Test (..) )
 
-import BookName.Extract
 import BookName.Format.AuthorBasic
-import BookName.Util
-
-
-assertNewName :: String -> [String] -> String -> Assertion
-assertNewName desc meta expected = do
-   let fields = parseMeta "foo" $ unlines meta
-   result <- runBN $ fmtAuthorBasic fields
-   let actual = either id id result
-   assertEqual desc expected actual
+import Test.BookName.Format.Util ( assertNewName )
 
 
 testAuthorBasic :: Test
 testAuthorBasic = TestCase $
-   assertNewName "testAuthorBasic" lrfMeta expected
+   assertNewName "testAuthorBasic" fmtAuthorBasic lrfMeta expected
    where
       lrfMeta =
          [ "Author: Herman Melville"
