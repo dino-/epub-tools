@@ -19,6 +19,7 @@ testMagChallengingDestiny :: Test
 testMagChallengingDestiny = TestList
    [ testChallengingDestinyShort
    , testChallengingDestinyLong
+   , testChallengingDestinyPub
    ]
 
 
@@ -49,4 +50,19 @@ testChallengingDestinyLong = TestCase $
       expected =
          ( formatterLabel
          , "ChallengingDestinyMagazine024.lrf"
+         )
+
+
+testChallengingDestinyPub :: Test
+testChallengingDestinyPub = TestCase $
+   assertNewName "Challenging Destiny Magazine, Publishing in author" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Crystalline Sphere Publishing"
+         , "Title: Challenging Destiny #18"
+         , "FreeText: 2004 by Crystalline Sphere Publishing"
+         ]
+      expected =
+         ( formatterLabel
+         , "ChallengingDestinyMagazine018.lrf"
          )
