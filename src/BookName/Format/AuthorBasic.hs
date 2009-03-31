@@ -20,14 +20,6 @@ fmtAuthorBasic = format "AuthorBasic"
 
 
 {-
-authorDouble :: [String] -> String
-authorDouble (last1:last2:_) = last1' ++ "_" ++ last2' ++ "-"
-   where
-      last1' = foldl (flip id) last1 commonFilters
-      last2' = foldl (flip id) last2 commonFilters
-authorDouble _ = undefined
-
-
 authorPatterns :: [(String, [String] -> String)]
 authorPatterns =
    [ ( ".* ([^ ]+) and .* ([^ ]+)", authorDouble )
