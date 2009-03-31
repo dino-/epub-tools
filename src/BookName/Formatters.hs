@@ -18,6 +18,7 @@ import BookName.Format.MagDell
 import BookName.Format.MagGud
 import BookName.Format.MagInterzone
 import BookName.Format.MagNemesis
+import BookName.Format.MagSomethingWicked
 import BookName.Util ( Fields )
 
 
@@ -30,6 +31,7 @@ formatters =
    , fmtMagChallengingDestiny
    , fmtMagGud
    , fmtMagInterzone
+   , fmtMagSomethingWicked
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorBasic

@@ -16,6 +16,7 @@ import Test.BookName.Format.MagDell
 import Test.BookName.Format.MagGud
 import Test.BookName.Format.MagInterzone
 import Test.BookName.Format.MagNemesis
+import Test.BookName.Format.MagSomethingWicked
 
 
 main :: IO Counts
@@ -34,4 +35,5 @@ tests = TestList
    , testMagGud
    , testMagInterzone
    , testMagNemesis
+   , testMagSomethingWicked
    ]
