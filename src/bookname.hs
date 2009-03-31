@@ -30,10 +30,10 @@ lookupErrMsg k m = fromMaybe
 formatATF :: (PrintfType u) => (Fields, String) -> u
 formatATF (fields, fmtUsed) =
    printf "\n   %9s: %s\n   %9s: %s\n   %9s: %s\n   %9s: %s\n"
-   "formatter" fmtUsed
-   "Author" (lookupErrMsg "Author" fields)
-   "Title" (lookupErrMsg "Title" fields)
-   "FreeText" (lookupErrMsg "FreeText" fields)
+      "formatter" fmtUsed
+      "Author" (lookupErrMsg "Author" fields)
+      "Title" (lookupErrMsg "Title" fields)
+      "FreeText" (lookupErrMsg "FreeText" fields)
 
 
 {- Format a set of book fields into a line containing the FreeText
