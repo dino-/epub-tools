@@ -13,8 +13,8 @@ import BookName.Format.Util
 import BookName.Util ( Fields )
 
 
-fmtAuthorBasic :: (MonadError String m) => Fields -> m String
-fmtAuthorBasic = format
+fmtAuthorBasic :: (MonadError String m) => Fields -> m (String, String)
+fmtAuthorBasic = format "AuthorBasic"
    "(.*) ([^ ]+)$" authorSingle
    "(.*)" titleSimple
 

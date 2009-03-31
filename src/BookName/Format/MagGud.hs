@@ -11,8 +11,8 @@ import BookName.Format.Util ( format )
 import BookName.Util ( Fields )
 
 
-fmtMagGud :: (MonadError String m) => Fields -> m String
-fmtMagGud = format
+fmtMagGud :: (MonadError String m) => Fields -> m (String, String)
+fmtMagGud = format "MagGud"
    ".* Authors" (const "")
    "GUD Magazine Issue ([0-9]+) ::.*" title
 

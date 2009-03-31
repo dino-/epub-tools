@@ -11,8 +11,8 @@ import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
-fmtMagInterzone :: (MonadError String m) => Fields -> m String
-fmtMagInterzone = format
+fmtMagInterzone :: (MonadError String m) => Fields -> m (String, String)
+fmtMagInterzone = format "MagInterzone"
    ".* Authors" (const "")
    "^(Interzone[^0-9]*)([0-9]+)$" title
 

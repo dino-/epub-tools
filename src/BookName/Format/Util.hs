@@ -108,12 +108,13 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
 -}
 format :: (MonadError String m) =>
           String
+          -> String
           -> ([String] -> String)
           -> String
           -> (String -> [String] -> String)
           -> Fields
-          -> m String
-format authorPat authorFmt titlePat titleFmt fs = do
+          -> m (String, String)
+format label authorPat authorFmt titlePat titleFmt fs = do
    oldAuthor <- lookupE "Author" fs
    newAuthor <- formatAuthor authorPat authorFmt oldAuthor
 
@@ -121,7 +122,10 @@ format authorPat authorFmt titlePat titleFmt fs = do
    let year = extractYear $ lookup "FreeText" fs
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
-   return $ newAuthor ++ newTitle ++ ".lrf"
+   return
+      ( label
+      , printf "%s%s.lrf" newAuthor newTitle
+      )
 
 
 {- A common simple formatter for many book authors

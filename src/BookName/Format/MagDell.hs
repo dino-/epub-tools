@@ -11,8 +11,10 @@ import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
-fmtMagDell :: (MonadError String m) => Fields -> m String
-fmtMagDell = format "Dell Magazine.*" (const "") "(.*) ([^ ]+) ([0-9]{4})$" titleMagYM
+fmtMagDell :: (MonadError String m) => Fields -> m (String, String)
+fmtMagDell = format "MagDell"
+   "Dell Magazine.*" (const "")
+   "(.*) ([^ ]+) ([0-9]{4})$" titleMagYM
 
 
 -- FIXME This will be factored out later

@@ -20,4 +20,7 @@ testAuthorBasic = TestCase $
          , "Title: Moby Dick"
          , "FreeText: 1851 Herman Melville"
          ]
-      expected = "MelvilleHerman-MobyDick_1851.lrf"
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick_1851.lrf"
+         )

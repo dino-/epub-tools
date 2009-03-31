@@ -11,8 +11,8 @@ import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
-fmtMagApex :: (MonadError String m) => Fields -> m String
-fmtMagApex = format
+fmtMagApex :: (MonadError String m) => Fields -> m (String, String)
+fmtMagApex = format "MagApex"
    ".* Authors" (const "")
    "(Apex.*) #([0-9]+).*" title
 

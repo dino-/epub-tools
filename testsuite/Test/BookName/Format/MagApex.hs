@@ -20,4 +20,7 @@ testMagApex = TestCase $
          , "Title: Apex Science Fiction and Horror Digest #10"
          , "FreeText: 2007 by Apex Authors"
          ]
-      expected = "ApexScienceFictionAndHorrorDigest10.lrf"
+      expected =
+         ( "MagApex"
+         , "ApexScienceFictionAndHorrorDigest10.lrf"
+         )

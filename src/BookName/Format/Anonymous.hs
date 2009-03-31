@@ -13,7 +13,7 @@ import BookName.Format.Util
 import BookName.Util ( Fields )
 
 
-fmtAnonymous :: (MonadError String m) => Fields -> m String
-fmtAnonymous = format
+fmtAnonymous :: (MonadError String m) => Fields -> m (String, String)
+fmtAnonymous = format "Anonymous"
    "(.*)(Anonymous)" authorSingle
    "(.*)" titleSimple

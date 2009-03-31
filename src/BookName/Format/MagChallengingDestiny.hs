@@ -11,8 +11,9 @@ import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
-fmtMagChallengingDestiny :: (MonadError String m) => Fields -> m String
-fmtMagChallengingDestiny = format
+fmtMagChallengingDestiny :: (MonadError String m) =>
+   Fields -> m (String, String)
+fmtMagChallengingDestiny = format "MagChallengingDestiny"
    "Crystalline Sphere Authors.*" (const "")
    "(Challenging Destiny) #([0-9]+).*" title
 

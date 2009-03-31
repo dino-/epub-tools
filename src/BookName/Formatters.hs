@@ -21,7 +21,7 @@ import BookName.Format.MagNemesis
 import BookName.Util ( Fields )
 
 
-formatters :: [Fields -> ErrorT String IO String]
+formatters :: [Fields -> ErrorT String IO (String, String)]
 formatters =
    [ fmtMagDell
    , fmtMagNemesis
@@ -36,7 +36,7 @@ formatters =
    ]
 
 
-tryFormatting :: Fields -> ErrorT String IO String
+tryFormatting :: Fields -> ErrorT String IO (String, String)
 tryFormatting fields = do
    let oldPath = fromJust $ lookup "File" fields
    foldr mplus 

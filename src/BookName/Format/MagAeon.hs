@@ -10,8 +10,8 @@ import BookName.Format.Util ( format )
 import BookName.Util ( Fields )
 
 
-fmtMagAeon :: (MonadError String m) => Fields -> m String
-fmtMagAeon = format
+fmtMagAeon :: (MonadError String m) => Fields -> m (String, String)
+fmtMagAeon = format "MagAeon"
    ".* Authors" (const "")
    "^A[eE]on ([^ ]+)$" titleMagAeon
 

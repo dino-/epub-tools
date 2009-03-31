@@ -20,4 +20,7 @@ testAuthorDouble = TestCase $
          , "Title: Rough Draft"
          , "FreeText: 2004 Kevin J. Anderson and Rebecca Moesta"
          ]
-      expected = "Anderson_Moesta-RoughDraft_2004.lrf"
+      expected =
+         ( "AuthorDouble"
+         , "Anderson_Moesta-RoughDraft_2004.lrf"
+         )

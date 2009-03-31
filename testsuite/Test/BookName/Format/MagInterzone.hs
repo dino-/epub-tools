@@ -19,4 +19,7 @@ testMagInterzone = TestCase $
          [ "Author: TTA Press Authors"
          , "Title: Interzone SFF #212"
          ]
-      expected = "InterzoneSFF212.lrf"
+      expected =
+         ( "MagInterzone"
+         , "InterzoneSFF212.lrf"
+         )

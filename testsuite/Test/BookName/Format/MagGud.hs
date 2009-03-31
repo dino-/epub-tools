@@ -11,6 +11,10 @@ import Test.HUnit ( Test (..) )
 import Test.BookName.Format.Util ( assertNewName )
 
 
+formatterLabel :: String
+formatterLabel = "MagGud"
+
+
 testMagGud :: Test
 testMagGud = TestList
    [ testGudShort
@@ -27,7 +31,10 @@ testGudShort = TestCase $
          , "Title: GUD Magazine Issue 0 :: Spring 2007"
          , "FreeText: 2007 by GUD Magazine on behalf of contributors"
          ]
-      expected = "GUDMagazine00.lrf"
+      expected =
+         ( formatterLabel
+         , "GUDMagazine00.lrf"
+         )
 
 
 testGudLong :: Test
@@ -39,4 +46,7 @@ testGudLong = TestCase $
          , "Title: GUD Magazine Issue 2 :: Spring 2008"
          , "FreeText: 2008 by GUD Publishing"
          ]
-      expected = "GUDMagazine02.lrf"
+      expected =
+         ( formatterLabel
+         , "GUDMagazine02.lrf"
+         )

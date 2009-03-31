@@ -27,26 +27,28 @@ lookupErrMsg k m = fromMaybe
    and FreeText
    This is used for verbose output.
 -}
-formatATF :: (PrintfType u) => Fields -> u
-formatATF fields = printf "\n   %s | %s | %s"
-   (lookupErrMsg "Author" fields)
-   (lookupErrMsg "Title" fields)
-   (lookupErrMsg "FreeText" fields)
+formatATF :: (PrintfType u) => (Fields, String) -> u
+formatATF (fields, fmtUsed) =
+   printf "\n   %9s: %s\n   %9s: %s\n   %9s: %s\n   %9s: %s\n"
+   "formatter" fmtUsed
+   "Author" (lookupErrMsg "Author" fields)
+   "Title" (lookupErrMsg "Title" fields)
+   "FreeText" (lookupErrMsg "FreeText" fields)
 
 
 {- Format a set of book fields into a line containing the FreeText
    This is used for verbose output.
 -}
-formatF :: Fields -> String
-formatF fields = "\n   " ++ (lookupErrMsg "FreeText" fields)
+formatF :: (Fields, a) -> String
+formatF (fields, _) = "\n   " ++ (lookupErrMsg "FreeText" fields)
 
 
-{- Format a line of output for a book that was processed
+{- Format output for a book that was processed
 -}
-makeOutput :: Options -> Fields -> String -> String
-makeOutput opts fields newPath =
+makeOutput :: Options -> (Fields, String, String) -> String
+makeOutput opts (fields, fmtUsed, newPath) =
    oldPath ++ " -> " ++ newPath ++ 
-      ((additional (optVerbose opts)) fields)
+      ((additional (optVerbose opts)) (fields, fmtUsed))
    where
       oldPath = fromJust $ lookup "File" fields
       additional Nothing  = const ""
@@ -62,15 +64,11 @@ processBook opts parseFileAction = do
       fields <- parseFileAction
       let oldPath = fromJust $ lookup "File" fields
       --liftIO $ print fields
-      newPath <- tryFormatting fields
+      (fmtUsed, newPath) <- tryFormatting fields
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
-      return (fields, newPath)
+      return (fields, fmtUsed, newPath)
 
-   let report = either
-         id
-         (\(fields, newPath) -> 
-            makeOutput opts fields newPath)
-         result
+   let report = either id (makeOutput opts) result
 
    putStrLn report
 

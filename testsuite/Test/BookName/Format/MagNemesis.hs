@@ -11,6 +11,10 @@ import Test.HUnit ( Test (..) )
 import Test.BookName.Format.Util ( assertNewName )
 
 
+formatterLabel :: String
+formatterLabel = "MagNemesis"
+
+
 testMagNemesis :: Test
 testMagNemesis = TestList
    [ testNemesisShort
@@ -27,7 +31,10 @@ testNemesisShort = TestCase $
          , "Title: Nemesis Magazine #2"
          , "FreeText: 2004 Stephen Adams"
          ]
-      expected = "NemesisMag002.lrf"
+      expected =
+         ( formatterLabel
+         , "NemesisMag002.lrf"
+         )
 
 
 testNemesisLong :: Test
@@ -39,4 +46,7 @@ testNemesisLong = TestCase $
          , "Title: Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"
          , "FreeText: 2005 Stephen Adams"
          ]
-      expected = "NemesisMag007.lrf"
+      expected =
+         ( formatterLabel
+         , "NemesisMag007.lrf"
+         )

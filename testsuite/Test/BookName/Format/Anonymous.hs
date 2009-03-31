@@ -20,4 +20,7 @@ testAnonymous = TestCase $
          , "Title: Science Fiction Stories By Unknown Authors"
          , "FreeText: "
          ]
-      expected = "Anonymous-ScienceFictionStoriesByUnknownAuthors.lrf"
+      expected =
+         ( "Anonymous"
+         , "Anonymous-ScienceFictionStoriesByUnknownAuthors.lrf"
+         )

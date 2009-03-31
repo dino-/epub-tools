@@ -17,10 +17,10 @@ import BookName.Util
 
 assertNewName :: String
                  -> [String]
-                 -> String
+                 -> (String, String)
                  -> Assertion
 assertNewName desc meta expected = do
    let fields = parseMeta ("unit test: " ++ desc) $ unlines meta
    result <- runBN $ tryFormatting fields
-   let actual = either id id result
+   let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
