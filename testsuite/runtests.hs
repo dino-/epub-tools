@@ -14,6 +14,7 @@ import Test.BookName.Format.MagAeon
 import Test.BookName.Format.MagApex
 import Test.BookName.Format.MagChallengingDestiny
 import Test.BookName.Format.MagDell
+import Test.BookName.Format.MagFsf
 import Test.BookName.Format.MagGud
 import Test.BookName.Format.MagInterzone
 import Test.BookName.Format.MagNemesis
@@ -34,6 +35,7 @@ tests = TestList
    , testMagApex
    , testMagChallengingDestiny
    , testMagDell
+   , testMagFsf
    , testMagGud
    , testMagInterzone
    , testMagNemesis

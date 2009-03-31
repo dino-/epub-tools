@@ -1,12 +1,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( filterCommon, format, authorSingle, titleSimple )
+   ( filterCommon, format, authorSingle, titleSimple, monthNum )
    where
 
 import Control.Monad.Error
 import Data.Char
-import Data.List ( foldl' )
+import Data.List ( foldl', isPrefixOf )
 import Data.Map hiding ( filter, map )
 import Prelude hiding ( last, lookup )
 import Text.Printf
@@ -75,6 +75,32 @@ extractYear (Just ft) =
    case (matchRegex (mkRegex "[^0-9]*([0-9]{4}).*") ft) of
       Just (year:_) -> '_' : year
       _             -> ""
+
+
+{- Convert an English month name (with creative ranges and variations)
+   into number form
+-}
+monthNum :: String -> String
+monthNum "January"            = "01"
+monthNum "January-February"   = "01_02"
+monthNum "February"           = "02"
+monthNum "March"              = "03"
+monthNum "April"              = "04"
+monthNum "April-May"          = "04_05"
+monthNum "May"                = "05"
+monthNum "June"               = "06"
+monthNum "June/July"          = "06_07"
+monthNum "July"               = "07"
+monthNum "July-August"        = "07_08"
+monthNum "Jul-Aug"            = "07_08"
+monthNum "August"             = "08"
+monthNum x
+   | isPrefixOf x "September" = "09"
+monthNum "October"            = "10"
+monthNum "October-November"   = "10_11"
+monthNum "November"           = "11"
+monthNum "December"           = "12"
+monthNum x                    = "[ERROR monthNum " ++ x ++ "]"
 
 
 formatAuthor :: (MonadError String m) =>
