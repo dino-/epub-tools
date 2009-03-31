@@ -8,13 +8,12 @@ module Test.BookName.Format.AuthorDouble
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.AuthorDouble
 import Test.BookName.Format.Util ( assertNewName )
 
 
 testAuthorDouble :: Test
 testAuthorDouble = TestCase $
-   assertNewName "Two authors" fmtAuthorDouble lrfMeta expected
+   assertNewName "Two authors" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Kevin J. Anderson and Rebecca Moesta"

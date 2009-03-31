@@ -8,7 +8,6 @@ module Test.BookName.Format.MagAeon
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.MagAeon
 import Test.BookName.Format.Util ( assertNewName )
 
 
@@ -21,7 +20,7 @@ testMagAeon = TestList $
 
 testAeon :: Test
 testAeon = TestCase $
-   assertNewName "testAeon" fmtMagAeon lrfMeta expected
+   assertNewName "testAeon" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Aeon Authors"
@@ -33,7 +32,7 @@ testAeon = TestCase $
 
 testAEon :: Test
 testAEon = TestCase $
-   assertNewName "testAEon" fmtMagAeon lrfMeta expected
+   assertNewName "testAEon" lrfMeta expected
    where
       lrfMeta =
          [ "Author: AEon Authors"

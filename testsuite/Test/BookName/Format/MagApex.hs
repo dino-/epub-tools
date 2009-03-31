@@ -8,13 +8,12 @@ module Test.BookName.Format.MagApex
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.MagApex
 import Test.BookName.Format.Util ( assertNewName )
 
 
 testMagApex :: Test
 testMagApex = TestCase $
-   assertNewName "testMagApex" fmtMagApex lrfMeta expected
+   assertNewName "testMagApex" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Apex Authors"

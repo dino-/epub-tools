@@ -12,27 +12,9 @@ import System.Posix.Files ( rename )
 import Text.Printf
 
 import BookName.Extract ( parseFile )
-import BookName.Format.Anonymous
-import BookName.Format.AuthorBasic
-import BookName.Format.AuthorDouble
-import BookName.Format.MagAeon
-import BookName.Format.MagApex
-import BookName.Format.MagDell
-import BookName.Format.MagNemesis
+import BookName.Formatters ( tryFormatting )
 import BookName.Opts ( Options (..), parseOpts, usageText )
 import BookName.Util ( Fields, runBN )
-
-
-formatters :: [Fields -> ErrorT String IO String]
-formatters =
-   [ fmtMagDell
-   , fmtMagNemesis
-   , fmtMagAeon
-   , fmtMagApex
-   , fmtAuthorDouble
-   , fmtAnonymous
-   , fmtAuthorBasic
-   ]
 
 
 lookupErrMsg :: String -> Fields -> String
@@ -80,9 +62,7 @@ processBook opts parseFileAction = do
       fields <- parseFileAction
       let oldPath = fromJust $ lookup "File" fields
       --liftIO $ print fields
-      newPath <- foldr mplus 
-         (throwError $ printf "%s [ERROR No formatter found]" oldPath) $
-         map (\f -> f fields) formatters
+      newPath <- tryFormatting fields
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (fields, newPath)
 

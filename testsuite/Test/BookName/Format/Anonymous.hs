@@ -8,13 +8,12 @@ module Test.BookName.Format.Anonymous
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.Anonymous
 import Test.BookName.Format.Util ( assertNewName )
 
 
 testAnonymous :: Test
 testAnonymous = TestCase $
-   assertNewName "testAnonymous" fmtAnonymous lrfMeta expected
+   assertNewName "testAnonymous" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Anonymous"

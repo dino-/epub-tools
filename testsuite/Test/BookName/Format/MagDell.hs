@@ -8,7 +8,6 @@ module Test.BookName.Format.MagDell
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.MagDell
 import Test.BookName.Format.Util ( assertNewName )
 
 
@@ -21,7 +20,7 @@ testMagDell = TestList
 
 testAnalog :: Test
 testAnalog = TestCase $
-   assertNewName "Analog" fmtMagDell lrfMeta expected
+   assertNewName "Analog" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Dell Magazine Authors"
@@ -33,7 +32,7 @@ testAnalog = TestCase $
 
 testAsimovs :: Test
 testAsimovs = TestCase $
-   assertNewName "Asimovs" fmtMagDell lrfMeta expected
+   assertNewName "Asimovs" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Dell Magazine Authors"

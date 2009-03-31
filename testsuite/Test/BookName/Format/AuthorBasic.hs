@@ -8,13 +8,12 @@ module Test.BookName.Format.AuthorBasic
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.AuthorBasic
 import Test.BookName.Format.Util ( assertNewName )
 
 
 testAuthorBasic :: Test
 testAuthorBasic = TestCase $
-   assertNewName "testAuthorBasic" fmtAuthorBasic lrfMeta expected
+   assertNewName "testAuthorBasic" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Herman Melville"

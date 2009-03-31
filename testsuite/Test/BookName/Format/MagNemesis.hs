@@ -8,7 +8,6 @@ module Test.BookName.Format.MagNemesis
 
 import Test.HUnit ( Test (..) )
 
-import BookName.Format.MagNemesis
 import Test.BookName.Format.Util ( assertNewName )
 
 
@@ -21,7 +20,7 @@ testMagNemesis = TestList
 
 testNemesisShort :: Test
 testNemesisShort = TestCase $
-   assertNewName "Nemesis Magazine, short" fmtMagNemesis lrfMeta expected
+   assertNewName "Nemesis Magazine, short" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Stephen Adams"
@@ -33,7 +32,7 @@ testNemesisShort = TestCase $
 
 testNemesisLong :: Test
 testNemesisLong = TestCase $
-   assertNewName "Nemesis Magazine, long" fmtMagNemesis lrfMeta expected
+   assertNewName "Nemesis Magazine, long" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Stephen Adams"

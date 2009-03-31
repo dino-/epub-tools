@@ -11,17 +11,16 @@ import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
 import BookName.Extract
+import BookName.Formatters ( tryFormatting )
 import BookName.Util
 
 
-assertNewName :: (Eq a, Show a) =>
-                 String
-                 -> (Fields -> Control.Monad.Error.ErrorT a IO a)
+assertNewName :: String
                  -> [String]
-                 -> a
+                 -> String
                  -> Assertion
-assertNewName desc fmtFunction meta expected = do
-   let fields = parseMeta "foo" $ unlines meta
-   result <- runBN $ fmtFunction fields
+assertNewName desc meta expected = do
+   let fields = parseMeta ("unit test: " ++ desc) $ unlines meta
+   result <- runBN $ tryFormatting fields
    let actual = either id id result
    assertEqual desc expected actual
