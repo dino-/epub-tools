@@ -11,15 +11,40 @@ import Test.HUnit ( Test (..) )
 import Test.BookName.Format.Util ( assertNewName )
 
 
+formatterLabel :: String
+formatterLabel = "MagInterzone"
+
+
 testMagInterzone :: Test
-testMagInterzone = TestCase $
-   assertNewName "testMagInterzone" lrfMeta expected
+testMagInterzone = TestList
+   [ testInterzoneShort
+   , testInterzoneLong
+   ]
+
+
+testInterzoneShort :: Test
+testInterzoneShort = TestCase $
+   assertNewName "Interzone Magazine, short" lrfMeta expected
    where
       lrfMeta =
          [ "Author: TTA Press Authors"
          , "Title: Interzone SFF #212"
          ]
       expected =
-         ( "MagInterzone"
+         ( formatterLabel
          , "InterzoneSFF212.lrf"
+         )
+
+
+testInterzoneLong :: Test
+testInterzoneLong = TestCase $
+   assertNewName "Interzone Magazine, long" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: TTA Press Authors"
+         , "Title: Interzone Science Fiction and Fantasy Magazine #216"
+         ]
+      expected =
+         ( formatterLabel
+         , "InterzoneSFF216.lrf"
          )
