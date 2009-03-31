@@ -11,9 +11,20 @@ import Test.HUnit ( Test (..) )
 import Test.BookName.Format.Util ( assertNewName )
 
 
+formatterLabel :: String
+formatterLabel = "AuthorBasic"
+
+
 testAuthorBasic :: Test
-testAuthorBasic = TestCase $
-   assertNewName "testAuthorBasic" lrfMeta expected
+testAuthorBasic = TestList
+   [ testBasic
+   , testCapsTitle
+   ]
+
+
+testBasic :: Test
+testBasic = TestCase $
+   assertNewName "Basic single author" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Herman Melville"
@@ -21,6 +32,21 @@ testAuthorBasic = TestCase $
          , "FreeText: 1851 Herman Melville"
          ]
       expected =
-         ( "AuthorBasic"
+         ( formatterLabel
          , "MelvilleHerman-MobyDick_1851.lrf"
+         )
+
+
+testCapsTitle :: Test
+testCapsTitle = TestCase $
+   assertNewName "All caps title" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Greg Bear"
+         , "Title: EON"
+         , "FreeText: 1985 by Greg Bear"
+         ]
+      expected =
+         ( formatterLabel
+         , "BearGreg-EON_1985.lrf"
          )
