@@ -72,7 +72,7 @@ filterCommon s = foldl' (flip id) s commonFilters
 extractYear :: Maybe String -> String
 extractYear Nothing   = ""
 extractYear (Just ft) =
-   case (matchRegex (mkRegex ".*([0-9]{4}).*") ft) of
+   case (matchRegex (mkRegex "[^0-9]*([0-9]{4}).*") ft) of
       Just (year:_) -> '_' : year
       _             -> ""
 

@@ -9,6 +9,7 @@ import Test.HUnit
 import Test.BookName.Format.Anonymous
 import Test.BookName.Format.AuthorBasic
 import Test.BookName.Format.AuthorDouble
+import Test.BookName.Format.General
 import Test.BookName.Format.MagAeon
 import Test.BookName.Format.MagApex
 import Test.BookName.Format.MagChallengingDestiny
@@ -28,6 +29,7 @@ tests = TestList
    [ testAnonymous
    , testAuthorBasic
    , testAuthorDouble
+   , testGeneral
    , testMagAeon
    , testMagApex
    , testMagChallengingDestiny
