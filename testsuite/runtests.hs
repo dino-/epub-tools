@@ -13,6 +13,7 @@ import Test.BookName.Format.MagAeon
 import Test.BookName.Format.MagApex
 import Test.BookName.Format.MagChallengingDestiny
 import Test.BookName.Format.MagDell
+import Test.BookName.Format.MagGud
 import Test.BookName.Format.MagNemesis
 
 
@@ -29,5 +30,6 @@ tests = TestList
    , testMagApex
    , testMagChallengingDestiny
    , testMagDell
+   , testMagGud
    , testMagNemesis
    ]

@@ -15,6 +15,7 @@ import BookName.Format.MagAeon
 import BookName.Format.MagApex
 import BookName.Format.MagChallengingDestiny
 import BookName.Format.MagDell
+import BookName.Format.MagGud
 import BookName.Format.MagNemesis
 import BookName.Util ( Fields )
 
@@ -26,6 +27,7 @@ formatters =
    , fmtMagAeon
    , fmtMagApex
    , fmtMagChallengingDestiny
+   , fmtMagGud
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorBasic
