@@ -7,7 +7,7 @@ module BookName.Format.MagFsf
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format, monthNum )
+import BookName.Format.Util ( format, monthNum )
 import BookName.Util ( Fields )
 
 
