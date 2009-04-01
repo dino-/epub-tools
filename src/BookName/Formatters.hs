@@ -21,6 +21,7 @@ import BookName.Format.MagGud
 import BookName.Format.MagInterzone
 import BookName.Format.MagNemesis
 import BookName.Format.MagSomethingWicked
+import BookName.Format.SFBestOf
 import BookName.Util ( Fields )
 
 
@@ -36,6 +37,7 @@ formatters =
    , fmtMagSomethingWicked
    , fmtMagFsf
    , fmtMagFutureOrbits
+   , fmtSFBestOf
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorBasic

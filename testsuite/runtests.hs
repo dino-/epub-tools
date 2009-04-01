@@ -20,6 +20,7 @@ import Test.BookName.Format.MagGud
 import Test.BookName.Format.MagInterzone
 import Test.BookName.Format.MagNemesis
 import Test.BookName.Format.MagSomethingWicked
+import Test.BookName.Format.SFBestOf
 
 
 main :: IO Counts
@@ -42,4 +43,5 @@ tests = TestList
    , testMagInterzone
    , testMagNemesis
    , testMagSomethingWicked
+   , testSFBestOf
    ]
