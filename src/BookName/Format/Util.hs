@@ -1,7 +1,10 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module BookName.Format.Util
-   ( filterCommon, format, authorSingle, titleSimple, monthNum )
+   ( filterCommon, format
+   , authorSingle, authorPostfix
+   , titleSimple
+   , monthNum )
    where
 
 import Control.Monad.Error
@@ -161,6 +164,15 @@ authorSingle :: [String] -> String
 authorSingle (rest:last:_) =
    printf "%s%s-" (filterCommon last) (filterCommon rest)
 authorSingle _             = undefined
+
+
+{- Author names with a postfix like II, III, Jr. or Sr.
+-}
+authorPostfix :: [String] -> String
+authorPostfix (rest:last:postfix:_) =
+   printf "%s%s%s-" (filterCommon last) (filterCommon rest)
+      (filterCommon postfix)
+authorPostfix _             = undefined
 
 
 {- A common simple formatter for many book titles. Handles year too.
