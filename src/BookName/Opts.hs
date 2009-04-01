@@ -22,8 +22,7 @@ data Options = Options
 defaultOptions :: Options
 defaultOptions = Options
    { optHelp = False
-   --, optNoAction = False  -- FIXME
-   , optNoAction = True
+   , optNoAction = False
    , optVerbose = Nothing
    }
 
