@@ -25,5 +25,5 @@ main = defaultMainWithHooks (simpleUserHooks
 
       -- Target for running all unit tests
       testRunner _ _ _ _ = do
-         system $ "runhaskell -itestsuite -isrc testsuite/runtests.hs"
+         system $ "runhaskell -isrc testsuite/runtests.hs"
          return ()
