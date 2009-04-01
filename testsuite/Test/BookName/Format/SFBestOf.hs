@@ -22,5 +22,5 @@ testSFBestOf = TestCase $
          ]
       expected =
          ( "SFBestOf"
-         , "ScienceFictionTheBestOfTheYear2007Edition.lrf"
+         , "ScienceFiction_TheBestOfTheYear2007Edition.lrf"
          )

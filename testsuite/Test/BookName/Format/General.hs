@@ -15,6 +15,7 @@ testGeneral :: Test
 testGeneral = TestList
    [ testCapsTitle
    , testMultPubYear
+   , testColon
    ]
 
 
@@ -45,4 +46,19 @@ testMultPubYear = TestCase $
       expected =
          ( "AuthorBasic"
          , "BearGreg-Hegira_1979.lrf"
+         )
+
+
+testColon :: Test
+testColon = TestCase $
+   assertNewName "colon becomes underscore" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Ed Howdershelt"
+         , "Title: Book 1: 3rd World Products, Inc."
+         , "FreeText: 2003 by Ed Howdershelt"
+         ]
+      expected =
+         ( "AuthorBasic"
+         , "HowdersheltEd-Book1_3rdWorldProductsInc_2003.lrf"
          )
