@@ -14,13 +14,13 @@ import BookName.Format.AuthorDouble
 import BookName.Format.AuthorSt
 import BookName.Format.AuthorThird
 import BookName.Format.MagAeon
-import BookName.Format.MagApex
 import BookName.Format.MagChallengingDestiny
 import BookName.Format.MagDell
 import BookName.Format.MagFsf
 import BookName.Format.MagFutureOrbits
 import BookName.Format.MagGud
 import BookName.Format.MagInterzone
+import BookName.Format.MagNameIssue
 import BookName.Format.MagNemesis
 import BookName.Format.MagSomethingWicked
 import BookName.Format.SFBestOf
@@ -32,13 +32,13 @@ formatters =
    [ fmtMagDell
    , fmtMagNemesis
    , fmtMagAeon
-   , fmtMagApex
    , fmtMagChallengingDestiny
    , fmtMagGud
    , fmtMagInterzone
    , fmtMagSomethingWicked
    , fmtMagFsf
    , fmtMagFutureOrbits
+   , fmtMagNameIssue
    , fmtSFBestOf
    , fmtAuthorDouble
    , fmtAnonymous

@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagApex
-   ( fmtMagApex )
+module BookName.Format.MagNameIssue
+   ( fmtMagNameIssue )
    where
 
 import Control.Monad.Error
@@ -11,10 +11,10 @@ import BookName.Format.Util ( filterCommon, format )
 import BookName.Util ( Fields )
 
 
-fmtMagApex :: (MonadError String m) => Fields -> m (String, String)
-fmtMagApex = format "MagApex"
+fmtMagNameIssue :: (MonadError String m) => Fields -> m (String, String)
+fmtMagNameIssue = format "MagNameIssue"
    ".* Authors" (const "")
-   "(Apex.*) #([0-9]+).*" title
+   "(.*) #([0-9]+).*" title
 
 
 title :: String -> [String] -> String

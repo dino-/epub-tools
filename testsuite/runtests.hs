@@ -58,6 +58,7 @@ tests = TestList
    , testNemesisLong
    , testMagSomethingWicked
    , testSFBestOf
+   , testMagBlackStatic
    ]
 
 
@@ -213,7 +214,7 @@ testMagAEon = TestCase $
 
 testMagApex :: Test
 testMagApex = TestCase $
-   assertNewName "testMagApex" lrfMeta expected
+   assertNewName "Apex Magazine" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Apex Authors"
@@ -221,7 +222,7 @@ testMagApex = TestCase $
          , "FreeText: 2007 by Apex Authors"
          ]
       expected =
-         ( "MagApex"
+         ( "MagNameIssue"
          , "ApexScienceFictionAndHorrorDigest10.lrf"
          )
 
@@ -461,4 +462,18 @@ testSFBestOf = TestCase $
       expected =
          ( "SFBestOf"
          , "ScienceFiction_TheBestOfTheYear2007Edition.lrf"
+         )
+
+
+testMagBlackStatic :: Test
+testMagBlackStatic = TestCase $
+   assertNewName "Black Static Magazine" lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: TTA Press Authors"
+         , "Title: Black Static Horror Magazine #5"
+         ]
+      expected =
+         ( "MagNameIssue"
+         , "BlackStaticHorrorMagazine05.lrf"
          )
