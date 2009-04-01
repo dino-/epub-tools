@@ -437,7 +437,7 @@ testNemesisLong = TestCase $
 
 testMagSomethingWicked :: Test
 testMagSomethingWicked = TestCase $
-   assertNewName "testMagSomethingWicked" lrfMeta expected
+   assertNewName "Something Wicked Magazine" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Something Wicked Authors"
@@ -452,7 +452,7 @@ testMagSomethingWicked = TestCase $
 
 testSFBestOf :: Test
 testSFBestOf = TestCase $
-   assertNewName "testSFBestOf" lrfMeta expected
+   assertNewName "Science Fiction: The Best of the Year" lrfMeta expected
    where
       lrfMeta =
          [ "Author: Rich Horton"
