@@ -34,6 +34,7 @@ tests = TestList
    [ testAnonymous
    , testAuthorBasic
    , testAuthorDouble
+   , testAuthorSt
    , testAuthorThird
    , testCapsTitle
    , testMultPubYear
@@ -102,6 +103,21 @@ testAuthorDouble = TestCase $
       expected =
          ( "AuthorDouble"
          , "Anderson_Moesta-RoughDraft_2004.lrf"
+         )
+
+
+testAuthorSt :: Test
+testAuthorSt = TestCase $
+   assertNewName "author name contains St." lrfMeta expected
+   where
+      lrfMeta =
+         [ "Author: Jennifer St. Clair"
+         , "Title: Budget Cuts"
+         , "FreeText: 2004, Jennifer St. Clair"
+         ]
+      expected =
+         ( "AuthorSt"
+         , "StClairJennifer-BudgetCuts_2004.lrf"
          )
 
 

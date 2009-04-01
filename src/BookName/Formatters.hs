@@ -11,6 +11,7 @@ import Text.Printf
 import BookName.Format.Anonymous
 import BookName.Format.AuthorBasic
 import BookName.Format.AuthorDouble
+import BookName.Format.AuthorSt
 import BookName.Format.AuthorThird
 import BookName.Format.MagAeon
 import BookName.Format.MagApex
@@ -42,6 +43,7 @@ formatters =
    , fmtAuthorDouble
    , fmtAnonymous
    , fmtAuthorThird
+   , fmtAuthorSt
    , fmtAuthorBasic
    ]
 
