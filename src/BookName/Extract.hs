@@ -20,9 +20,18 @@ parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
       (_:"":_)    -> Nothing
-      (key:val:_) -> Just (key, val)
+      (key:val:_) -> Just (transformKey key, val)
       [_]         -> Nothing
       []          -> Nothing
+
+
+trimSpaces :: String -> String
+trimSpaces = reverse . (dropWhile (== ' ')) . reverse
+
+
+transformKey :: String -> String
+transformKey "Author(s)           " = "Authors"
+transformKey key                    = trimSpaces key
 
 
 parseMeta :: String -> String -> Fields

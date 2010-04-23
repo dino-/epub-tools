@@ -31,9 +31,9 @@ formatATF :: (PrintfType u) => (Fields, String) -> u
 formatATF (fields, fmtUsed) =
    printf "\n   %9s: %s\n   %9s: %s\n   %9s: %s\n   %9s: %s\n"
       "formatter" fmtUsed
-      "Author" (lookupErrMsg "Author" fields)
+      "Authors" (lookupErrMsg "Authors" fields)
       "Title" (lookupErrMsg "Title" fields)
-      "FreeText" (lookupErrMsg "FreeText" fields)
+      "Comments" (lookupErrMsg "Comments" fields)
 
 
 {- Format a set of book fields into a line containing the FreeText

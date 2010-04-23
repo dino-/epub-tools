@@ -145,11 +145,11 @@ format :: (MonadError String m) =>
           -> Fields
           -> m (String, String)
 format label authorPat authorFmt titlePat titleFmt fs = do
-   oldAuthor <- lookupE "Author" fs
+   oldAuthor <- lookupE "Authors" fs
    newAuthor <- formatAuthor authorPat authorFmt oldAuthor
 
    oldTitle <- lookupE "Title" fs
-   let year = extractYear $ lookup "FreeText" fs
+   let year = extractYear $ lookup "Comment" fs
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
    return
