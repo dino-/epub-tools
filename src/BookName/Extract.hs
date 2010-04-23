@@ -44,7 +44,7 @@ extractMeta ::
    (MonadIO m, RunResult (IO a), MonadError [Char] m) =>
    String -> m a
 extractMeta path = do
-   let app = "lrf-meta"
+   let app = "ebook-meta"
    result <- liftIO $ tryEC $ run ((printf "%s %s" app path) :: String)
    case result of
       Left ps -> throwError $
