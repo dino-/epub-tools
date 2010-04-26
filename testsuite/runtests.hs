@@ -37,7 +37,6 @@ tests = TestList
    , testAuthorSt
    , testAuthorThird
    , testCapsTitle
-   , testMultPubYear
    , testColon
    , testMagAeon
    , testMagAEon
@@ -143,21 +142,6 @@ testCapsTitle = TestCase $
       expected =
          ( "AuthorBasic"
          , "BearGreg-EON.lrf"
-         )
-
-
-testMultPubYear :: Test
-testMultPubYear = TestCase $
-   assertNewName "more than one publication year" lrfMeta expected
-   where
-      lrfMeta =
-         [ "Authors: Greg Bear"
-         , "Title: Hegira"
-         , "FreeText: 1979 by Greg Bear. Revised text copyright 1987 by Greg Bear"
-         ]
-      expected =
-         ( "AuthorBasic"
-         , "BearGreg-Hegira_1979.lrf"
          )
 
 
