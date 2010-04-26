@@ -67,7 +67,7 @@ testAnonymous = TestCase $
    assertNewName "testAnonymous" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Anonymous"
+         [ "Authors: Anonymous"
          , "Title: Science Fiction Stories By Unknown Authors"
          , "FreeText: "
          ]
@@ -82,7 +82,7 @@ testAuthorBasic = TestCase $
    assertNewName "basic author" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Herman Melville"
+         [ "Authors: Herman Melville"
          , "Title: Moby Dick"
          , "FreeText: 1851 Herman Melville"
          ]
@@ -97,7 +97,7 @@ testAuthorDouble = TestCase $
    assertNewName "two authors" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Kevin J. Anderson and Rebecca Moesta"
+         [ "Authors: Kevin J. Anderson and Rebecca Moesta"
          , "Title: Rough Draft"
          , "FreeText: 2004 Kevin J. Anderson and Rebecca Moesta"
          ]
@@ -112,7 +112,7 @@ testAuthorSt = TestCase $
    assertNewName "author name contains St." lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Jennifer St. Clair"
+         [ "Authors: Jennifer St. Clair"
          , "Title: Budget Cuts"
          , "FreeText: 2004, Jennifer St. Clair"
          ]
@@ -127,7 +127,7 @@ testAuthorThird = TestCase $
    assertNewName "author name contains III" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Carlton Mellick III"
+         [ "Authors: Carlton Mellick III"
          , "Title: Sunset with a Beard"
          , "FreeText: 2002 by Carlton Mellick III"
          ]
@@ -142,7 +142,7 @@ testCapsTitle = TestCase $
    assertNewName "title all caps" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Greg Bear"
+         [ "Authors: Greg Bear"
          , "Title: EON"
          , "FreeText: 1985 by Greg Bear"
          ]
@@ -157,7 +157,7 @@ testMultPubYear = TestCase $
    assertNewName "more than one publication year" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Greg Bear"
+         [ "Authors: Greg Bear"
          , "Title: Hegira"
          , "FreeText: 1979 by Greg Bear. Revised text copyright 1987 by Greg Bear"
          ]
@@ -172,7 +172,7 @@ testColon = TestCase $
    assertNewName "colon becomes underscore" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Ed Howdershelt"
+         [ "Authors: Ed Howdershelt"
          , "Title: Book 1: 3rd World Products, Inc."
          , "FreeText: 2003 by Ed Howdershelt"
          ]
@@ -187,7 +187,7 @@ testMagAeon = TestCase $
    assertNewName "Aeon magazine" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Aeon Authors"
+         [ "Authors: Aeon Authors"
          , "Title: Aeon Eight"
          , "FreeText: 2006 by Scorpius Digital Publishing"
          ]
@@ -202,7 +202,7 @@ testMagAEon = TestCase $
    assertNewName "AEon magazine" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: AEon Authors"
+         [ "Authors: AEon Authors"
          , "Title: Aeon Thirteen"
          , "FreeText: 2008 by Quintamid LLC"
          ]
@@ -217,7 +217,7 @@ testMagApex = TestCase $
    assertNewName "Apex Magazine" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Apex Authors"
+         [ "Authors: Apex Authors"
          , "Title: Apex Science Fiction and Horror Digest #10"
          , "FreeText: 2007 by Apex Authors"
          ]
@@ -232,7 +232,7 @@ testChallengingDestinyShort = TestCase $
    assertNewName "Challenging Destiny Magazine, short" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Crystalline Sphere Authors"
+         [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #23"
          , "FreeText: 2006 by Crystalline Sphere Publishing"
          ]
@@ -247,7 +247,7 @@ testChallengingDestinyLong = TestCase $
    assertNewName "Challenging Destiny Magazine, long" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Crystalline Sphere Authors"
+         [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #24: August 2007"
          , "FreeText: 2007 by Crystalline Sphere Publishing"
          ]
@@ -262,7 +262,7 @@ testChallengingDestinyPub = TestCase $
    assertNewName "Challenging Destiny Magazine, Publishing in author" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Crystalline Sphere Publishing"
+         [ "Authors: Crystalline Sphere Publishing"
          , "Title: Challenging Destiny #18"
          , "FreeText: 2004 by Crystalline Sphere Publishing"
          ]
@@ -277,7 +277,7 @@ testAnalog = TestCase $
    assertNewName "Analog" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Dell Magazine Authors"
+         [ "Authors: Dell Magazine Authors"
          , "Title: Analog SFF, July-August 2003"
          , "FreeText: 2003 by Dell Magazines"
          ]
@@ -292,7 +292,7 @@ testAsimovs = TestCase $
    assertNewName "Asimovs" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Dell Magazine Authors"
+         [ "Authors: Dell Magazine Authors"
          , "Title: Asimov's SF, August 2003"
          , "FreeText: 2003 by Dell Magazines"
          ]
@@ -307,7 +307,7 @@ testFsfShort = TestCase $
    assertNewName "FSF Magazine, short" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Spilogale Authors"
+         [ "Authors: Spilogale Authors"
          , "Title: FSF, April 2008"
          , "FreeText: 2008 by Spilogale, Inc."
          ]
@@ -322,7 +322,7 @@ testFsfLong = TestCase $
    assertNewName "FSF Magazine, long" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Spilogale Authors"
+         [ "Authors: Spilogale Authors"
          , "Title: FSF Magazine, April 2006"
          , "FreeText: 2006 by Spilogale, Inc."
          ]
@@ -337,7 +337,7 @@ testMagFutureOrbits = TestCase $
    assertNewName "testMagFutureOrbits" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Vander Neut Publications, L.L.C."
+         [ "Authors: Vander Neut Publications, L.L.C."
          , "Title: Future Orbits Issue 5, June/July 2002"
          , "FreeText: 2002 by Vander Neut Publications, L.L.C."
          ]
@@ -352,7 +352,7 @@ testGudShort = TestCase $
    assertNewName "Gud Magazine, short" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: GUD Magazine Authors"
+         [ "Authors: GUD Magazine Authors"
          , "Title: GUD Magazine Issue 0 :: Spring 2007"
          , "FreeText: 2007 by GUD Magazine on behalf of contributors"
          ]
@@ -367,7 +367,7 @@ testGudLong = TestCase $
    assertNewName "Gud Magazine, long" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: GUD Magazine Authors, Jeff Somers, Jeremy Shipp"
+         [ "Authors: GUD Magazine Authors, Jeff Somers, Jeremy Shipp"
          , "Title: GUD Magazine Issue 2 :: Spring 2008"
          , "FreeText: 2008 by GUD Publishing"
          ]
@@ -382,7 +382,7 @@ testInterzoneShort = TestCase $
    assertNewName "Interzone Magazine, short" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: TTA Press Authors"
+         [ "Authors: TTA Press Authors"
          , "Title: Interzone SFF #212"
          ]
       expected =
@@ -396,7 +396,7 @@ testInterzoneLong = TestCase $
    assertNewName "Interzone Magazine, long" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: TTA Press Authors"
+         [ "Authors: TTA Press Authors"
          , "Title: Interzone Science Fiction and Fantasy Magazine #216"
          ]
       expected =
@@ -410,7 +410,7 @@ testNemesisShort = TestCase $
    assertNewName "Nemesis Magazine, short" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Stephen Adams"
+         [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #2"
          , "FreeText: 2004 Stephen Adams"
          ]
@@ -425,7 +425,7 @@ testNemesisLong = TestCase $
    assertNewName "Nemesis Magazine, long" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Stephen Adams"
+         [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"
          , "FreeText: 2005 Stephen Adams"
          ]
@@ -440,7 +440,7 @@ testMagSomethingWicked = TestCase $
    assertNewName "Something Wicked Magazine" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Something Wicked Authors"
+         [ "Authors: Something Wicked Authors"
          , "Title: Something Wicked SF and Horror Magazine #5"
          , "FreeText: 2007 by Something Wicked and Contributing Authors"
          ]
@@ -455,7 +455,7 @@ testSFBestOf = TestCase $
    assertNewName "Science Fiction: The Best of the Year" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: Rich Horton"
+         [ "Authors: Rich Horton"
          , "Title: Science Fiction: The Best of the Year, 2007 Edition"
          , "FreeText: 2007 by Wildside Press"
          ]
@@ -470,7 +470,7 @@ testMagBlackStatic = TestCase $
    assertNewName "Black Static Magazine" lrfMeta expected
    where
       lrfMeta =
-         [ "Author: TTA Press Authors"
+         [ "Authors: TTA Press Authors"
          , "Title: Black Static Horror Magazine #5"
          ]
       expected =
