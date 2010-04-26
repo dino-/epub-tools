@@ -268,7 +268,7 @@ testAnalog = TestCase $
          ]
       expected =
          ( "MagDell"
-         , "AnalogSFF2003-07_08.epub"
+         , "AnalogSF2003-07_08.epub"
          )
 
 
