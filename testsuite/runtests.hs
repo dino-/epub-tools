@@ -71,7 +71,7 @@ testAnonymous = TestCase $
          ]
       expected =
          ( "Anonymous"
-         , "Anonymous-ScienceFictionStoriesByUnknownAuthors.lrf"
+         , "Anonymous-ScienceFictionStoriesByUnknownAuthors.epub"
          )
 
 
@@ -85,7 +85,7 @@ testAuthorBasic = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "MelvilleHerman-MobyDick.lrf"
+         , "MelvilleHerman-MobyDick.epub"
          )
 
 
@@ -99,7 +99,7 @@ testAuthorDouble = TestCase $
          ]
       expected =
          ( "AuthorDouble"
-         , "Anderson_Moesta-RoughDraft.lrf"
+         , "Anderson_Moesta-RoughDraft.epub"
          )
 
 
@@ -113,7 +113,7 @@ testAuthorSt = TestCase $
          ]
       expected =
          ( "AuthorSt"
-         , "StClairJennifer-BudgetCuts.lrf"
+         , "StClairJennifer-BudgetCuts.epub"
          )
 
 
@@ -127,7 +127,7 @@ testAuthorThird = TestCase $
          ]
       expected =
          ( "AuthorThird"
-         , "MellickCarltonIII-SunsetWithABeard.lrf"
+         , "MellickCarltonIII-SunsetWithABeard.epub"
          )
 
 
@@ -141,7 +141,7 @@ testCapsTitle = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "BearGreg-EON.lrf"
+         , "BearGreg-EON.epub"
          )
 
 
@@ -155,7 +155,7 @@ testColon = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "HowdersheltEd-Book1_3rdWorldProductsInc.lrf"
+         , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
          )
 
 
@@ -169,7 +169,7 @@ testMagAeon = TestCase $
          ]
       expected =
          ( "MagAeon"
-         , "AeonMagazine08.lrf"
+         , "AeonMagazine08.epub"
          )
 
 
@@ -183,7 +183,7 @@ testMagAEon = TestCase $
          ]
       expected =
          ( "MagAeon"
-         , "AeonMagazine13.lrf"
+         , "AeonMagazine13.epub"
          )
 
 
@@ -197,7 +197,7 @@ testMagApex = TestCase $
          ]
       expected =
          ( "MagNameIssue"
-         , "ApexScienceFictionAndHorrorDigest10.lrf"
+         , "ApexScienceFictionAndHorrorDigest10.epub"
          )
 
 
@@ -211,7 +211,7 @@ testChallengingDestinyShort = TestCase $
          ]
       expected =
          ( "MagChallengingDestiny"
-         , "ChallengingDestinyMagazine023.lrf"
+         , "ChallengingDestinyMagazine023.epub"
          )
 
 
@@ -225,7 +225,7 @@ testChallengingDestinyLong = TestCase $
          ]
       expected =
          ( "MagChallengingDestiny"
-         , "ChallengingDestinyMagazine024.lrf"
+         , "ChallengingDestinyMagazine024.epub"
          )
 
 
@@ -239,7 +239,7 @@ testChallengingDestinyPub = TestCase $
          ]
       expected =
          ( "MagChallengingDestiny"
-         , "ChallengingDestinyMagazine018.lrf"
+         , "ChallengingDestinyMagazine018.epub"
          )
 
 
@@ -253,7 +253,7 @@ testAnalog = TestCase $
          ]
       expected =
          ( "MagDell"
-         , "AnalogSFF2003-07_08.lrf"
+         , "AnalogSFF2003-07_08.epub"
          )
 
 
@@ -267,7 +267,7 @@ testAsimovs = TestCase $
          ]
       expected =
          ( "MagDell"
-         , "AsimovsSF2003-08.lrf"
+         , "AsimovsSF2003-08.epub"
          )
 
 
@@ -281,7 +281,7 @@ testFsfShort = TestCase $
          ]
       expected =
          ( "MagFsf"
-         , "FantasyScienceFiction2008-04.lrf"
+         , "FantasyScienceFiction2008-04.epub"
          )
 
 
@@ -295,7 +295,7 @@ testFsfLong = TestCase $
          ]
       expected =
          ( "MagFsf"
-         , "FantasyScienceFiction2006-04.lrf"
+         , "FantasyScienceFiction2006-04.epub"
          )
 
 
@@ -309,7 +309,7 @@ testMagFutureOrbits = TestCase $
          ]
       expected =
          ( "MagFutureOrbits"
-         , "FutureOrbitsMagazine05_2002-06_07.lrf"
+         , "FutureOrbitsMagazine05_2002-06_07.epub"
          )
 
 
@@ -323,7 +323,7 @@ testGudShort = TestCase $
          ]
       expected =
          ( "MagGud"
-         , "GUDMagazine00.lrf"
+         , "GUDMagazine00.epub"
          )
 
 
@@ -337,7 +337,7 @@ testGudLong = TestCase $
          ]
       expected =
          ( "MagGud"
-         , "GUDMagazine02.lrf"
+         , "GUDMagazine02.epub"
          )
 
 
@@ -351,7 +351,7 @@ testInterzoneShort = TestCase $
          ]
       expected =
          ( "MagInterzone"
-         , "InterzoneSFF212.lrf"
+         , "InterzoneSFF212.epub"
          )
 
 
@@ -365,7 +365,7 @@ testInterzoneLong = TestCase $
          ]
       expected =
          ( "MagInterzone"
-         , "InterzoneSFF216.lrf"
+         , "InterzoneSFF216.epub"
          )
 
 
@@ -379,7 +379,7 @@ testNemesisShort = TestCase $
          ]
       expected =
          ( "MagNemesis"
-         , "NemesisMag002.lrf"
+         , "NemesisMag002.epub"
          )
 
 
@@ -393,7 +393,7 @@ testNemesisLong = TestCase $
          ]
       expected =
          ( "MagNemesis"
-         , "NemesisMag007.lrf"
+         , "NemesisMag007.epub"
          )
 
 
@@ -407,7 +407,7 @@ testMagSomethingWicked = TestCase $
          ]
       expected =
          ( "MagSomethingWicked"
-         , "SomethingWickedMagazine05.lrf"
+         , "SomethingWickedMagazine05.epub"
          )
 
 
@@ -421,7 +421,7 @@ testSFBestOf = TestCase $
          ]
       expected =
          ( "SFBestOf"
-         , "ScienceFiction_TheBestOfTheYear2007Edition.lrf"
+         , "ScienceFiction_TheBestOfTheYear2007Edition.epub"
          )
 
 
@@ -435,5 +435,5 @@ testMagBlackStatic = TestCase $
          ]
       expected =
          ( "MagNameIssue"
-         , "BlackStaticHorrorMagazine05.lrf"
+         , "BlackStaticHorrorMagazine05.epub"
          )
