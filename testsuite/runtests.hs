@@ -38,6 +38,7 @@ tests = TestList
    , testAuthorThird
    , testCapsTitle
    , testColon
+   , testBracketTitle
    , testMagAeon
    , testMagAEon
    , testMagApex
@@ -156,6 +157,20 @@ testColon = TestCase $
       expected =
          ( "AuthorBasic"
          , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
+         )
+
+
+testBracketTitle :: Test
+testBracketTitle = TestCase $
+   assertNewName "title with brackets" bookFields expected
+   where
+      bookFields =
+         [ "Title: SKitty [Shipscat series #1]"
+         , "Authors: Mercedes Lackey"
+         ]
+      expected =
+         ( "AuthorBasic"
+         , "LackeyMercedes-SKitty_ShipscatSeries1.epub"
          )
 
 
