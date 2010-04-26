@@ -14,7 +14,7 @@ import BookName.Util ( Fields )
 
 fmtAuthorDouble :: (MonadError String m) => Fields -> m (String, String)
 fmtAuthorDouble = format "AuthorDouble"
-   ".* ([^ ]+) and .* ([^ ]+)" authorDouble
+   ".* ([^ ]+) & .* ([^ ]+)" authorDouble
    "(.*)" titleSimple
 
 
