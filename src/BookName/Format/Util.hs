@@ -154,7 +154,7 @@ format label authorPat authorFmt titlePat titleFmt fs = do
 
    return
       ( label
-      , printf "%s%s.lrf" newAuthor newTitle
+      , printf "%s%s.epub" newAuthor newTitle
       )
 
 
