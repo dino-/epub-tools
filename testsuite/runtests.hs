@@ -86,7 +86,7 @@ testAuthorBasic = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "MelvilleHerman-MobyDick_1851.lrf"
+         , "MelvilleHerman-MobyDick.lrf"
          )
 
 
@@ -100,7 +100,7 @@ testAuthorDouble = TestCase $
          ]
       expected =
          ( "AuthorDouble"
-         , "Anderson_Moesta-RoughDraft_2004.lrf"
+         , "Anderson_Moesta-RoughDraft.lrf"
          )
 
 
@@ -114,7 +114,7 @@ testAuthorSt = TestCase $
          ]
       expected =
          ( "AuthorSt"
-         , "StClairJennifer-BudgetCuts_2004.lrf"
+         , "StClairJennifer-BudgetCuts.lrf"
          )
 
 
@@ -128,7 +128,7 @@ testAuthorThird = TestCase $
          ]
       expected =
          ( "AuthorThird"
-         , "MellickCarltonIII-SunsetWithABeard_2002.lrf"
+         , "MellickCarltonIII-SunsetWithABeard.lrf"
          )
 
 
@@ -142,7 +142,7 @@ testCapsTitle = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "BearGreg-EON_1985.lrf"
+         , "BearGreg-EON.lrf"
          )
 
 
@@ -171,7 +171,7 @@ testColon = TestCase $
          ]
       expected =
          ( "AuthorBasic"
-         , "HowdersheltEd-Book1_3rdWorldProductsInc_2003.lrf"
+         , "HowdersheltEd-Book1_3rdWorldProductsInc.lrf"
          )
 
 
