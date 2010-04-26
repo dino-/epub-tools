@@ -20,7 +20,7 @@ parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
       (_:"":_)    -> Nothing
-      (key:val:_) -> Just (transformKey key, val)
+      (key:val:_) -> Just (transformKey key, trimBracketed val)
       [_]         -> Nothing
       []          -> Nothing
 
@@ -32,6 +32,12 @@ trimSpaces = reverse . (dropWhile (== ' ')) . reverse
 transformKey :: String -> String
 transformKey "Author(s)           " = "Authors"
 transformKey key                    = trimSpaces key
+
+
+trimBracketed :: String -> String
+trimBracketed s
+   | '[' `elem` s = init $ takeWhile (/= '[') s
+   | otherwise  = s
 
 
 parseMeta :: String -> String -> Fields
