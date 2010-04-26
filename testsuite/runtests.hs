@@ -95,7 +95,7 @@ testAuthorDouble = TestCase $
    assertNewName "two authors" bookFields expected
    where
       bookFields =
-         [ "Authors: Kevin J. Anderson and Rebecca Moesta"
+         [ "Authors: Kevin J. Anderson & Rebecca Moesta"
          , "Title: Rough Draft"
          ]
       expected =
