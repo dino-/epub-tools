@@ -69,7 +69,6 @@ testAnonymous = TestCase $
       lrfMeta =
          [ "Authors: Anonymous"
          , "Title: Science Fiction Stories By Unknown Authors"
-         , "FreeText: "
          ]
       expected =
          ( "Anonymous"
@@ -84,7 +83,6 @@ testAuthorBasic = TestCase $
       lrfMeta =
          [ "Authors: Herman Melville"
          , "Title: Moby Dick"
-         , "FreeText: 1851 Herman Melville"
          ]
       expected =
          ( "AuthorBasic"
@@ -99,7 +97,6 @@ testAuthorDouble = TestCase $
       lrfMeta =
          [ "Authors: Kevin J. Anderson and Rebecca Moesta"
          , "Title: Rough Draft"
-         , "FreeText: 2004 Kevin J. Anderson and Rebecca Moesta"
          ]
       expected =
          ( "AuthorDouble"
@@ -114,7 +111,6 @@ testAuthorSt = TestCase $
       lrfMeta =
          [ "Authors: Jennifer St. Clair"
          , "Title: Budget Cuts"
-         , "FreeText: 2004, Jennifer St. Clair"
          ]
       expected =
          ( "AuthorSt"
@@ -129,7 +125,6 @@ testAuthorThird = TestCase $
       lrfMeta =
          [ "Authors: Carlton Mellick III"
          , "Title: Sunset with a Beard"
-         , "FreeText: 2002 by Carlton Mellick III"
          ]
       expected =
          ( "AuthorThird"
@@ -144,7 +139,6 @@ testCapsTitle = TestCase $
       lrfMeta =
          [ "Authors: Greg Bear"
          , "Title: EON"
-         , "FreeText: 1985 by Greg Bear"
          ]
       expected =
          ( "AuthorBasic"
@@ -174,7 +168,6 @@ testColon = TestCase $
       lrfMeta =
          [ "Authors: Ed Howdershelt"
          , "Title: Book 1: 3rd World Products, Inc."
-         , "FreeText: 2003 by Ed Howdershelt"
          ]
       expected =
          ( "AuthorBasic"
@@ -189,7 +182,6 @@ testMagAeon = TestCase $
       lrfMeta =
          [ "Authors: Aeon Authors"
          , "Title: Aeon Eight"
-         , "FreeText: 2006 by Scorpius Digital Publishing"
          ]
       expected =
          ( "MagAeon"
@@ -204,7 +196,6 @@ testMagAEon = TestCase $
       lrfMeta =
          [ "Authors: AEon Authors"
          , "Title: Aeon Thirteen"
-         , "FreeText: 2008 by Quintamid LLC"
          ]
       expected =
          ( "MagAeon"
@@ -219,7 +210,6 @@ testMagApex = TestCase $
       lrfMeta =
          [ "Authors: Apex Authors"
          , "Title: Apex Science Fiction and Horror Digest #10"
-         , "FreeText: 2007 by Apex Authors"
          ]
       expected =
          ( "MagNameIssue"
@@ -234,7 +224,6 @@ testChallengingDestinyShort = TestCase $
       lrfMeta =
          [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #23"
-         , "FreeText: 2006 by Crystalline Sphere Publishing"
          ]
       expected =
          ( "MagChallengingDestiny"
@@ -249,7 +238,6 @@ testChallengingDestinyLong = TestCase $
       lrfMeta =
          [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #24: August 2007"
-         , "FreeText: 2007 by Crystalline Sphere Publishing"
          ]
       expected =
          ( "MagChallengingDestiny"
@@ -264,7 +252,6 @@ testChallengingDestinyPub = TestCase $
       lrfMeta =
          [ "Authors: Crystalline Sphere Publishing"
          , "Title: Challenging Destiny #18"
-         , "FreeText: 2004 by Crystalline Sphere Publishing"
          ]
       expected =
          ( "MagChallengingDestiny"
@@ -279,7 +266,6 @@ testAnalog = TestCase $
       lrfMeta =
          [ "Authors: Dell Magazine Authors"
          , "Title: Analog SFF, July-August 2003"
-         , "FreeText: 2003 by Dell Magazines"
          ]
       expected =
          ( "MagDell"
@@ -294,7 +280,6 @@ testAsimovs = TestCase $
       lrfMeta =
          [ "Authors: Dell Magazine Authors"
          , "Title: Asimov's SF, August 2003"
-         , "FreeText: 2003 by Dell Magazines"
          ]
       expected =
          ( "MagDell"
@@ -309,7 +294,6 @@ testFsfShort = TestCase $
       lrfMeta =
          [ "Authors: Spilogale Authors"
          , "Title: FSF, April 2008"
-         , "FreeText: 2008 by Spilogale, Inc."
          ]
       expected =
          ( "MagFsf"
@@ -324,7 +308,6 @@ testFsfLong = TestCase $
       lrfMeta =
          [ "Authors: Spilogale Authors"
          , "Title: FSF Magazine, April 2006"
-         , "FreeText: 2006 by Spilogale, Inc."
          ]
       expected =
          ( "MagFsf"
@@ -339,7 +322,6 @@ testMagFutureOrbits = TestCase $
       lrfMeta =
          [ "Authors: Vander Neut Publications, L.L.C."
          , "Title: Future Orbits Issue 5, June/July 2002"
-         , "FreeText: 2002 by Vander Neut Publications, L.L.C."
          ]
       expected =
          ( "MagFutureOrbits"
@@ -354,7 +336,6 @@ testGudShort = TestCase $
       lrfMeta =
          [ "Authors: GUD Magazine Authors"
          , "Title: GUD Magazine Issue 0 :: Spring 2007"
-         , "FreeText: 2007 by GUD Magazine on behalf of contributors"
          ]
       expected =
          ( "MagGud"
@@ -369,7 +350,6 @@ testGudLong = TestCase $
       lrfMeta =
          [ "Authors: GUD Magazine Authors, Jeff Somers, Jeremy Shipp"
          , "Title: GUD Magazine Issue 2 :: Spring 2008"
-         , "FreeText: 2008 by GUD Publishing"
          ]
       expected =
          ( "MagGud"
@@ -412,7 +392,6 @@ testNemesisShort = TestCase $
       lrfMeta =
          [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #2"
-         , "FreeText: 2004 Stephen Adams"
          ]
       expected =
          ( "MagNemesis"
@@ -427,7 +406,6 @@ testNemesisLong = TestCase $
       lrfMeta =
          [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"
-         , "FreeText: 2005 Stephen Adams"
          ]
       expected =
          ( "MagNemesis"
@@ -442,7 +420,6 @@ testMagSomethingWicked = TestCase $
       lrfMeta =
          [ "Authors: Something Wicked Authors"
          , "Title: Something Wicked SF and Horror Magazine #5"
-         , "FreeText: 2007 by Something Wicked and Contributing Authors"
          ]
       expected =
          ( "MagSomethingWicked"
@@ -457,7 +434,6 @@ testSFBestOf = TestCase $
       lrfMeta =
          [ "Authors: Rich Horton"
          , "Title: Science Fiction: The Best of the Year, 2007 Edition"
-         , "FreeText: 2007 by Wildside Press"
          ]
       expected =
          ( "SFBestOf"
