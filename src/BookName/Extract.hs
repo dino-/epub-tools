@@ -20,7 +20,7 @@ parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
       (_:"":_)    -> Nothing
-      (key:val:_) -> Just (transformKey key, trimBracketed val)
+      (key:val:_) -> Just (transformKey key, val)
       [_]         -> Nothing
       []          -> Nothing
 
@@ -41,7 +41,8 @@ trimBracketed s
 
 
 parseMeta :: String -> String -> Fields
-parseMeta path raw = fromList $ catMaybes $ map parseLine allLines
+parseMeta path raw = adjust trimBracketed "Authors" . fromList
+   . catMaybes . map parseLine $ allLines
    where
       allLines = ("File: " ++ path) : (lines raw)
 
