@@ -63,9 +63,9 @@ tests = TestList
 
 testAnonymous :: Test
 testAnonymous = TestCase $
-   assertNewName "testAnonymous" lrfMeta expected
+   assertNewName "testAnonymous" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Anonymous"
          , "Title: Science Fiction Stories By Unknown Authors"
          ]
@@ -77,9 +77,9 @@ testAnonymous = TestCase $
 
 testAuthorBasic :: Test
 testAuthorBasic = TestCase $
-   assertNewName "basic author" lrfMeta expected
+   assertNewName "basic author" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Herman Melville"
          , "Title: Moby Dick"
          ]
@@ -91,9 +91,9 @@ testAuthorBasic = TestCase $
 
 testAuthorDouble :: Test
 testAuthorDouble = TestCase $
-   assertNewName "two authors" lrfMeta expected
+   assertNewName "two authors" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Kevin J. Anderson and Rebecca Moesta"
          , "Title: Rough Draft"
          ]
@@ -105,9 +105,9 @@ testAuthorDouble = TestCase $
 
 testAuthorSt :: Test
 testAuthorSt = TestCase $
-   assertNewName "author name contains St." lrfMeta expected
+   assertNewName "author name contains St." bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Jennifer St. Clair"
          , "Title: Budget Cuts"
          ]
@@ -119,9 +119,9 @@ testAuthorSt = TestCase $
 
 testAuthorThird :: Test
 testAuthorThird = TestCase $
-   assertNewName "author name contains III" lrfMeta expected
+   assertNewName "author name contains III" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Carlton Mellick III"
          , "Title: Sunset with a Beard"
          ]
@@ -133,9 +133,9 @@ testAuthorThird = TestCase $
 
 testCapsTitle :: Test
 testCapsTitle = TestCase $
-   assertNewName "title all caps" lrfMeta expected
+   assertNewName "title all caps" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Greg Bear"
          , "Title: EON"
          ]
@@ -147,9 +147,9 @@ testCapsTitle = TestCase $
 
 testColon :: Test
 testColon = TestCase $
-   assertNewName "colon becomes underscore" lrfMeta expected
+   assertNewName "colon becomes underscore" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Ed Howdershelt"
          , "Title: Book 1: 3rd World Products, Inc."
          ]
@@ -161,9 +161,9 @@ testColon = TestCase $
 
 testMagAeon :: Test
 testMagAeon = TestCase $
-   assertNewName "Aeon magazine" lrfMeta expected
+   assertNewName "Aeon magazine" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Aeon Authors"
          , "Title: Aeon Eight"
          ]
@@ -175,9 +175,9 @@ testMagAeon = TestCase $
 
 testMagAEon :: Test
 testMagAEon = TestCase $
-   assertNewName "AEon magazine" lrfMeta expected
+   assertNewName "AEon magazine" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: AEon Authors"
          , "Title: Aeon Thirteen"
          ]
@@ -189,9 +189,9 @@ testMagAEon = TestCase $
 
 testMagApex :: Test
 testMagApex = TestCase $
-   assertNewName "Apex Magazine" lrfMeta expected
+   assertNewName "Apex Magazine" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Apex Authors"
          , "Title: Apex Science Fiction and Horror Digest #10"
          ]
@@ -203,9 +203,9 @@ testMagApex = TestCase $
 
 testChallengingDestinyShort :: Test
 testChallengingDestinyShort = TestCase $
-   assertNewName "Challenging Destiny Magazine, short" lrfMeta expected
+   assertNewName "Challenging Destiny Magazine, short" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #23"
          ]
@@ -217,9 +217,9 @@ testChallengingDestinyShort = TestCase $
 
 testChallengingDestinyLong :: Test
 testChallengingDestinyLong = TestCase $
-   assertNewName "Challenging Destiny Magazine, long" lrfMeta expected
+   assertNewName "Challenging Destiny Magazine, long" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Crystalline Sphere Authors"
          , "Title: Challenging Destiny #24: August 2007"
          ]
@@ -231,9 +231,9 @@ testChallengingDestinyLong = TestCase $
 
 testChallengingDestinyPub :: Test
 testChallengingDestinyPub = TestCase $
-   assertNewName "Challenging Destiny Magazine, Publishing in author" lrfMeta expected
+   assertNewName "Challenging Destiny Magazine, Publishing in author" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Crystalline Sphere Publishing"
          , "Title: Challenging Destiny #18"
          ]
@@ -245,9 +245,9 @@ testChallengingDestinyPub = TestCase $
 
 testAnalog :: Test
 testAnalog = TestCase $
-   assertNewName "Analog" lrfMeta expected
+   assertNewName "Analog" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Dell Magazine Authors"
          , "Title: Analog SFF, July-August 2003"
          ]
@@ -259,9 +259,9 @@ testAnalog = TestCase $
 
 testAsimovs :: Test
 testAsimovs = TestCase $
-   assertNewName "Asimovs" lrfMeta expected
+   assertNewName "Asimovs" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Dell Magazine Authors"
          , "Title: Asimov's SF, August 2003"
          ]
@@ -273,9 +273,9 @@ testAsimovs = TestCase $
 
 testFsfShort :: Test
 testFsfShort = TestCase $
-   assertNewName "FSF Magazine, short" lrfMeta expected
+   assertNewName "FSF Magazine, short" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Spilogale Authors"
          , "Title: FSF, April 2008"
          ]
@@ -287,9 +287,9 @@ testFsfShort = TestCase $
 
 testFsfLong :: Test
 testFsfLong = TestCase $
-   assertNewName "FSF Magazine, long" lrfMeta expected
+   assertNewName "FSF Magazine, long" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Spilogale Authors"
          , "Title: FSF Magazine, April 2006"
          ]
@@ -301,9 +301,9 @@ testFsfLong = TestCase $
 
 testMagFutureOrbits :: Test
 testMagFutureOrbits = TestCase $
-   assertNewName "testMagFutureOrbits" lrfMeta expected
+   assertNewName "testMagFutureOrbits" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Vander Neut Publications, L.L.C."
          , "Title: Future Orbits Issue 5, June/July 2002"
          ]
@@ -315,9 +315,9 @@ testMagFutureOrbits = TestCase $
 
 testGudShort :: Test
 testGudShort = TestCase $
-   assertNewName "Gud Magazine, short" lrfMeta expected
+   assertNewName "Gud Magazine, short" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: GUD Magazine Authors"
          , "Title: GUD Magazine Issue 0 :: Spring 2007"
          ]
@@ -329,9 +329,9 @@ testGudShort = TestCase $
 
 testGudLong :: Test
 testGudLong = TestCase $
-   assertNewName "Gud Magazine, long" lrfMeta expected
+   assertNewName "Gud Magazine, long" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: GUD Magazine Authors, Jeff Somers, Jeremy Shipp"
          , "Title: GUD Magazine Issue 2 :: Spring 2008"
          ]
@@ -343,9 +343,9 @@ testGudLong = TestCase $
 
 testInterzoneShort :: Test
 testInterzoneShort = TestCase $
-   assertNewName "Interzone Magazine, short" lrfMeta expected
+   assertNewName "Interzone Magazine, short" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: TTA Press Authors"
          , "Title: Interzone SFF #212"
          ]
@@ -357,9 +357,9 @@ testInterzoneShort = TestCase $
 
 testInterzoneLong :: Test
 testInterzoneLong = TestCase $
-   assertNewName "Interzone Magazine, long" lrfMeta expected
+   assertNewName "Interzone Magazine, long" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: TTA Press Authors"
          , "Title: Interzone Science Fiction and Fantasy Magazine #216"
          ]
@@ -371,9 +371,9 @@ testInterzoneLong = TestCase $
 
 testNemesisShort :: Test
 testNemesisShort = TestCase $
-   assertNewName "Nemesis Magazine, short" lrfMeta expected
+   assertNewName "Nemesis Magazine, short" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #2"
          ]
@@ -385,9 +385,9 @@ testNemesisShort = TestCase $
 
 testNemesisLong :: Test
 testNemesisLong = TestCase $
-   assertNewName "Nemesis Magazine, long" lrfMeta expected
+   assertNewName "Nemesis Magazine, long" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Stephen Adams"
          , "Title: Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"
          ]
@@ -399,9 +399,9 @@ testNemesisLong = TestCase $
 
 testMagSomethingWicked :: Test
 testMagSomethingWicked = TestCase $
-   assertNewName "Something Wicked Magazine" lrfMeta expected
+   assertNewName "Something Wicked Magazine" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Something Wicked Authors"
          , "Title: Something Wicked SF and Horror Magazine #5"
          ]
@@ -413,9 +413,9 @@ testMagSomethingWicked = TestCase $
 
 testSFBestOf :: Test
 testSFBestOf = TestCase $
-   assertNewName "Science Fiction: The Best of the Year" lrfMeta expected
+   assertNewName "Science Fiction: The Best of the Year" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: Rich Horton"
          , "Title: Science Fiction: The Best of the Year, 2007 Edition"
          ]
@@ -427,9 +427,9 @@ testSFBestOf = TestCase $
 
 testMagBlackStatic :: Test
 testMagBlackStatic = TestCase $
-   assertNewName "Black Static Magazine" lrfMeta expected
+   assertNewName "Black Static Magazine" bookFields expected
    where
-      lrfMeta =
+      bookFields =
          [ "Authors: TTA Press Authors"
          , "Title: Black Static Horror Magazine #5"
          ]
