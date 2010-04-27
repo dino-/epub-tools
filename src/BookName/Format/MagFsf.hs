@@ -14,7 +14,7 @@ import BookName.Util ( Fields )
 fmtMagFsf :: (MonadError String m) => Fields -> m (String, String)
 fmtMagFsf = format "MagFsf"
    "Spilogale.*" (const "")
-   "FSF.*, ([^ ]+) ([0-9]{4})$" title
+   ".* ([^ ]+) ([0-9]{4})$" title
 
 
 title :: String -> [String] -> String
