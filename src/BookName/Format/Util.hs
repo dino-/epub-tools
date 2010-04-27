@@ -95,6 +95,10 @@ monthNum x
    | isPrefixOf x "February"  = "02"
 monthNum x
    | isPrefixOf x "March"     = "03"
+monthNum "March-April"        = "03_04"
+monthNum "March/April"        = "03_04"
+monthNum "Mar-Apr"            = "03_04"
+monthNum "Mar/Apr"            = "03_04"
 monthNum x
    | isPrefixOf x "April"     = "04"
 monthNum "April-May"          = "04_05"
