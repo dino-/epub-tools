@@ -1,3 +1,12 @@
+- Add a new test: Books with a metadata field consisting of more than one line. May need parsec to parse this multiline business.
+  Example book with this situation: MerrifieldSteve-Harvest.epub
+
+- Add a new test: Input file paths with spaces
+
+- Update licensing year
+
+- Try to make this still work with .lrf files and with .epub from other sources (like Feedbooks, Webscriptions)
+
 - Need to reinstate those negative "simple" tests. They do a lot of testing for difficult titles (which is commonFilters)
 
 - Put BSD3 licensing info on all source files and anything else that's relevant
