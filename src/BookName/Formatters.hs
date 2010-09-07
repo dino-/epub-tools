@@ -20,6 +20,7 @@ import BookName.Format.MagFsf
 import BookName.Format.MagFutureOrbits
 import BookName.Format.MagGud
 import BookName.Format.MagInterzone
+import BookName.Format.MagLightspeed
 import BookName.Format.MagNameIssue
 import BookName.Format.MagNemesis
 import BookName.Format.MagSomethingWicked
@@ -35,6 +36,7 @@ formatters =
    , fmtMagChallengingDestiny
    , fmtMagGud
    , fmtMagInterzone
+   , fmtMagLightspeed
    , fmtMagSomethingWicked
    , fmtMagFsf
    , fmtMagFutureOrbits
