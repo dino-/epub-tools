@@ -130,6 +130,7 @@ monthNum "Aug-Sep"            = "08_09"
 monthNum "Aug/Sep"            = "08_09"
 monthNum x
    | isPrefixOf x "September" = "09"
+monthNum "September-October"  = "09_10"
 monthNum x
    | isPrefixOf x "October"   = "10"
 monthNum "October-November"   = "10_11"
