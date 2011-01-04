@@ -12,7 +12,7 @@ stability:           experimental
 synopsis:            Rename epub ebook files based on meta information
 description:         Command-line utility for renaming/moving epub ebook files based on metadata contained within the file. Written in Haskell.
 category:            Unclassified
-tested-with:         GHC>=6.8.2
+tested-with:         GHC>=6.12.3
 
 executable           bookname
    main-is:          bookname.hs
