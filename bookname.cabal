@@ -9,11 +9,8 @@ author:              Dino Morelli
 maintainer:          Dino Morelli <dino@ui3.info>
 stability:           experimental
 --homepage:            http://ui3.info/d/proj/bookname.html
-synopsis:            Rename ebook files based on meta information
-description:         
-   Command-line utility for renaming/moving ebook files based on metadata
-   contained within the file. Works for these formats: Sony LRF. Written
-   in Haskell.
+synopsis:            Rename epub ebook files based on meta information
+description:         Command-line utility for renaming/moving epub ebook files based on metadata contained within the file. Written in Haskell.
 category:            Unclassified
 tested-with:         GHC>=6.8.2
 
