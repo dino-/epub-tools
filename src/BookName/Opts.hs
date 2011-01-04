@@ -62,5 +62,5 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
       footer = init $ unlines
          [ "foo bar baz"
          , ""
-         , "Version 1.0.0  Dino Morelli <dino@ui3.info>"
+         , "Version 2.0.0  Dino Morelli <dino@ui3.info>"
          ]
