@@ -18,18 +18,18 @@ import BookName.Util ( runBN )
 {- Construct additional verbose output
 -}
 formatF :: (String, Metadata) -> String
-formatF (fmtUsed, _) = printf "   formatter: %s\n" fmtUsed
+formatF (fmtUsed, _) = printf "\n   formatter: %s" fmtUsed
 
 formatFM :: (String, Metadata) -> String
 formatFM (fmtUsed, md) =
-   printf "   formatter: %s\n   %s\n" fmtUsed (show md)
+   printf "\n   formatter: %s\n   %s" fmtUsed (show md)
 
 
 {- Format output for a book that was processed
 -}
 makeOutput :: Options -> (FilePath, FilePath, String, Metadata) -> String
 makeOutput opts (oldPath, newPath, fmtUsed, md) =
-   printf "%s -> %s\n%s" oldPath newPath
+   printf "%s -> %s%s" oldPath newPath
       (additional (optVerbose opts) (fmtUsed, md))
    where
       additional Nothing  = const ""
