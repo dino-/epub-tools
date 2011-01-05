@@ -13,6 +13,7 @@ import Control.Monad.Error
 import Data.Char
 import Data.List ( foldl', intercalate, isPrefixOf )
 import Data.Maybe ( fromJust )
+--import Debug.Trace
 import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
@@ -217,6 +218,7 @@ format :: (MonadError String m)
           -> m (String, String)
 format label authorPat authorFmt titlePat titleFmt md = do
    newAuthor <- formatAuthor authorPat authorFmt md
+   --trace newAuthor (return ())
 
    let (MetaTitle _ oldTitle) = head . metaTitles $ md
    let year = extractYear md

@@ -4,14 +4,14 @@ module BookName.Format.MagNameIssue
    ( fmtMagNameIssue )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( filterCommon, format )
-import BookName.Util ( Fields )
 
 
-fmtMagNameIssue :: (MonadError String m) => Fields -> m (String, String)
+fmtMagNameIssue :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagNameIssue = format "MagNameIssue"
    ".* Authors" (const "")
    "(.*) #([0-9]+).*" title

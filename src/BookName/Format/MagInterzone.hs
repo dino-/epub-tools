@@ -4,14 +4,14 @@ module BookName.Format.MagInterzone
    ( fmtMagInterzone )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( format )
-import BookName.Util ( Fields )
 
 
-fmtMagInterzone :: (MonadError String m) => Fields -> m (String, String)
+fmtMagInterzone :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagInterzone = format "MagInterzone"
    ".* Authors" (const "")
    "^(Interzone)[^0-9]*([0-9]+)$" title

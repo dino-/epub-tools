@@ -4,14 +4,14 @@ module BookName.Format.MagFutureOrbits
    ( fmtMagFutureOrbits )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( filterCommon, format, monthNum )
-import BookName.Util ( Fields )
 
 
-fmtMagFutureOrbits :: (MonadError String m) => Fields -> m (String, String)
+fmtMagFutureOrbits :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagFutureOrbits = format "MagFutureOrbits"
    ".*" (const "")
    "(Future Orbits) Issue ([0-9]+), ([^ ]+) ([0-9]{4})$" title

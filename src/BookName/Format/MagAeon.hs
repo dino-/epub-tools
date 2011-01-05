@@ -4,13 +4,13 @@ module BookName.Format.MagAeon
    ( fmtMagAeon )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 
 import BookName.Format.Util ( format )
-import BookName.Util ( Fields )
 
 
-fmtMagAeon :: (MonadError String m) => Fields -> m (String, String)
+fmtMagAeon :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagAeon = format "MagAeon"
    ".* Authors" (const "")
    "^A[eE]on ([^ ]+)$" titleMagAeon

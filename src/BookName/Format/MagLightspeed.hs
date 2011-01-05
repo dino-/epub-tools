@@ -4,14 +4,14 @@ module BookName.Format.MagLightspeed
    ( fmtMagLightspeed )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( format, monthNum )
-import BookName.Util ( Fields )
 
 
-fmtMagLightspeed :: (MonadError String m) => Fields -> m (String, String)
+fmtMagLightspeed :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagLightspeed = format "MagInterzone"
    ".*Adams.*" (const "")
    "(Lightspeed) .*, (.*) (.*)" title

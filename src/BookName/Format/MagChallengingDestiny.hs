@@ -4,15 +4,15 @@ module BookName.Format.MagChallengingDestiny
    ( fmtMagChallengingDestiny )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( filterCommon, format )
-import BookName.Util ( Fields )
 
 
 fmtMagChallengingDestiny :: (MonadError String m) =>
-   Fields -> m (String, String)
+   Metadata -> m (String, String)
 fmtMagChallengingDestiny = format "MagChallengingDestiny"
    "Crystalline Sphere .*" (const "")
    "(Challenging Destiny) #([0-9]+).*" title
