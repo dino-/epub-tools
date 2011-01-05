@@ -4,18 +4,18 @@ module BookName.Format.AuthorBasic
    ( fmtAuthorBasic )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 
 import BookName.Format.Util
    ( format
-   , authorSingle, titleSimple
+   , author, titleSimple
    )
-import BookName.Util ( Fields )
 
 
-fmtAuthorBasic :: (MonadError String m) => Fields -> m (String, String)
+fmtAuthorBasic :: (MonadError String m) => Metadata -> m (String, String)
 fmtAuthorBasic = format "AuthorBasic"
-   "(.*) ([^ ]+)$" authorSingle
+   ".*" author
    "(.*)" titleSimple
 
 

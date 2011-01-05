@@ -4,14 +4,14 @@ module BookName.Format.MagDell
    ( fmtMagDell )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( filterCommon, format, monthNum )
-import BookName.Util ( Fields )
 
 
-fmtMagDell :: (MonadError String m) => Fields -> m (String, String)
+fmtMagDell :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagDell = format "MagDell"
    "Dell Magazine.*" (const "")
    "([^ ]*).*, ([^ ]+) ([0-9]{4})$" title

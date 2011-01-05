@@ -2,20 +2,24 @@
 
 module BookName.Extract
    ( parseFile
-   , parseMeta
+--   , parseMeta
    )
    where
 
+import Codec.Epub.Opf.Package
+import Codec.Epub.Opf.Parse
 import Control.Monad.Error
-import Data.Map hiding ( map )
-import Data.Maybe
-import HSH.Command
-import Text.Printf
-import Text.Regex
+--import Data.Map hiding ( map )
+--import Data.Maybe
+--import HSH.Command
+--import System.FilePath
+--import Text.Printf
+--import Text.Regex
 
-import BookName.Util
+--import BookName.Util
 
 
+{-
 parseLine :: String -> Maybe (String, String)
 parseLine line =
    case (fromJust $ matchRegex (mkRegex "([^:]+): (.*)") line) of
@@ -57,9 +61,11 @@ extractMeta path = do
       Left ps -> throwError $
          printf "[ERROR %s  path: %s  status: %s]" app path (show ps)
       Right output -> return output
+-}
 
 
-parseFile :: (MonadIO m, MonadError String m) => String -> m Fields
+parseFile :: (MonadIO m, MonadError String m)
+   => FilePath -> m (String, Metadata)
 parseFile path = do
-   output <- extractMeta path
-   return $ parseMeta path output
+   pkg <- parseEpubOpf path
+   return (path, opMeta pkg)

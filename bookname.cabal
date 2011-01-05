@@ -16,7 +16,7 @@ tested-with:         GHC>=6.12.3
 
 executable           bookname
    main-is:          bookname.hs
-   build-depends:    base, containers, filepath, HSH, mtl, regex-compat, 
-                     unix
+   build-depends:    base, containers, epub-metadata, filepath, HSH, mtl, 
+                     regex-compat, unix
    ghc-options:      -Wall
    hs-source-dirs:   src

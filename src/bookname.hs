@@ -1,9 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
-import Data.Map hiding ( filter, map, null )
-import Data.Maybe ( fromJust, fromMaybe )
-import Prelude hiding ( lookup )
 import System.Environment ( getArgs )
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdout, stderr 
@@ -14,50 +12,34 @@ import Text.Printf
 import BookName.Extract ( parseFile )
 import BookName.Formatters ( tryFormatting )
 import BookName.Opts ( Options (..), parseOpts, usageText )
-import BookName.Util ( Fields, runBN )
+import BookName.Util ( runBN )
 
 
-lookupErrMsg :: String -> Fields -> String
-lookupErrMsg k m = fromMaybe 
-   ("[ERROR missing key: " ++ k ++ "]")
-   $ lookup k m
-
-
-{- Format a set of book fields into a line containing author, title,
-   and FreeText
-   This is used for verbose output.
+{- Construct additional verbose output
 -}
-formatATF :: (PrintfType u) => (Fields, String) -> u
-formatATF (fields, fmtUsed) =
-   printf "\n   %9s: %s\n   %9s: %s\n   %9s: %s\n   %9s: %s\n"
-      "formatter" fmtUsed
-      "Authors" (lookupErrMsg "Authors" fields)
-      "Title" (lookupErrMsg "Title" fields)
-      "Comments" (lookupErrMsg "Comments" fields)
+formatF :: (String, Metadata) -> String
+formatF (fmtUsed, _) = printf "   formatter: %s\n" fmtUsed
 
-
-{- Format a set of book fields into a line containing the FreeText
-   This is used for verbose output.
--}
-formatF :: (Fields, a) -> String
-formatF (fields, _) = "\n   " ++ (lookupErrMsg "FreeText" fields)
+formatFM :: (String, Metadata) -> String
+formatFM (fmtUsed, md) =
+   printf "   formatter: %s\n   %s\n" fmtUsed (show md)
 
 
 {- Format output for a book that was processed
 -}
-makeOutput :: Options -> (Fields, String, String) -> String
-makeOutput opts (fields, fmtUsed, newPath) =
-   oldPath ++ " -> " ++ newPath ++ 
-      ((additional (optVerbose opts)) (fields, fmtUsed))
+makeOutput :: Options -> (FilePath, FilePath, String, Metadata) -> String
+makeOutput opts (oldPath, newPath, fmtUsed, md) =
+   printf "%s -> %s\n%s" oldPath newPath
+      (additional (optVerbose opts) (fmtUsed, md))
    where
-      oldPath = fromJust $ lookup "File" fields
       additional Nothing  = const ""
       additional (Just 1) = formatF
-      additional _        = formatATF
+      additional _        = formatFM
 
 
 {- Process an individual LRF book file
 -}
+{-
 processBook :: Options -> ErrorT String IO Fields -> IO ()
 processBook opts parseFileAction = do
    result <- runBN $ do
@@ -70,6 +52,19 @@ processBook opts parseFileAction = do
 
    let report = either id (makeOutput opts) result
 
+   putStrLn report
+-}
+{- Process an individual epub book file
+-}
+processBook :: Options -> ErrorT String IO (FilePath, Metadata) -> IO ()
+processBook opts parseFileAction = do
+   result <- runBN $ do
+      (oldPath, md) <- parseFileAction
+      (fmtUsed, newPath) <- tryFormatting (oldPath, md)
+      --unless (optNoAction opts) $ liftIO $ rename oldPath newPath
+      return (oldPath, newPath, fmtUsed, md)
+
+   let report = either id (makeOutput opts) result
    putStrLn report
 
 

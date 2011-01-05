@@ -2,26 +2,21 @@
 
 module BookName.Format.Util
    ( filterCommon, format
+   , author
    , authorSingle, authorPostfix
    , titleSimple
    , monthNum )
    where
 
+import Codec.Epub.Opf.Package
 import Control.Monad.Error
 import Data.Char
-import Data.List ( foldl', isPrefixOf )
-import Data.Map hiding ( filter, map )
-import Prelude hiding ( last, lookup )
+import Data.List ( foldl', intercalate, isPrefixOf )
+import Data.Maybe ( fromJust )
+import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
 
-import BookName.Util ( Fields )
-
-
-lookupE :: (MonadError String m) => String -> Map String a -> m a
-lookupE k m = case (lookup k m) of
-   Nothing -> throwError $ "[ERROR missing key: " ++ k ++ "]"
-   Just v -> return v
 
 
 {- Convenience function to make a regex replacer for a given pattern 
@@ -68,17 +63,16 @@ filterCommon :: String -> String
 filterCommon s = foldl' (flip id) s commonFilters
 
 
-{- Pull from a (Just String) the first occurrance of a 4-digit 
-   year-shaped substring. Or evaluate to ""
-   Successful year strings will be prefixed like: "_2009", which
-   is the format we need them in generated file paths.
+{- Look for a date tag with event="original-publication" in the
+   metadata
 -}
-extractYear :: Maybe String -> String
-extractYear Nothing   = ""
-extractYear (Just ft) =
-   case (matchRegex (mkRegex "[^0-9]*([0-9]{4}).*") ft) of
-      Just (year:_) -> '_' : year
-      _             -> ""
+extractYear :: Metadata -> String
+extractYear md = maybe "" ('_' :)
+   (foldr mplus Nothing (map maybeYear $ metaDates md))
+
+   where
+      maybeYear (MetaDate (Just "original-publication") d) = Just d
+      maybeYear _                                          = Nothing
 
 
 {- Convert an English month name (with creative ranges and variations)
@@ -144,14 +138,32 @@ monthNum x
 monthNum x                    = "[ERROR monthNum " ++ x ++ "]"
 
 
+{-
 formatAuthor :: (MonadError String m) =>
                String
-               -> ([String] -> String)
+               -> (Metadata -> String)
                -> String
                -> m String
 formatAuthor re f s = case matchRegex (mkRegex re) s of
    Just xs -> return $ f xs
    Nothing -> throwError "formatAuthor failed"
+-}
+formatAuthor :: (MonadError String m) =>
+               String
+               -> (Metadata -> String)
+               -> Metadata
+               -> m String
+formatAuthor re f md =
+   maybe (throwError "formatAuthor failed")
+      (const (return . f $ md)) tryPats
+
+   where
+      justAuthorStrings = map (\(MetaCreator _ _ n) -> n)
+
+      match = matchRegex (mkRegex re)
+
+      tryPats = foldr mplus Nothing
+         ((map match) . justAuthorStrings . justAuthors $ md)
 
 
 formatTitle :: (MonadError String m) =>
@@ -173,6 +185,7 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
    to the supplied format function. If any of this fails, the entire 
    action throws.
 -}
+{-
 format :: (MonadError String m) =>
           String
           -> String
@@ -193,12 +206,69 @@ format label authorPat authorFmt titlePat titleFmt fs = do
       ( label
       , printf "%s%s.epub" newAuthor newTitle
       )
+-}
+format :: (MonadError String m)
+          => String
+          -> String
+          -> (Metadata -> String)
+          -> String
+          -> (String -> [String] -> String)
+          -> Metadata
+          -> m (String, String)
+format label authorPat authorFmt titlePat titleFmt md = do
+   newAuthor <- formatAuthor authorPat authorFmt md
+
+   let (MetaTitle _ oldTitle) = head . metaTitles $ md
+   let year = extractYear md
+   newTitle <- formatTitle titlePat titleFmt year oldTitle
+
+   return
+      ( label
+      , printf "%s%s.epub" newAuthor newTitle
+      )
+
+
+formatSingleAuthor :: MetaCreator -> String
+formatSingleAuthor (MetaCreator _ (Just fa) _ ) = authorSingle parts
+   where
+      parts = fromJust . (matchRegex (mkRegex "(.*), (.*)")) $ fa
+formatSingleAuthor (MetaCreator _ _         di) = 
+   authorSingle . reverse $ parts
+   where
+      parts = fromJust .
+         (matchRegex (mkRegex "(.*) ([^ ]+)$")) $ di
+
+
+lastName :: MetaCreator -> String
+lastName (MetaCreator _ (Just fa) _ ) = head . fromJust .
+   (matchRegex (mkRegex "(.*),.*")) $ fa
+lastName (MetaCreator _ _         di) = head . fromJust .
+   (matchRegex (mkRegex ".* (.*)")) $ di
+
+
+formatMultiAuthors :: [MetaCreator] -> String
+formatMultiAuthors = (intercalate "_") . (map lastName)
+
+
+justAuthors :: Metadata -> [MetaCreator]
+justAuthors = (filter isAut) . metaCreators
+   where
+      isAut (MetaCreator (Just "aut") _ _) = True
+      isAut (MetaCreator Nothing      _ _) = True
+      isAut _                              = False
+
+
+author :: Metadata -> String
+author = fmtAuthor . justAuthors
+   where
+      fmtAuthor [c] = formatSingleAuthor c
+      fmtAuthor cs = (formatMultiAuthors cs) ++ "-"
 
 
 {- A common simple formatter for many book authors
 -}
 authorSingle :: [String] -> String
-authorSingle (rest:last:_) =
+authorSingle (last:rest:_) =
    printf "%s%s-" (filterCommon last) (filterCommon rest)
 authorSingle _             = undefined
 

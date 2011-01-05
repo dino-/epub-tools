@@ -4,14 +4,14 @@ module BookName.Format.MagNemesis
    ( fmtMagNemesis )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
 import BookName.Format.Util ( filterCommon, format )
-import BookName.Util ( Fields )
 
 
-fmtMagNemesis :: (MonadError String m) => Fields -> m (String, String)
+fmtMagNemesis :: (MonadError String m) => Metadata -> m (String, String)
 fmtMagNemesis = format "MagNemesis"
    "Stephen Adams" (const "")
    "(Nemesis Mag)azine #([0-9]+).*" title
