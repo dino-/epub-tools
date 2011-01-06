@@ -201,9 +201,14 @@ format label authorPat authorFmt titlePat titleFmt md = do
 
 
 formatSingleAuthor :: MetaCreator -> String
-formatSingleAuthor (MetaCreator _ (Just fa) _ ) = authorSingle parts
+
+formatSingleAuthor (MetaCreator _ (Just fa) di) = 
+   if (fa == di)
+      then formatSingleAuthor $ MetaCreator Nothing Nothing di
+      else authorSingle parts
    where
       parts = fromJust . (matchRegex (mkRegex "(.*), (.*)")) $ fa
+
 formatSingleAuthor (MetaCreator _ _         di) = 
    authorSingle . reverse $ parts
    where
