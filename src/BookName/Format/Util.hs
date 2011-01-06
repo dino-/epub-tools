@@ -43,14 +43,15 @@ capFirstAndDeSpace s = concat $ map capFirst $ words s
 -}
 commonFilters :: [(String -> String)]
 commonFilters =
-   [ repl "[.',\\?();#’]" ""
+   [ repl "[',\\?();#’]"  ""
+   , repl "\\."           " "
    , repl ":"             "_"
    , filter (/= '"')
    , repl "]"             ""
    , repl "\\*"           ""
    , repl "!"             ""
    , repl "-"             " "
-   , repl "\\["           "_"
+   , repl "\\["           "_ "
    -- Decided that I like the article included in titles
    --, repl "^The "         ""
    , repl "&"             " And "
