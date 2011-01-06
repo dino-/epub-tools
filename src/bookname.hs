@@ -44,7 +44,7 @@ processBook opts parseFileAction = do
    result <- runBN $ do
       (oldPath, md) <- parseFileAction
       (fmtUsed, newPath) <- tryFormatting (oldPath, md)
-      --unless (optNoAction opts) $ liftIO $ rename oldPath newPath
+      unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (oldPath, newPath, fmtUsed, md)
 
    let report = either id (makeOutput opts) result
