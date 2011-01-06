@@ -51,7 +51,8 @@ commonFilters =
    , repl "!"             ""
    , repl "-"             " "
    , repl "\\["           "_"
-   , repl "^The "         ""
+   -- Decided that I like the article included in titles
+   --, repl "^The "         ""
    , repl "&"             " And "
    , capFirstAndDeSpace
    ]
