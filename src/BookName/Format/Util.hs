@@ -29,12 +29,12 @@ repl re rpl str = subRegex (mkRegex re) str rpl
 
 
 {- Transforms a string like this:
-      "the quick brown fox" -> "TheQuickBrownFox"
+      "the quick brown McCheeseburger" -> "TheQuickBrownMccheeseburger"
 -}
 capFirstAndDeSpace :: String -> String
 capFirstAndDeSpace s = concat $ map capFirst $ words s
    where
-      capFirst (first:rest) = (toUpper first) : rest
+      capFirst (first:rest) = (toUpper first) : (map toLower rest)
       capFirst _ = undefined
 
 
