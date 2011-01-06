@@ -37,23 +37,6 @@ makeOutput opts (oldPath, newPath, fmtUsed, md) =
       additional _        = formatFM
 
 
-{- Process an individual LRF book file
--}
-{-
-processBook :: Options -> ErrorT String IO Fields -> IO ()
-processBook opts parseFileAction = do
-   result <- runBN $ do
-      fields <- parseFileAction
-      let oldPath = fromJust $ lookup "File" fields
-      --liftIO $ print fields
-      (fmtUsed, newPath) <- tryFormatting fields
-      unless (optNoAction opts) $ liftIO $ rename oldPath newPath
-      return (fields, fmtUsed, newPath)
-
-   let report = either id (makeOutput opts) result
-
-   putStrLn report
--}
 {- Process an individual epub book file
 -}
 processBook :: Options -> ErrorT String IO (FilePath, Metadata) -> IO ()

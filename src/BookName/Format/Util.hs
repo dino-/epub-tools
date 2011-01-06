@@ -139,16 +139,6 @@ monthNum x
 monthNum x                    = "[ERROR monthNum " ++ x ++ "]"
 
 
-{-
-formatAuthor :: (MonadError String m) =>
-               String
-               -> (Metadata -> String)
-               -> String
-               -> m String
-formatAuthor re f s = case matchRegex (mkRegex re) s of
-   Just xs -> return $ f xs
-   Nothing -> throwError "formatAuthor failed"
--}
 formatAuthor :: (MonadError String m) =>
                String
                -> (Metadata -> String)
@@ -156,15 +146,16 @@ formatAuthor :: (MonadError String m) =>
                -> m String
 formatAuthor re f md =
    maybe (throwError "formatAuthor failed")
-      (const (return . f $ md)) tryPats
+      (const (return . f $ md)) (tryPats $ justAuthors md)
 
    where
       justAuthorStrings = map (\(MetaCreator _ _ n) -> n)
 
       match = matchRegex (mkRegex re)
 
-      tryPats = foldr mplus Nothing
-         ((map match) . justAuthorStrings . justAuthors $ md)
+      tryPats [] = Just []  -- Special case of no authors at all
+      tryPats as = foldr mplus Nothing
+         ((map match) . justAuthorStrings $ as)
 
 
 formatTitle :: (MonadError String m) =>
@@ -185,28 +176,6 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
    If the pattern matches, the resulting list of match results is sent 
    to the supplied format function. If any of this fails, the entire 
    action throws.
--}
-{-
-format :: (MonadError String m) =>
-          String
-          -> String
-          -> ([String] -> String)
-          -> String
-          -> (String -> [String] -> String)
-          -> Fields
-          -> m (String, String)
-format label authorPat authorFmt titlePat titleFmt fs = do
-   oldAuthor <- lookupE "Authors" fs
-   newAuthor <- formatAuthor authorPat authorFmt oldAuthor
-
-   oldTitle <- lookupE "Title" fs
-   let year = extractYear $ lookup "Comment" fs
-   newTitle <- formatTitle titlePat titleFmt year oldTitle
-
-   return
-      ( label
-      , printf "%s%s.epub" newAuthor newTitle
-      )
 -}
 format :: (MonadError String m)
           => String
