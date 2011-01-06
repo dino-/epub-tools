@@ -203,11 +203,11 @@ format label authorPat authorFmt titlePat titleFmt md = do
 formatSingleAuthor :: MetaCreator -> String
 
 formatSingleAuthor (MetaCreator _ (Just fa) di) = 
-   if (fa == di)
+   if ((fa == di) && all (/= ',') fa)
       then formatSingleAuthor $ MetaCreator Nothing Nothing di
       else authorSingle parts
    where
-      parts = fromJust . (matchRegex (mkRegex "(.*), (.*)")) $ fa
+      parts = [fa]
 
 formatSingleAuthor (MetaCreator _ _         di) = 
    authorSingle . reverse $ parts
@@ -247,6 +247,8 @@ author = fmtAuthor . justAuthors
 authorSingle :: [String] -> String
 authorSingle (last:rest:_) =
    printf "%s%s-" (filterCommon last) (filterCommon rest)
+authorSingle [n]           = printf "%s-" $ filterCommon n
+--authorSingle x             = show x
 authorSingle _             = undefined
 
 
