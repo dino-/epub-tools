@@ -13,6 +13,7 @@ import BookName.Format.AuthorBasic
 --import BookName.Format.AuthorThird
 import BookName.Format.MagAeon
 import BookName.Format.MagAnalog
+import BookName.Format.MagBCS
 import BookName.Format.MagChallengingDestiny
 import BookName.Format.MagFsf
 import BookName.Format.MagFutureOrbits
@@ -43,6 +44,7 @@ formatters =
    , fmtMagSomethingWicked
    , fmtMagFsf
    , fmtMagFutureOrbits
+   , fmtMagBCS
    , fmtMagNameIssue
    , fmtSFBestOf
 
