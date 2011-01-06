@@ -12,8 +12,8 @@ import BookName.Format.AuthorBasic
 --import BookName.Format.AuthorSt
 --import BookName.Format.AuthorThird
 import BookName.Format.MagAeon
+import BookName.Format.MagAnalog
 import BookName.Format.MagChallengingDestiny
-import BookName.Format.MagDell
 import BookName.Format.MagFsf
 import BookName.Format.MagFutureOrbits
 import BookName.Format.MagGud
@@ -33,7 +33,7 @@ formatters =
    , fmtAuthorThird
    , fmtAuthorSt
 -}
-   [ fmtMagDell
+   [ fmtMagAnalog
    , fmtMagNemesis
    , fmtMagAeon
    , fmtMagChallengingDestiny

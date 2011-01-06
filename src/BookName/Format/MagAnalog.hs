@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagDell
-   ( fmtMagDell )
+module BookName.Format.MagAnalog
+   ( fmtMagAnalog )
    where
 
 import Codec.Epub.Opf.Package.Metadata
@@ -11,8 +11,8 @@ import Text.Printf
 import BookName.Format.Util ( filterCommon, format, monthNum )
 
 
-fmtMagDell :: (MonadError String m) => Metadata -> m (String, String)
-fmtMagDell = format "MagDell"
+fmtMagAnalog :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagAnalog = format "MagAnalog"
    "Dell Magazine.*" (const "")
    "([^ ]*).*, ([^ ]+) ([0-9]{4})$" title
 
