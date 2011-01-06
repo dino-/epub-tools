@@ -1,8 +1,8 @@
 What is the overall progression?
 
 - For each book (this is an ErrorT action):
-   - Load the fields, fail if can't get Fields successfully
-   - Try formatters on the fields, fail if we have no formatter that fits
+   - Parse the metadata
+   - Try formatters on the metadata, fail if we have no formatter that fits
       - This is a foldr mplus operation on the list of possible formatters
         We want the first one that works, if possible.
    - Rename with the new filename, fail if we can't do this rename
