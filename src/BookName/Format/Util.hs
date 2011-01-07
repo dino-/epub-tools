@@ -208,9 +208,7 @@ formatSingleAuthor :: MetaCreator -> String
 formatSingleAuthor (MetaCreator _ (Just fa) di) = 
    if ((fa == di) && all (/= ',') fa)
       then formatSingleAuthor $ MetaCreator Nothing Nothing di
-      else authorSingle parts
-   where
-      parts = [fa]
+      else authorSingle [fa]
 
 formatSingleAuthor (MetaCreator _ _         di) = 
    authorSingle . reverse $ parts
