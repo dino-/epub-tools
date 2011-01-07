@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagBCS
-   ( fmtMagBCS )
+module BookName.Format.MagBcs
+   ( fmtMagBcs )
    where
 
 import Codec.Epub.Opf.Package.Metadata
@@ -11,9 +11,9 @@ import Text.Printf
 import BookName.Format.Util ( filterCommon, format )
 
 
-fmtMagBCS :: (MonadError String m) =>
+fmtMagBcs :: (MonadError String m) =>
    Metadata -> m (String, String)
-fmtMagBCS = format "MagBCS"
+fmtMagBcs = format "MagBcs"
    ".*" (const "")
    "(Beneath Ceaseless.*) #([0-9]+).*" title
 
