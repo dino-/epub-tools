@@ -23,6 +23,7 @@ import BookName.Format.MagInterzone
 import BookName.Format.MagLightspeed
 import BookName.Format.MagNameIssue
 import BookName.Format.MagNemesis
+import BookName.Format.MagRageMachine
 import BookName.Format.MagSomethingWicked
 import BookName.Format.SFBestOf
 
@@ -43,6 +44,7 @@ formatters =
    , fmtMagInterzone
    , fmtMagLightspeed
    , fmtMagSomethingWicked
+   , fmtMagRageMachine
    , fmtMagFsf
    , fmtMagFutureOrbits
    , fmtMagBCS
