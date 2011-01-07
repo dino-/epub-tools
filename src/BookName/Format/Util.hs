@@ -4,6 +4,7 @@ module BookName.Format.Util
    ( filterCommon, format
    , author
    , authorSingle, authorPostfix
+   , justAuthors
    , titleSimple
    , monthNum )
    where

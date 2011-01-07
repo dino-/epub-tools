@@ -4,21 +4,29 @@ module BookName.Format.AuthorDouble
    ( fmtAuthorDouble )
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
+import Data.Maybe ( fromJust )
 import Prelude hiding ( last )
 import Text.Printf
+import Text.Regex
 
-import BookName.Format.Util ( filterCommon, format, titleSimple )
-import BookName.Util ( Fields )
+import BookName.Format.Util ( filterCommon, format, justAuthors, 
+   titleSimple )
 
 
-fmtAuthorDouble :: (MonadError String m) => Fields -> m (String, String)
+fmtAuthorDouble :: (MonadError String m) => Metadata -> m (String, String)
 fmtAuthorDouble = format "AuthorDouble"
-   ".* ([^ ]+) & .* ([^ ]+)" authorDouble
+   ".* and .*" authorDouble
    "(.*)" titleSimple
 
 
-authorDouble :: [String] -> String
-authorDouble (last1:last2:_) = 
-   printf "%s_%s-" (filterCommon last1) (filterCommon last2)
-authorDouble _               = undefined
+authorDouble :: Metadata -> String
+authorDouble = fmtAuthors . extractParts . head . justAuthors
+   where
+      extractParts (MetaCreator _ _ di) = fromJust . 
+         matchRegex (mkRegex ".* ([^ ]+) and .* ([^ ]+)") $ di
+
+      fmtAuthors (last1:last2:_) = 
+         printf "%s_%s-" (filterCommon last1) (filterCommon last2)
+      fmtAuthors _ = undefined
