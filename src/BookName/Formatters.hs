@@ -15,6 +15,7 @@ import BookName.Format.MagAeon
 import BookName.Format.MagAnalog
 import BookName.Format.MagBCS
 import BookName.Format.MagChallengingDestiny
+import BookName.Format.MagEclipse
 import BookName.Format.MagFsf
 import BookName.Format.MagFutureOrbits
 import BookName.Format.MagGud
@@ -36,6 +37,7 @@ formatters =
    [ fmtMagAnalog
    , fmtMagNemesis
    , fmtMagAeon
+   , fmtMagEclipse
    , fmtMagChallengingDestiny
    , fmtMagGud
    , fmtMagInterzone
