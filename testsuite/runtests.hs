@@ -59,6 +59,7 @@ tests = TestList
    , testMagBlackStatic
    , testRageMachineMag
    , testEclipseMag
+   , testBcs
    ]
 
 
@@ -563,4 +564,26 @@ testEclipseMag = TestCase $
       expected =
          ( "MagEclipse"
          , "Eclipse01.epub"
+         )
+
+
+testBcs :: Test
+testBcs = TestCase $
+   assertNewName "Beneath Ceaseless Skies Magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = 
+            [ MetaCreator (Just "aut")
+               (Just "Tidwell, Erin A.")
+               "Hoover, Kenneth Mark"
+            , MetaCreator (Just "aut")
+               (Just "Tidwell, Erin A.")
+               "Tidwell, Erin A."
+            ]
+         , metaTitles = [MetaTitle Nothing 
+            "Beneath Ceaseless Skies #32"]
+         }
+      expected =
+         ( "MagBcs"
+         , "BeneathCeaselessSkies_Issue032.epub"
          )
