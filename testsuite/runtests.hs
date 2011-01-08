@@ -58,6 +58,7 @@ tests = TestList
    , testSFBestOf
    , testMagBlackStatic
    , testRageMachineMag
+   , testEclipseMag
    ]
 
 
@@ -545,4 +546,21 @@ testRageMachineMag = TestCase $
       expected =
          ( "MagRageMachine"
          , "RageMachineMagazine1_2005-12.epub"
+         )
+
+
+testEclipseMag :: Test
+testEclipseMag = TestCase $
+   assertNewName "Eclipse Magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Strahan, Jonathan")
+            "Jonathan Strahan"]
+         , metaTitles = [MetaTitle Nothing 
+            "Eclipse One"]
+         }
+      expected =
+         ( "MagEclipse"
+         , "Eclipse01.epub"
          )
