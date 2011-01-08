@@ -55,8 +55,8 @@ tests = TestList
    , testNemesisShort
    , testNemesisLong
    , testMagSomethingWicked
-{-
    , testSFBestOf
+{-
    , testMagBlackStatic
 -}
    ]
@@ -501,21 +501,23 @@ testMagSomethingWicked = TestCase $
          )
 
 
-{-
 testSFBestOf :: Test
 testSFBestOf = TestCase $
-   assertNewName "Science Fiction: The Best of the Year" bookFields expected
+   assertNewName "Science Fiction: The Best of the Year" meta expected
    where
-      bookFields =
-         [ "Authors: Rich Horton"
-         , "Title: Science Fiction: The Best of the Year, 2007 Edition"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Rich Horton"]
+         , metaTitles = [MetaTitle Nothing 
+            "Science Fiction: The Best of the Year, 2007 Edition"]
+         }
       expected =
          ( "SFBestOf"
          , "ScienceFiction_TheBestOfTheYear2007Edition.epub"
          )
 
 
+{-
 testMagBlackStatic :: Test
 testMagBlackStatic = TestCase $
    assertNewName "Black Static Magazine" bookFields expected
