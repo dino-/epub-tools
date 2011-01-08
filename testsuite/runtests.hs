@@ -46,8 +46,8 @@ tests = TestList
    , testAsimovs
    , testFsfShort
    , testFsfLong
-{-
    , testMagFutureOrbits
+{-
    , testGudShort
    , testGudLong
    , testInterzoneShort
@@ -352,21 +352,23 @@ testFsfLong = TestCase $
          )
 
 
-{-
 testMagFutureOrbits :: Test
 testMagFutureOrbits = TestCase $
-   assertNewName "testMagFutureOrbits" bookFields expected
+   assertNewName "testMagFutureOrbits" meta expected
    where
-      bookFields =
-         [ "Authors: Vander Neut Publications, L.L.C."
-         , "Title: Future Orbits Issue 5, June/July 2002"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Vander Neut Publications, L.L.C."]
+         , metaTitles = [MetaTitle Nothing 
+            "Future Orbits Issue 5, June/July 2002"]
+         }
       expected =
          ( "MagFutureOrbits"
          , "FutureOrbitsMagazine05_2002-06_07.epub"
          )
 
 
+{-
 testGudShort :: Test
 testGudShort = TestCase $
    assertNewName "Gud Magazine, short" bookFields expected
