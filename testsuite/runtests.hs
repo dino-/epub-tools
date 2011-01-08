@@ -43,8 +43,8 @@ tests = TestList
    , testChallengingDestinyLong
    , testChallengingDestinyPub
    , testAnalog
-{-
    , testAsimovs
+{-
    , testFsfShort
    , testFsfLong
    , testMagFutureOrbits
@@ -305,21 +305,23 @@ testAnalog = TestCase $
          )
 
 
-{-
 testAsimovs :: Test
 testAsimovs = TestCase $
-   assertNewName "Asimovs" bookFields expected
+   assertNewName "Asimovs" meta expected
    where
-      bookFields =
-         [ "Authors: Dell Magazine Authors"
-         , "Title: Asimov's SF, August 2003"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Dell Magazine Authors"]
+         , metaTitles = [MetaTitle Nothing
+            "Asimov's SF, August 2003"]
+         }
       expected =
-         ( "MagDell"
+         ( "MagAnalog"
          , "AsimovsSF2003-08.epub"
          )
 
 
+{-
 testFsfShort :: Test
 testFsfShort = TestCase $
    assertNewName "FSF Magazine, short" bookFields expected
