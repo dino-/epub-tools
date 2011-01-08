@@ -32,6 +32,7 @@ tests = TestList
    , testAuthorFileas
    , testAuthorFull
    , testAuthorDoubleAnd
+   , testNoAuthor
    , testCapsTitle
    , testColon
    , testBracketTitle
@@ -119,6 +120,26 @@ testAuthorFull = TestCase $
       expected =
          ( "AuthorBasic"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testNoAuthor :: Test
+testNoAuthor = TestCase $
+   assertNewName "no author(s) at all" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ MetaCreator (Just "edt") Nothing
+               "Graham Spindlewest"
+            , MetaCreator (Just "ill") Nothing
+               "Eva Tunglewacker"
+            ]
+         , metaTitles = [MetaTitle Nothing
+            "Some Collection of Fine Stories, Volume 1"]
+         }
+      expected =
+         ( "SFBestOf"
+         , "SomeCollectionOfFineStoriesVolume1.epub"
          )
 
 
