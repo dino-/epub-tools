@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 
-import Codec.Epub.Opf.Package.Metadata
+import Codec.Epub.Opf.Package
+import Codec.Epub.Opf.Parse
 import Control.Monad.Error
 import System.Environment ( getArgs )
 import System.IO ( BufferMode ( NoBuffering )
@@ -9,7 +10,6 @@ import System.IO ( BufferMode ( NoBuffering )
 import System.Posix.Files ( rename )
 import Text.Printf
 
-import BookName.Extract ( parseFile )
 import BookName.Formatters ( tryFormatting )
 import BookName.Opts ( Options (..), parseOpts, usageText )
 import BookName.Util ( runBN )
@@ -49,6 +49,15 @@ processBook opts parseFileAction = do
 
    let report = either id (makeOutput opts) result
    putStrLn report
+
+
+{- Thin wrapper around epub-metadata file parse
+-}
+parseFile :: (MonadIO m, MonadError String m)
+   => FilePath -> m (String, Metadata)
+parseFile path = do
+   pkg <- parseEpubOpf path
+   return (path, opMeta pkg)
 
 
 main :: IO ()
