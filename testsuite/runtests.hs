@@ -39,10 +39,10 @@ tests = TestList
    , testMagAEon
    , testMagApexLong
    , testMagApexShort
-{-
    , testChallengingDestinyShort
    , testChallengingDestinyLong
    , testChallengingDestinyPub
+{-
    , testAnalog
    , testAsimovs
    , testFsfShort
@@ -240,15 +240,16 @@ testMagApexShort = TestCase $
          )
 
 
-{-
 testChallengingDestinyShort :: Test
 testChallengingDestinyShort = TestCase $
-   assertNewName "Challenging Destiny Magazine, short" bookFields expected
+   assertNewName "Challenging Destiny Magazine, short" meta expected
    where
-      bookFields =
-         [ "Authors: Crystalline Sphere Authors"
-         , "Title: Challenging Destiny #23"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Crystalline Sphere Authors"]
+         , metaTitles = [MetaTitle Nothing
+            "Challenging Destiny #23"]
+         }
       expected =
          ( "MagChallengingDestiny"
          , "ChallengingDestinyMagazine023.epub"
@@ -257,12 +258,14 @@ testChallengingDestinyShort = TestCase $
 
 testChallengingDestinyLong :: Test
 testChallengingDestinyLong = TestCase $
-   assertNewName "Challenging Destiny Magazine, long" bookFields expected
+   assertNewName "Challenging Destiny Magazine, long" meta expected
    where
-      bookFields =
-         [ "Authors: Crystalline Sphere Authors"
-         , "Title: Challenging Destiny #24: August 2007"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Crystalline Sphere Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "Challenging Destiny #24: August 2007"]
+         }
       expected =
          ( "MagChallengingDestiny"
          , "ChallengingDestinyMagazine024.epub"
@@ -271,18 +274,22 @@ testChallengingDestinyLong = TestCase $
 
 testChallengingDestinyPub :: Test
 testChallengingDestinyPub = TestCase $
-   assertNewName "Challenging Destiny Magazine, Publishing in author" bookFields expected
+   assertNewName "Challenging Destiny Magazine, Publishing in author"
+      meta expected
    where
-      bookFields =
-         [ "Authors: Crystalline Sphere Publishing"
-         , "Title: Challenging Destiny #18"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Crystalline Sphere Publishing"]
+         , metaTitles = [MetaTitle Nothing 
+            "Challenging Destiny #18"]
+         }
       expected =
          ( "MagChallengingDestiny"
          , "ChallengingDestinyMagazine018.epub"
          )
 
 
+{-
 testAnalog :: Test
 testAnalog = TestCase $
    assertNewName "Analog" bookFields expected
