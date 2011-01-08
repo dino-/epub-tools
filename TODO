@@ -1,9 +1,5 @@
 - Complete usage in Opts
 
-- Update unit tests. They don't work at all now.
-
-- Add a new test: Input file paths with spaces
-
 - Update licensing year
 
 - Need to reinstate those negative "simple" tests. They do a lot of testing for difficult titles (which is commonFilters)
