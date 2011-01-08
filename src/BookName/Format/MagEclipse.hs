@@ -11,7 +11,7 @@ import BookName.Format.Util ( format )
 
 
 fmtMagEclipse :: (MonadError String m) => Metadata -> m (String, String)
-fmtMagEclipse = format "MagAeon"
+fmtMagEclipse = format "MagEclipse"
    ".*" (const "")
    "^(Eclipse) ([^ ]+)$" titleMagEclipse
 
