@@ -44,9 +44,9 @@ tests = TestList
    , testChallengingDestinyPub
    , testAnalog
    , testAsimovs
-{-
    , testFsfShort
    , testFsfLong
+{-
    , testMagFutureOrbits
    , testGudShort
    , testGudLong
@@ -321,15 +321,15 @@ testAsimovs = TestCase $
          )
 
 
-{-
 testFsfShort :: Test
 testFsfShort = TestCase $
-   assertNewName "FSF Magazine, short" bookFields expected
+   assertNewName "FSF Magazine, short" meta expected
    where
-      bookFields =
-         [ "Authors: Spilogale Authors"
-         , "Title: FSF, April 2008"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Spilogale Authors"]
+         , metaTitles = [MetaTitle Nothing "FSF, April 2008"]
+         }
       expected =
          ( "MagFsf"
          , "FantasyScienceFiction2008-04.epub"
@@ -338,18 +338,21 @@ testFsfShort = TestCase $
 
 testFsfLong :: Test
 testFsfLong = TestCase $
-   assertNewName "FSF Magazine, long" bookFields expected
+   assertNewName "FSF Magazine, long" meta expected
    where
-      bookFields =
-         [ "Authors: Spilogale Authors"
-         , "Title: FSF Magazine, April 2006"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Spilogale Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "FSF Magazine, April 2006"]
+         }
       expected =
          ( "MagFsf"
          , "FantasyScienceFiction2006-04.epub"
          )
 
 
+{-
 testMagFutureOrbits :: Test
 testMagFutureOrbits = TestCase $
    assertNewName "testMagFutureOrbits" bookFields expected
