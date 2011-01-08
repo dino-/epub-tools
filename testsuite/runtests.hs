@@ -51,9 +51,9 @@ tests = TestList
    , testGudLong
    , testInterzoneShort
    , testInterzoneLong
-{-
    , testNemesisShort
    , testNemesisLong
+{-
    , testMagSomethingWicked
    , testSFBestOf
    , testMagBlackStatic
@@ -432,15 +432,16 @@ testInterzoneLong = TestCase $
          )
 
 
-{-
 testNemesisShort :: Test
 testNemesisShort = TestCase $
-   assertNewName "Nemesis Magazine, short" bookFields expected
+   assertNewName "Nemesis Magazine, short" meta expected
    where
-      bookFields =
-         [ "Authors: Stephen Adams"
-         , "Title: Nemesis Magazine #2"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Stephen Adams"]
+         , metaTitles = [MetaTitle Nothing 
+            "Nemesis Magazine #2"]
+         }
       expected =
          ( "MagNemesis"
          , "NemesisMag002.epub"
@@ -449,18 +450,21 @@ testNemesisShort = TestCase $
 
 testNemesisLong :: Test
 testNemesisLong = TestCase $
-   assertNewName "Nemesis Magazine, long" bookFields expected
+   assertNewName "Nemesis Magazine, long" meta expected
    where
-      bookFields =
-         [ "Authors: Stephen Adams"
-         , "Title: Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "Stephen Adams"]
+         , metaTitles = [MetaTitle Nothing 
+            "Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"]
+         }
       expected =
          ( "MagNemesis"
          , "NemesisMag007.epub"
          )
 
 
+{-
 testMagSomethingWicked :: Test
 testMagSomethingWicked = TestCase $
    assertNewName "Something Wicked Magazine" bookFields expected
