@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
+import Codec.Epub.Opf.Format.Package
 import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad.Error
@@ -17,20 +18,21 @@ import BookName.Util ( runBN )
 
 {- Construct additional verbose output
 -}
-formatF :: (String, Metadata) -> String
+formatF :: (String, Package) -> String
 formatF (fmtUsed, _) = printf "\n   formatter: %s" fmtUsed
 
-formatFM :: (String, Metadata) -> String
-formatFM (fmtUsed, md) =
-   printf "\n   formatter: %s\n   %s" fmtUsed (show md)
+formatFM :: (String, Package) -> String
+formatFM (fmtUsed, pkg) =
+   printf "\n   formatter: %s\n%s" fmtUsed
+      (formatPackage False pkg)
 
 
 {- Format output for a book that was processed
 -}
-makeOutput :: Options -> (FilePath, FilePath, String, Metadata) -> String
-makeOutput opts (oldPath, newPath, fmtUsed, md) =
+makeOutput :: Options -> (FilePath, FilePath, String, Package) -> String
+makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
    printf "%s -> %s%s" oldPath newPath
-      (additional (optVerbose opts) (fmtUsed, md))
+      (additional (optVerbose opts) (fmtUsed, pkg))
    where
       additional Nothing  = const ""
       additional (Just 1) = formatF
@@ -39,13 +41,14 @@ makeOutput opts (oldPath, newPath, fmtUsed, md) =
 
 {- Process an individual epub book file
 -}
-processBook :: Options -> ErrorT String IO (FilePath, Metadata) -> IO ()
+processBook :: Options -> ErrorT String IO (FilePath, Package) -> IO ()
 processBook opts parseFileAction = do
    result <- runBN $ do
-      (oldPath, md) <- parseFileAction
+      (oldPath, pkg) <- parseFileAction
+      let md = opMeta pkg
       (fmtUsed, newPath) <- tryFormatting (oldPath, md)
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
-      return (oldPath, newPath, fmtUsed, md)
+      return (oldPath, newPath, fmtUsed, pkg)
 
    let report = either id (makeOutput opts) result
    putStrLn report
@@ -54,10 +57,10 @@ processBook opts parseFileAction = do
 {- Thin wrapper around epub-metadata file parse
 -}
 parseFile :: (MonadIO m, MonadError String m)
-   => FilePath -> m (String, Metadata)
+   => FilePath -> m (String, Package)
 parseFile path = do
    pkg <- parseEpubOpf path
-   return (path, opMeta pkg)
+   return (path, pkg)
 
 
 main :: IO ()
