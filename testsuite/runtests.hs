@@ -37,8 +37,9 @@ tests = TestList
    , testBracketTitle
    , testMagAeon
    , testMagAEon
+   , testMagApexLong
+   , testMagApexShort
 {-
-   , testMagApex
    , testChallengingDestinyShort
    , testChallengingDestinyLong
    , testChallengingDestinyPub
@@ -207,21 +208,39 @@ testMagAEon = TestCase $
          )
 
 
-{-
-testMagApex :: Test
-testMagApex = TestCase $
-   assertNewName "Apex Magazine" bookFields expected
+testMagApexLong :: Test
+testMagApexLong = TestCase $
+   assertNewName "Apex Magazine, older, long title" meta expected
    where
-      bookFields =
-         [ "Authors: Apex Authors"
-         , "Title: Apex Science Fiction and Horror Digest #10"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Apex Authors"]
+         , metaTitles = [MetaTitle Nothing
+            "Apex Science Fiction and Horror Digest #9"]
+         }
       expected =
-         ( "MagNameIssue"
-         , "ApexScienceFictionAndHorrorDigest10.epub"
+         ( "MagApex"
+         , "ApexMagazine009.epub"
          )
 
 
+testMagApexShort :: Test
+testMagApexShort = TestCase $
+   assertNewName "Apex Magazine, newer, short title" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Apex Authors"]
+         , metaTitles = [MetaTitle Nothing
+            "Apex Magazine Issue 17"]
+         }
+      expected =
+         ( "MagApex"
+         , "ApexMagazine017.epub"
+         )
+
+
+{-
 testChallengingDestinyShort :: Test
 testChallengingDestinyShort = TestCase $
    assertNewName "Challenging Destiny Magazine, short" bookFields expected
