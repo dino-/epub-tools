@@ -47,9 +47,9 @@ tests = TestList
    , testFsfShort
    , testFsfLong
    , testMagFutureOrbits
-{-
    , testGudShort
    , testGudLong
+{-
    , testInterzoneShort
    , testInterzoneLong
    , testNemesisShort
@@ -368,15 +368,16 @@ testMagFutureOrbits = TestCase $
          )
 
 
-{-
 testGudShort :: Test
 testGudShort = TestCase $
-   assertNewName "Gud Magazine, short" bookFields expected
+   assertNewName "Gud Magazine, short" meta expected
    where
-      bookFields =
-         [ "Authors: GUD Magazine Authors"
-         , "Title: GUD Magazine Issue 0 :: Spring 2007"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "GUD Magazine Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "GUD Magazine Issue 0 :: Spring 2007"]
+         }
       expected =
          ( "MagGud"
          , "GUDMagazine00.epub"
@@ -385,18 +386,21 @@ testGudShort = TestCase $
 
 testGudLong :: Test
 testGudLong = TestCase $
-   assertNewName "Gud Magazine, long" bookFields expected
+   assertNewName "Gud Magazine, long" meta expected
    where
-      bookFields =
-         [ "Authors: GUD Magazine Authors, Jeff Somers, Jeremy Shipp"
-         , "Title: GUD Magazine Issue 2 :: Spring 2008"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "GUD Magazine Authors, Jeff Somers, Jeremy Shipp"]
+         , metaTitles = [MetaTitle Nothing 
+            "GUD Magazine Issue 2 :: Spring 2008"]
+         }
       expected =
          ( "MagGud"
          , "GUDMagazine02.epub"
          )
 
 
+{-
 testInterzoneShort :: Test
 testInterzoneShort = TestCase $
    assertNewName "Interzone Magazine, short" bookFields expected
