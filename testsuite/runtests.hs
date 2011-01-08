@@ -27,16 +27,17 @@ main = runTestTT tests
 
 tests :: Test
 tests = TestList
-   [ testAuthorBasic
+   [ testAuthorMinimal
+   , testAuthorRole
+   , testAuthorFileas
+   , testAuthorFull
    , testAuthorDoubleAnd
---   , testAuthorSt
---   , testAuthorThird
    , testCapsTitle
    , testColon
    , testBracketTitle
-{-
    , testMagAeon
    , testMagAEon
+{-
    , testMagApex
    , testChallengingDestinyShort
    , testChallengingDestinyLong
@@ -59,12 +60,59 @@ tests = TestList
    ]
 
 
-testAuthorBasic :: Test
-testAuthorBasic = TestCase $
-   assertNewName "basic author" meta expected
+testAuthorMinimal :: Test
+testAuthorMinimal = TestCase $
+   assertNewName "minimal author" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing "Herman Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorRole :: Test
+testAuthorRole = TestCase $
+   assertNewName "author with role" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Herman Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorFileas :: Test
+testAuthorFileas = TestCase $
+   assertNewName "author with file-as" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing
+            (Just "Melville, Herman")
+            "Herman Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorFull :: Test
+testAuthorFull = TestCase $
+   assertNewName "author fully filled out" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Melville, Herman")
+            "Herman Melville"]
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
@@ -86,36 +134,6 @@ testAuthorDoubleAnd = TestCase $
          ( "AuthorDouble"
          , "Anderson_Moesta-RoughDraft.epub"
          )
-
-
-{-
-testAuthorSt :: Test
-testAuthorSt = TestCase $
-   assertNewName "author name contains St." bookFields expected
-   where
-      bookFields =
-         [ "Authors: Jennifer St. Clair"
-         , "Title: Budget Cuts"
-         ]
-      expected =
-         ( "AuthorSt"
-         , "StClairJennifer-BudgetCuts.epub"
-         )
-
-
-testAuthorThird :: Test
-testAuthorThird = TestCase $
-   assertNewName "author name contains III" bookFields expected
-   where
-      bookFields =
-         [ "Authors: Carlton Mellick III"
-         , "Title: Sunset with a Beard"
-         ]
-      expected =
-         ( "AuthorThird"
-         , "MellickCarltonIII-SunsetWithABeard.epub"
-         )
--}
 
 
 testCapsTitle :: Test
@@ -161,15 +179,14 @@ testBracketTitle = TestCase $
          )
 
 
-{-
 testMagAeon :: Test
 testMagAeon = TestCase $
-   assertNewName "Aeon magazine" bookFields expected
+   assertNewName "Aeon magazine" meta expected
    where
-      bookFields =
-         [ "Authors: Aeon Authors"
-         , "Title: Aeon Eight"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Aeon Authors"]
+         , metaTitles = [MetaTitle Nothing "Aeon Eight"]
+         }
       expected =
          ( "MagAeon"
          , "AeonMagazine08.epub"
@@ -178,18 +195,19 @@ testMagAeon = TestCase $
 
 testMagAEon :: Test
 testMagAEon = TestCase $
-   assertNewName "AEon magazine" bookFields expected
+   assertNewName "AEon magazine" meta expected
    where
-      bookFields =
-         [ "Authors: AEon Authors"
-         , "Title: Aeon Thirteen"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "AEon Authors"]
+         , metaTitles = [MetaTitle Nothing "Aeon Thirteen"]
+         }
       expected =
          ( "MagAeon"
          , "AeonMagazine13.epub"
          )
 
 
+{-
 testMagApex :: Test
 testMagApex = TestCase $
    assertNewName "Apex Magazine" bookFields expected
