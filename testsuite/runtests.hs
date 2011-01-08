@@ -56,9 +56,7 @@ tests = TestList
    , testNemesisLong
    , testMagSomethingWicked
    , testSFBestOf
-{-
    , testMagBlackStatic
--}
    ]
 
 
@@ -517,17 +515,17 @@ testSFBestOf = TestCase $
          )
 
 
-{-
 testMagBlackStatic :: Test
 testMagBlackStatic = TestCase $
-   assertNewName "Black Static Magazine" bookFields expected
+   assertNewName "Black Static Magazine" meta expected
    where
-      bookFields =
-         [ "Authors: TTA Press Authors"
-         , "Title: Black Static Horror Magazine #5"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "TTA Press Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "Black Static Horror Magazine #5"]
+         }
       expected =
          ( "MagNameIssue"
          , "BlackStaticHorrorMagazine05.epub"
          )
--}
