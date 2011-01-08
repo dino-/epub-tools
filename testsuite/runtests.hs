@@ -5,22 +5,18 @@
 module Main
    where
 
+import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Test.HUnit ( Counts, Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
-import BookName.Extract
 import BookName.Formatters ( tryFormatting )
 import BookName.Util
 
 
-assertNewName :: String
-                 -> [String]
-                 -> (String, String)
-                 -> Assertion
+assertNewName :: String -> Metadata -> (String, String) -> Assertion
 assertNewName desc meta expected = do
-   let fields = parseMeta ("unit test: " ++ desc) $ unlines meta
-   result <- runBN $ tryFormatting fields
+   result <- runBN $ tryFormatting ("", meta)
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 
@@ -31,14 +27,14 @@ main = runTestTT tests
 
 tests :: Test
 tests = TestList
-   [ testAnonymous
-   , testAuthorBasic
-   , testAuthorDouble
-   , testAuthorSt
-   , testAuthorThird
+   [ testAuthorBasic
+   , testAuthorDoubleAnd
+--   , testAuthorSt
+--   , testAuthorThird
    , testCapsTitle
    , testColon
    , testBracketTitle
+{-
    , testMagAeon
    , testMagAEon
    , testMagApex
@@ -59,51 +55,40 @@ tests = TestList
    , testMagSomethingWicked
    , testSFBestOf
    , testMagBlackStatic
+-}
    ]
-
-
-testAnonymous :: Test
-testAnonymous = TestCase $
-   assertNewName "testAnonymous" bookFields expected
-   where
-      bookFields =
-         [ "Authors: Anonymous"
-         , "Title: Science Fiction Stories By Unknown Authors"
-         ]
-      expected =
-         ( "Anonymous"
-         , "Anonymous-ScienceFictionStoriesByUnknownAuthors.epub"
-         )
 
 
 testAuthorBasic :: Test
 testAuthorBasic = TestCase $
-   assertNewName "basic author" bookFields expected
+   assertNewName "basic author" meta expected
    where
-      bookFields =
-         [ "Authors: Herman Melville"
-         , "Title: Moby Dick"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Herman Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
       expected =
          ( "AuthorBasic"
          , "MelvilleHerman-MobyDick.epub"
          )
 
 
-testAuthorDouble :: Test
-testAuthorDouble = TestCase $
-   assertNewName "two authors" bookFields expected
+testAuthorDoubleAnd :: Test
+testAuthorDoubleAnd = TestCase $
+   assertNewName "two authors separated by and" meta expected
    where
-      bookFields =
-         [ "Authors: Kevin J. Anderson & Rebecca Moesta"
-         , "Title: Rough Draft"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Kevin J. Anderson and Rebecca Moesta"]
+         , metaTitles = [MetaTitle Nothing "Rough Draft"]
+         }
       expected =
          ( "AuthorDouble"
          , "Anderson_Moesta-RoughDraft.epub"
          )
 
 
+{-
 testAuthorSt :: Test
 testAuthorSt = TestCase $
    assertNewName "author name contains St." bookFields expected
@@ -130,30 +115,32 @@ testAuthorThird = TestCase $
          ( "AuthorThird"
          , "MellickCarltonIII-SunsetWithABeard.epub"
          )
+-}
 
 
 testCapsTitle :: Test
 testCapsTitle = TestCase $
-   assertNewName "title all caps" bookFields expected
+   assertNewName "title all caps" meta expected
    where
-      bookFields =
-         [ "Authors: Greg Bear"
-         , "Title: EON"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Greg Bear"]
+         , metaTitles = [MetaTitle Nothing "EON"]
+         }
       expected =
          ( "AuthorBasic"
-         , "BearGreg-EON.epub"
+         , "BearGreg-Eon.epub"
          )
 
 
 testColon :: Test
 testColon = TestCase $
-   assertNewName "colon becomes underscore" bookFields expected
+   assertNewName "colon becomes underscore" meta expected
    where
-      bookFields =
-         [ "Authors: Ed Howdershelt"
-         , "Title: Book 1: 3rd World Products, Inc."
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Ed Howdershelt"]
+         , metaTitles = [MetaTitle Nothing 
+            "Book 1: 3rd World Products, Inc."]
+         }
       expected =
          ( "AuthorBasic"
          , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
@@ -162,18 +149,19 @@ testColon = TestCase $
 
 testBracketTitle :: Test
 testBracketTitle = TestCase $
-   assertNewName "title with brackets" bookFields expected
+   assertNewName "title with brackets" meta expected
    where
-      bookFields =
-         [ "Title: SKitty [Shipscat series #1]"
-         , "Authors: Mercedes Lackey"
-         ]
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Mercedes Lackey"]
+         , metaTitles = [MetaTitle Nothing "SKitty [Shipscat series #1]"]
+         }
       expected =
          ( "AuthorBasic"
-         , "LackeyMercedes-SKitty_ShipscatSeries1.epub"
+         , "LackeyMercedes-Skitty_ShipscatSeries1.epub"
          )
 
 
+{-
 testMagAeon :: Test
 testMagAeon = TestCase $
    assertNewName "Aeon magazine" bookFields expected
@@ -452,3 +440,4 @@ testMagBlackStatic = TestCase $
          ( "MagNameIssue"
          , "BlackStaticHorrorMagazine05.epub"
          )
+-}
