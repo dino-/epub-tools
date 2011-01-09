@@ -193,7 +193,9 @@ format label authorPat authorFmt titlePat titleFmt md = do
    newAuthor <- formatAuthor authorPat authorFmt md
    --trace newAuthor (return ())
 
-   let (MetaTitle _ oldTitle) = head . metaTitles $ md
+   (MetaTitle _ oldTitle) <- case metaTitles md of
+      [] -> throwError "format failed, no title present"
+      ts -> return . head $ ts
    let year = extractYear md
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
