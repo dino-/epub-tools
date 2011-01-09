@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagNemesis
+module EpubName.Format.MagNemesis
    ( fmtMagNemesis )
    where
 
@@ -12,7 +12,7 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format )
+import EpubName.Format.Util ( filterCommon, format )
 
 
 fmtMagNemesis :: (MonadError String m) => Metadata -> m (String, String)

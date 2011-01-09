@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.AuthorDouble
+module EpubName.Format.AuthorDouble
    ( fmtAuthorDouble )
    where
 
@@ -15,7 +15,7 @@ import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
 
-import BookName.Format.Util ( filterCommon, format, justAuthors, 
+import EpubName.Format.Util ( filterCommon, format, justAuthors, 
    titleSimple )
 
 

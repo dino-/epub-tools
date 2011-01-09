@@ -1,4 +1,4 @@
-name:                bookname
+name:                epubname
 cabal-version:       >= 1.2
 version:             2.0.0
 build-type:          Simple
@@ -8,14 +8,14 @@ copyright:           2008-2011 Dino Morelli
 author:              Dino Morelli 
 maintainer:          Dino Morelli <dino@ui3.info>
 stability:           experimental
---homepage:            http://ui3.info/d/proj/bookname.html
+--homepage:            http://ui3.info/d/proj/epubname.html
 synopsis:            Rename epub ebook files based on meta information
 description:         Command-line utility for renaming/moving epub ebook files based on metadata contained within the file. Written in Haskell.
 category:            Unclassified
 tested-with:         GHC>=6.12.3
 
-executable           bookname
-   main-is:          bookname.hs
+executable           epubname
+   main-is:          epubname.hs
    build-depends:    base, containers, epub-metadata, filepath, HSH, mtl, 
                      regex-compat, unix
    ghc-options:      -Wall

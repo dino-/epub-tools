@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.Util
+module EpubName.Format.Util
    ( filterCommon, format
    , author
    , authorSingle, authorPostfix

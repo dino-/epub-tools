@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagLightspeed
+module EpubName.Format.MagLightspeed
    ( fmtMagLightspeed )
    where
 
@@ -12,7 +12,7 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( format, monthNum )
+import EpubName.Format.Util ( format, monthNum )
 
 
 fmtMagLightspeed :: (MonadError String m) => Metadata -> m (String, String)

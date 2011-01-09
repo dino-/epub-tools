@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagChallengingDestiny
+module EpubName.Format.MagChallengingDestiny
    ( fmtMagChallengingDestiny )
    where
 
@@ -12,7 +12,7 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format )
+import EpubName.Format.Util ( filterCommon, format )
 
 
 fmtMagChallengingDestiny :: (MonadError String m) =>

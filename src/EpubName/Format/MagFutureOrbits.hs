@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagFutureOrbits
+module EpubName.Format.MagFutureOrbits
    ( fmtMagFutureOrbits )
    where
 
@@ -12,7 +12,7 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format, monthNum )
+import EpubName.Format.Util ( filterCommon, format, monthNum )
 
 
 fmtMagFutureOrbits :: (MonadError String m) => Metadata -> m (String, String)

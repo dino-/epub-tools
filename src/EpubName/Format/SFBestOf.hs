@@ -4,14 +4,14 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.SFBestOf
+module EpubName.Format.SFBestOf
    ( fmtSFBestOf )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 
-import BookName.Format.Util ( filterCommon, format )
+import EpubName.Format.Util ( filterCommon, format )
 
 
 fmtSFBestOf :: (MonadError String m) => Metadata -> m (String, String)

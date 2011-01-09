@@ -4,24 +4,24 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagEclipse
-   ( fmtMagEclipse )
+module EpubName.Format.MagAeon
+   ( fmtMagAeon )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 
-import BookName.Format.Util ( format )
+import EpubName.Format.Util ( format )
 
 
-fmtMagEclipse :: (MonadError String m) => Metadata -> m (String, String)
-fmtMagEclipse = format "MagEclipse"
-   ".*" (const "")
-   "^(Eclipse) ([^ ]+)$" titleMagEclipse
+fmtMagAeon :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagAeon = format "MagAeon"
+   ".* Authors" (const "")
+   "^A[eE]on ([^ ]+)$" titleMagAeon
 
 
-titleMagEclipse :: String -> [String] -> String
-titleMagEclipse _ (magName:numWord:_) = magName ++ (num numWord)
+titleMagAeon :: String -> [String] -> String
+titleMagAeon _ (numWord:_) = "AeonMagazine" ++ (num numWord)
    where
       num "One"       = "01"
       num "Two"       = "02"
@@ -43,5 +43,5 @@ titleMagEclipse _ (magName:numWord:_) = magName ++ (num numWord)
       num "Eighteen"  = "18"
       num "Nineteen"  = "19"
       num "Twenty"    = "20"
-      num x           = "[ERROR titleMagEclipse " ++ x ++ "]"
-titleMagEclipse _ _      = undefined
+      num x           = "[ERROR titleMagAeon " ++ x ++ "]"
+titleMagAeon _ _      = undefined

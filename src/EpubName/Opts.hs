@@ -3,7 +3,7 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 
-module BookName.Opts
+module EpubName.Opts
    ( Options (..)
    , parseOpts, usageText
    )
@@ -55,7 +55,7 @@ usageText :: String
 usageText = (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
-         [ "Usage: bookname [OPTIONS] FILES"
+         [ "Usage: epubname [OPTIONS] FILES"
          , "Rename book files based on metadata"
          , ""
          , "Options:"

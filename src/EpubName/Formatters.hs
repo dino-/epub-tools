@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module BookName.Formatters
+module EpubName.Formatters
    ( tryFormatting )
    where
 
@@ -10,27 +10,27 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
---import BookName.Format.Anonymous
-import BookName.Format.AuthorBasic
-import BookName.Format.AuthorDouble
---import BookName.Format.AuthorSt
---import BookName.Format.AuthorThird
-import BookName.Format.MagAeon
-import BookName.Format.MagAnalog
-import BookName.Format.MagApex
-import BookName.Format.MagBcs
-import BookName.Format.MagChallengingDestiny
-import BookName.Format.MagEclipse
-import BookName.Format.MagFsf
-import BookName.Format.MagFutureOrbits
-import BookName.Format.MagGud
-import BookName.Format.MagInterzone
-import BookName.Format.MagLightspeed
-import BookName.Format.MagNameIssue
-import BookName.Format.MagNemesis
-import BookName.Format.MagRageMachine
-import BookName.Format.MagSomethingWicked
-import BookName.Format.SFBestOf
+--import EpubName.Format.Anonymous
+import EpubName.Format.AuthorBasic
+import EpubName.Format.AuthorDouble
+--import EpubName.Format.AuthorSt
+--import EpubName.Format.AuthorThird
+import EpubName.Format.MagAeon
+import EpubName.Format.MagAnalog
+import EpubName.Format.MagApex
+import EpubName.Format.MagBcs
+import EpubName.Format.MagChallengingDestiny
+import EpubName.Format.MagEclipse
+import EpubName.Format.MagFsf
+import EpubName.Format.MagFutureOrbits
+import EpubName.Format.MagGud
+import EpubName.Format.MagInterzone
+import EpubName.Format.MagLightspeed
+import EpubName.Format.MagNameIssue
+import EpubName.Format.MagNemesis
+import EpubName.Format.MagRageMachine
+import EpubName.Format.MagSomethingWicked
+import EpubName.Format.SFBestOf
 
 
 formatters :: [Metadata -> ErrorT String IO (String, String)]

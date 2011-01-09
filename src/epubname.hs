@@ -15,9 +15,9 @@ import System.IO ( BufferMode ( NoBuffering )
 import System.Posix.Files ( rename )
 import Text.Printf
 
-import BookName.Formatters ( tryFormatting )
-import BookName.Opts ( Options (..), parseOpts, usageText )
-import BookName.Util ( runBN )
+import EpubName.Formatters ( tryFormatting )
+import EpubName.Opts ( Options (..), parseOpts, usageText )
+import EpubName.Util ( runBN )
 
 
 {- Construct additional verbose output

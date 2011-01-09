@@ -10,8 +10,8 @@ import Control.Monad.Error
 import Test.HUnit ( Counts, Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
-import BookName.Formatters ( tryFormatting )
-import BookName.Util
+import EpubName.Formatters ( tryFormatting )
+import EpubName.Util
 
 
 assertNewName :: String -> Metadata -> (String, String) -> Assertion

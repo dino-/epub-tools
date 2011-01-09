@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Util
+module EpubName.Util
    ( runBN
    )
    where

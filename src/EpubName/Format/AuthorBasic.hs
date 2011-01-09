@@ -4,14 +4,14 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.AuthorBasic
+module EpubName.Format.AuthorBasic
    ( fmtAuthorBasic )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 
-import BookName.Format.Util
+import EpubName.Format.Util
    ( format
    , author, titleSimple
    )

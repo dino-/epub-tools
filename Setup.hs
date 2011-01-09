@@ -20,7 +20,7 @@ main = defaultMainWithHooks (simpleUserHooks
       -- Create symlink to the binary after build for developer 
       -- convenience
       customPostBuild _ _ _ _ = do
-         let dest = "bookname"
+         let dest = "epubname"
 
          exists <- fileExist dest
          unless exists $ do

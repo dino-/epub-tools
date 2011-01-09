@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagGud
+module EpubName.Format.MagGud
    ( fmtMagGud )
    where
 
@@ -12,7 +12,7 @@ import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( format )
+import EpubName.Format.Util ( format )
 
 
 fmtMagGud :: (MonadError String m) => Metadata -> m (String, String)

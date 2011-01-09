@@ -4,24 +4,24 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module BookName.Format.MagSomethingWicked
-   ( fmtMagSomethingWicked )
+module EpubName.Format.MagInterzone
+   ( fmtMagInterzone )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
 import Text.Printf
 
-import BookName.Format.Util ( filterCommon, format )
+import EpubName.Format.Util ( format )
 
 
-fmtMagSomethingWicked :: (MonadError String m) => Metadata -> m (String, String)
-fmtMagSomethingWicked = format "MagSomethingWicked"
+fmtMagInterzone :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagInterzone = format "MagInterzone"
    ".* Authors" (const "")
-   "(Something Wicked).* #([0-9]+).*" title
+   "^(Interzone)[^0-9]*([0-9]+)$" title
 
 
 title :: String -> [String] -> String
 title _ (name:issue:_) =
-   printf "%sMagazine%02d" (filterCommon name) (read issue :: Int)
+   printf "%sSFF%d" name (read issue :: Int)
 title _ _              = undefined
