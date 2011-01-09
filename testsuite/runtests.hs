@@ -37,6 +37,7 @@ tests = TestList
    , testColon
    , testBracketTitle
    , testNoTitle
+   , testAllPunctuation
    , testMagAeon
    , testMagAEon
    , testMagApexLong
@@ -214,6 +215,22 @@ testNoTitle = TestCase $
       expected =
          ( "NO FORMATTER"
          , " [ERROR No formatter found]"
+         )
+
+
+testAllPunctuation :: Test
+testAllPunctuation = TestCase $
+   assertNewName "big test of all punctuation" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Dino Morelli"]
+         , metaTitles = [MetaTitle Nothing
+            "The *crazy*: Sand-box. Of Smedley's discontent, fear & Malnourishment? (Maybe not!); [Part #2]"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2.epub"
          )
 
 
