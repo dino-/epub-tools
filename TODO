@@ -2,6 +2,4 @@
 
 - Update licensing year
 
-- Need to reinstate those negative "simple" tests. They do a lot of testing for difficult titles (which is commonFilters)
-
 - Put BSD3 licensing info on all source files and anything else that's relevant
