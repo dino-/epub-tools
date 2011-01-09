@@ -36,6 +36,7 @@ tests = TestList
    , testCapsTitle
    , testColon
    , testBracketTitle
+   , testNoTitle
    , testMagAeon
    , testMagAEon
    , testMagApexLong
@@ -199,6 +200,20 @@ testBracketTitle = TestCase $
       expected =
          ( "AuthorBasic"
          , "LackeyMercedes-Skitty_ShipscatSeries1.epub"
+         )
+
+
+testNoTitle :: Test
+testNoTitle = TestCase $
+   assertNewName "missing title" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Nobody McCrankypants"]
+         }
+      expected =
+         ( "NO FORMATTER"
+         , " [ERROR No formatter found]"
          )
 
 
