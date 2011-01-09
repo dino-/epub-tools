@@ -38,6 +38,7 @@ tests = TestList
    , testBracketTitle
    , testNoTitle
    , testAllPunctuation
+   , testPubYear
    , testMagAeon
    , testMagAEon
    , testMagApexLong
@@ -231,6 +232,21 @@ testAllPunctuation = TestCase $
       expected =
          ( "AuthorBasic"
          , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2.epub"
+         )
+
+
+testPubYear :: Test
+testPubYear = TestCase $
+   assertNewName "book with a publication year" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Jim Jones"]
+         , metaTitles = [MetaTitle Nothing "A Timeless Story"]
+         , metaDates = [MetaDate (Just "original-publication") "2003"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "JonesJim-ATimelessStory_2003.epub"
          )
 
 
