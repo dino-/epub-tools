@@ -1,5 +1,10 @@
 #! /bin/bash
 
+# Copyright: 2008-2011 Dino Morelli
+# License: BSD3 (see LICENSE)
+# Author: Dino Morelli <dino@ui3.info>
+
+
 cd /var/local/archive/doc/books/fiction
 
 tempDir="/home/dino/temp"
