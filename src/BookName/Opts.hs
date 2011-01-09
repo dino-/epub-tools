@@ -61,7 +61,10 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "Options:"
          ]
       footer = init $ unlines
-         [ "foo bar baz"
+         [ "Verbosity levels:"
+         , "   <none> - Just display the oldname -> newname output"
+         , "   1      - Include which formatter processed the file"
+         , "   2      - Include the OPF Package and Metadata info"
          , ""
          , "Version 2.0.0  Dino Morelli <dino@ui3.info>"
          ]
