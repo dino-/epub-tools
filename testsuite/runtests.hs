@@ -33,6 +33,7 @@ tests = TestList
    , testAuthorFull
    , testAuthorDoubleAnd
    , testNoAuthor
+   , testNoAuthorPubDate
    , testCapsTitle
    , testColon
    , testBracketTitle
@@ -144,6 +145,29 @@ testNoAuthor = TestCase $
       expected =
          ( "SFBestOf"
          , "SomeCollectionOfFineStoriesVolume1.epub"
+         )
+
+
+testNoAuthorPubDate :: Test
+testNoAuthorPubDate = TestCase $
+   assertNewName "no author(s) at all, with publication date" 
+      meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ MetaCreator (Just "edt") Nothing
+               "Graham Spindlewest"
+            , MetaCreator (Just "ill") Nothing
+               "Eva Tunglewacker"
+            ]
+         , metaTitles = [MetaTitle Nothing
+            "Some Collection of Fine Stories, Volume 1"]
+         , metaDates = [MetaDate (Just "original-publication")
+            "2008"]
+         }
+      expected =
+         ( "SFBestOf"
+         , "SomeCollectionOfFineStoriesVolume1_2008.epub"
          )
 
 
