@@ -56,7 +56,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
          [ "Usage: epubname [OPTIONS] FILES"
-         , "Rename book files based on metadata"
+         , "Rename EPUB book files with clear names based on their metadata"
          , ""
          , "Options:"
          ]
