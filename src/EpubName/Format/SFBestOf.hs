@@ -10,6 +10,7 @@ module EpubName.Format.SFBestOf
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
+import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
 
@@ -21,5 +22,5 @@ fmtSFBestOf = format "SFBestOf"
 
 
 title :: String -> [String] -> String
-title _ (name:_) = filterCommon name
+title year (name:_) = printf "%s%s" (filterCommon name) year
 title _ _ = undefined
