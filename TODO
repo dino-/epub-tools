@@ -1,0 +1,7 @@
+- Support for some sort of suffix to naming
+   Do this with a switch, but should we support a conf file?
+   If so, where? Are we moving to ~/.config/<appname> now?
+
+- Need to have meaningful exit codes, also documented
+
+- Do developer web page for this project in preparation for release
