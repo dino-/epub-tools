@@ -11,6 +11,7 @@ module EpubName.Opts
 
 import Data.Maybe
 import System.Console.GetOpt
+import System.Exit
 
 
 data Options = Options
@@ -44,11 +45,13 @@ options =
    ]
 
 
-parseOpts :: [String] -> IO (Options, [String])
+parseOpts :: [String] -> IO (Either ExitCode (Options, [String]))
 parseOpts argv = 
    case getOpt Permute options argv of
-      (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
-      (_,_,errs) -> ioError $ userError (concat errs ++ usageText)
+      (o,n,[]  ) -> return . Right $ (foldl (flip id) defaultOptions o, n)
+      (_,_,errs) -> do
+         putStrLn $ concat errs ++ usageText
+         return . Left $ ExitFailure 1
 
 
 usageText :: String
@@ -65,6 +68,11 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   <none> - Just display the oldname -> newname output"
          , "   1      - Include which formatter processed the file"
          , "   2      - Include the OPF Package and Metadata info"
+         , ""
+         , "Exit codes:"
+         , "   0 - success"
+         , "   1 - bad options"
+         , "   2 - failed to process one or more of the files given"
          , ""
          , "Book names are constructed by examining creator tags, the title tag, and one of the date tags in the OPF Package metadata."
          , ""

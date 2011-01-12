@@ -9,6 +9,7 @@ import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad.Error
 import System.Environment ( getArgs )
+import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdout, stderr 
                  )
@@ -45,7 +46,8 @@ makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
 
 {- Process an individual epub book file
 -}
-processBook :: Options -> ErrorT String IO (FilePath, Package) -> IO ()
+processBook :: Options -> ErrorT String IO (FilePath, Package)
+   -> IO Bool
 processBook opts parseFileAction = do
    result <- runBN $ do
       (oldPath, pkg) <- parseFileAction
@@ -54,8 +56,10 @@ processBook opts parseFileAction = do
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
       return (oldPath, newPath, fmtUsed, pkg)
 
-   let report = either id (makeOutput opts) result
+   let (success, report) = either ((,) False)
+         (\r -> (True, makeOutput opts r)) result
    putStrLn report
+   return success
 
 
 {- Thin wrapper around epub-metadata file parse
@@ -72,11 +76,18 @@ main = do
    -- No buffering, it messes with the order of output
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
 
-   (opts, paths) <- getArgs >>= parseOpts
+   (opts, paths) <- getArgs >>= parseOpts >>= either exitWith return
 
-   if ((optHelp opts) || (null paths))
-      then putStrLn usageText
+   ec <- if ((optHelp opts) || (null paths))
+      then do
+         putStrLn usageText
+         return ExitSuccess
       else do
          when (optNoAction opts) (putStrLn "No-action specified")
          let parseFileActions = map parseFile paths
-         mapM_ (processBook opts) parseFileActions
+         codes <- mapM (processBook opts) parseFileActions
+         case all id codes of
+            True  -> return ExitSuccess
+            False -> return . ExitFailure $ 2
+
+   exitWith ec
