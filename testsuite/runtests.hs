@@ -21,8 +21,10 @@ assertNewName desc meta expected = do
    assertEqual desc expected actual
 
 
-main :: IO Counts
-main = runTestTT tests
+main :: IO ()
+main = do
+   runTestTT tests
+   return ()
 
 
 tests :: Test
