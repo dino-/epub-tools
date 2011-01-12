@@ -66,5 +66,5 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   1      - Include which formatter processed the file"
          , "   2      - Include the OPF Package and Metadata info"
          , ""
-         , "Version 2.0.0  Dino Morelli <dino@ui3.info>"
+         , "Version 2.0.1  Dino Morelli <dino@ui3.info>"
          ]
