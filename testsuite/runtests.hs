@@ -15,11 +15,16 @@ import EpubName.Opts
 import EpubName.Util
 
 
-assertNewName :: String -> Metadata -> (String, String) -> Assertion
-assertNewName desc meta expected = do
-   result <- runEN defaultOptions $ tryFormatting ("", meta)
+assertNewNameOpts :: Options -> String -> Metadata 
+   -> (String, String) -> Assertion
+assertNewNameOpts opts desc meta expected = do
+   result <- runEN opts $ tryFormatting ("", meta)
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
+
+
+assertNewName :: String -> Metadata -> (String, String) -> Assertion
+assertNewName = assertNewNameOpts defaultOptions
 
 
 main :: IO ()
@@ -67,6 +72,9 @@ tests = TestList
    , testRageMachineMag
    , testEclipseMag
    , testBcs
+   , testBkpFileAs
+   , testBkpText
+   , testBkpMissing
    ]
 
 
@@ -661,4 +669,62 @@ testBcs = TestCase $
       expected =
          ( "MagBcs"
          , "BeneathCeaselessSkies_Issue032.epub"
+         )
+
+
+testBkpFileAs :: Test
+testBkpFileAs = TestCase $
+   assertNewNameOpts opts 
+      "book publisher suffix requested and present in file-as"
+      meta expected
+   where
+      opts = defaultOptions { optPublisher = True }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Herman Melville"]
+         , metaContributors = [MetaCreator (Just "bkp") (Just "acme") 
+            "Acme Publishing, Inc."]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick_acme.epub"
+         )
+
+
+testBkpText :: Test
+testBkpText = TestCase $
+   assertNewNameOpts opts 
+      "book publisher suffix requested and present in text"
+      meta expected
+   where
+      opts = defaultOptions { optPublisher = True }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Herman Melville"]
+         , metaContributors = [MetaCreator (Just "bkp") Nothing
+            "Acme Publishing, Inc."]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick_AcmePublishingInc.epub"
+         )
+
+
+testBkpMissing :: Test
+testBkpMissing = TestCase $
+   assertNewNameOpts opts 
+      "book publisher suffix requested and not present"
+      meta expected
+   where
+      opts = defaultOptions { optPublisher = True }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Herman Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "MelvilleHerman-MobyDick.epub"
          )
