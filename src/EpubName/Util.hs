@@ -2,17 +2,19 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Util
-   ( runBN
+   ( EN , runEN
+   , throwError
    )
    where
 
 import Control.Monad.Error
+import Control.Monad.Reader
+
+import EpubName.Opts
 
 
---type BN a = (ErrorT String IO) a
+type EN a = ReaderT Options (ErrorT String IO) a
 
-runBN :: (ErrorT e m) a -> m (Either e a)
-runBN = runErrorT
+runEN :: Options -> EN a -> IO (Either String a)
+runEN env ev = runErrorT $ runReaderT ev env

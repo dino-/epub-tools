@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagFutureOrbits
    ( fmtMagFutureOrbits )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubName.Util
 
 
-fmtMagFutureOrbits :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagFutureOrbits :: Metadata -> EN (String, String)
 fmtMagFutureOrbits = format "MagFutureOrbits"
    ".*" (const "")
    "(Future Orbits) Issue ([0-9]+), ([^ ]+) ([0-9]{4})$" title

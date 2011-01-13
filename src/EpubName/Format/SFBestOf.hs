@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.SFBestOf
    ( fmtSFBestOf )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
+import EpubName.Util
 
 
-fmtSFBestOf :: (MonadError String m) => Metadata -> m (String, String)
+fmtSFBestOf :: Metadata -> EN (String, String)
 fmtSFBestOf = format "SFBestOf"
    "Rich Horton.*" (const "")
    "(.*)" title

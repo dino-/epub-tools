@@ -2,14 +2,11 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.AuthorDouble
    ( fmtAuthorDouble )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Data.Maybe ( fromJust )
 import Prelude hiding ( last )
 import Text.Printf
@@ -17,9 +14,10 @@ import Text.Regex
 
 import EpubName.Format.Util ( filterCommon, format, justAuthors, 
    titleSimple )
+import EpubName.Util
 
 
-fmtAuthorDouble :: (MonadError String m) => Metadata -> m (String, String)
+fmtAuthorDouble :: Metadata -> EN (String, String)
 fmtAuthorDouble = format "AuthorDouble"
    ".* and .*" authorDouble
    "(.*)" titleSimple

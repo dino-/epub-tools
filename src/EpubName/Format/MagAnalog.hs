@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagAnalog
    ( fmtMagAnalog )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubName.Util
 
 
-fmtMagAnalog :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagAnalog :: Metadata -> EN (String, String)
 fmtMagAnalog = format "MagAnalog"
    "Dell Magazine.*" (const "")
    "([^ ]*).*, ([^ ]+) ([0-9]{4})$" title

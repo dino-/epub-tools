@@ -2,21 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagBcs
    ( fmtMagBcs )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
+import EpubName.Util
 
 
-fmtMagBcs :: (MonadError String m) =>
-   Metadata -> m (String, String)
+fmtMagBcs :: Metadata -> EN (String, String)
 fmtMagBcs = format "MagBcs"
    ".*" (const "")
    "(Beneath Ceaseless.*) #([0-9]+).*" title

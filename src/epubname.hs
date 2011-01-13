@@ -2,12 +2,11 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 import Codec.Epub.Opf.Format.Package
 import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
-import Control.Monad.Error
+import Control.Monad
+import Control.Monad.Trans
 import System.Environment ( getArgs )
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
@@ -18,7 +17,7 @@ import Text.Printf
 
 import EpubName.Formatters ( tryFormatting )
 import EpubName.Opts ( Options (..), parseOpts, usageText )
-import EpubName.Util ( runBN )
+import EpubName.Util
 
 
 {- Construct additional verbose output
@@ -46,11 +45,10 @@ makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
 
 {- Process an individual epub book file
 -}
-processBook :: Options -> ErrorT String IO (FilePath, Package)
-   -> IO Bool
-processBook opts parseFileAction = do
-   result <- runBN $ do
-      (oldPath, pkg) <- parseFileAction
+processBook :: Options -> FilePath -> IO Bool
+processBook opts oldPath = do
+   result <- runEN opts $ do
+      pkg <- parseEpubOpf oldPath
       let md = opMeta pkg
       (fmtUsed, newPath) <- tryFormatting (oldPath, md)
       unless (optNoAction opts) $ liftIO $ rename oldPath newPath
@@ -60,15 +58,6 @@ processBook opts parseFileAction = do
          (\r -> (True, makeOutput opts r)) result
    putStrLn report
    return success
-
-
-{- Thin wrapper around epub-metadata file parse
--}
-parseFile :: (MonadIO m, MonadError String m)
-   => FilePath -> m (String, Package)
-parseFile path = do
-   pkg <- parseEpubOpf path
-   return (path, pkg)
 
 
 main :: IO ()
@@ -84,8 +73,7 @@ main = do
          return ExitSuccess
       else do
          when (optNoAction opts) (putStrLn "No-action specified")
-         let parseFileActions = map parseFile paths
-         codes <- mapM (processBook opts) parseFileActions
+         codes <- mapM (processBook opts) paths
          case all id codes of
             True  -> return ExitSuccess
             False -> return . ExitFailure $ 2

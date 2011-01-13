@@ -7,7 +7,7 @@ module EpubName.Formatters
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
+import Control.Monad
 import Text.Printf
 
 --import EpubName.Format.Anonymous
@@ -31,9 +31,10 @@ import EpubName.Format.MagNemesis
 import EpubName.Format.MagRageMachine
 import EpubName.Format.MagSomethingWicked
 import EpubName.Format.SFBestOf
+import EpubName.Util
 
 
-formatters :: [Metadata -> ErrorT String IO (String, String)]
+formatters :: [Metadata -> EN (String, String)]
 formatters =
 {-
    , fmtAnonymous
@@ -62,7 +63,7 @@ formatters =
    ]
 
 
-tryFormatting :: (FilePath, Metadata) -> ErrorT String IO (String, String)
+tryFormatting :: (FilePath, Metadata) -> EN (String, String)
 tryFormatting (oldPath, md) = do
    foldr mplus 
       (throwError $ printf "%s [ERROR No formatter found]" oldPath) $

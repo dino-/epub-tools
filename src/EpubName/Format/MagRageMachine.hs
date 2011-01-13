@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagRageMachine
    ( fmtMagRageMachine )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubName.Util
 
 
-fmtMagRageMachine :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagRageMachine :: Metadata -> EN (String, String)
 fmtMagRageMachine = format "MagRageMachine"
    ".*" (const "")
    "(Rage Machine.*)--([^ ]+) ([0-9]{4})$" title

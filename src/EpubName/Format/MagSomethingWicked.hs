@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagSomethingWicked
    ( fmtMagSomethingWicked )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
+import EpubName.Util
 
 
-fmtMagSomethingWicked :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagSomethingWicked :: Metadata -> EN (String, String)
 fmtMagSomethingWicked = format "MagSomethingWicked"
    ".* Authors" (const "")
    "(Something Wicked).* #([0-9]+).*" title

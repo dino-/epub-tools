@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagFsf
    ( fmtMagFsf )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( format, monthNum )
+import EpubName.Util
 
 
-fmtMagFsf :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagFsf :: Metadata -> EN (String, String)
 fmtMagFsf = format "MagFsf"
    "Spilogale.*" (const "")
    ".* ([^ ]+) ([0-9]{4})$" title

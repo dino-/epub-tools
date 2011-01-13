@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagNemesis
    ( fmtMagNemesis )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
+import EpubName.Util
 
 
-fmtMagNemesis :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagNemesis :: Metadata -> EN (String, String)
 fmtMagNemesis = format "MagNemesis"
    "Stephen Adams" (const "")
    "(Nemesis Mag)azine #([0-9]+).*" title

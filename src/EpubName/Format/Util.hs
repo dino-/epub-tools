@@ -2,8 +2,6 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.Util
    ( filterCommon, format
    , author
@@ -22,6 +20,8 @@ import Data.Maybe ( fromJust )
 import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
+
+import EpubName.Util
 
 
 
@@ -147,11 +147,11 @@ monthNum x
 monthNum x                    = "[ERROR monthNum " ++ x ++ "]"
 
 
-formatAuthor :: (MonadError String m) =>
-               String
-               -> (Metadata -> String)
-               -> Metadata
-               -> m String
+formatAuthor
+   :: String
+   -> (Metadata -> String)
+   -> Metadata
+   -> EN String
 formatAuthor re f md =
    maybe (throwError "formatAuthor failed")
       (const (return . f $ md)) (tryPats $ justAuthors md)
@@ -166,12 +166,12 @@ formatAuthor re f md =
          ((map match) . justAuthorStrings $ as)
 
 
-formatTitle :: (MonadError String m) =>
-               String
-               -> (String -> [String] -> String)
-               -> String
-               -> String
-               -> m String
+formatTitle 
+   :: String
+   -> (String -> [String] -> String)
+   -> String
+   -> String
+   -> EN String
 formatTitle re f year s = case matchRegex (mkRegex re) s of
    Just xs -> return $ f year xs
    Nothing -> throwError "formatTitle failed"
@@ -185,14 +185,14 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
    to the supplied format function. If any of this fails, the entire 
    action throws.
 -}
-format :: (MonadError String m)
-          => String
-          -> String
-          -> (Metadata -> String)
-          -> String
-          -> (String -> [String] -> String)
-          -> Metadata
-          -> m (String, String)
+format
+   :: String
+   -> String
+   -> (Metadata -> String)
+   -> String
+   -> (String -> [String] -> String)
+   -> Metadata
+   -> EN (String, String)
 format label authorPat authorFmt titlePat titleFmt md = do
    newAuthor <- formatAuthor authorPat authorFmt md
    --trace newAuthor (return ())

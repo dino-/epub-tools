@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagInterzone
    ( fmtMagInterzone )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( format )
+import EpubName.Util
 
 
-fmtMagInterzone :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagInterzone :: Metadata -> EN (String, String)
 fmtMagInterzone = format "MagInterzone"
    ".* Authors" (const "")
    "^(Interzone)[^0-9]*([0-9]+)$" title

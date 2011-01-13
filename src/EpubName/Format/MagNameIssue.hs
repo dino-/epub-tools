@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagNameIssue
    ( fmtMagNameIssue )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( filterCommon, format )
+import EpubName.Util
 
 
-fmtMagNameIssue :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagNameIssue :: Metadata -> EN (String, String)
 fmtMagNameIssue = format "MagNameIssue"
    ".* Authors" (const "")
    "(.*) #([0-9]+).*" title

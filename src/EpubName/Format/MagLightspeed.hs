@@ -2,20 +2,18 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagLightspeed
    ( fmtMagLightspeed )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import Text.Printf
 
 import EpubName.Format.Util ( format, monthNum )
+import EpubName.Util
 
 
-fmtMagLightspeed :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagLightspeed :: Metadata -> EN (String, String)
 fmtMagLightspeed = format "MagInterzone"
    ".*Adams.*" (const "")
    "(Lightspeed) .*, (.*) (.*)" title

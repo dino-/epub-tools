@@ -2,19 +2,17 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagAeon
    ( fmtMagAeon )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 
 import EpubName.Format.Util ( format )
+import EpubName.Util
 
 
-fmtMagAeon :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagAeon :: Metadata -> EN (String, String)
 fmtMagAeon = format "MagAeon"
    ".* Authors" (const "")
    "^A[eE]on ([^ ]+)$" titleMagAeon

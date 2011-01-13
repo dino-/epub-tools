@@ -2,22 +2,20 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.AuthorBasic
    ( fmtAuthorBasic )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 
 import EpubName.Format.Util
    ( format
    , author, titleSimple
    )
+import EpubName.Util
 
 
-fmtAuthorBasic :: (MonadError String m) => Metadata -> m (String, String)
+fmtAuthorBasic :: Metadata -> EN (String, String)
 fmtAuthorBasic = format "AuthorBasic"
    ".*" author
    "(.*)" titleSimple

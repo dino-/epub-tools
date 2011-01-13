@@ -2,19 +2,17 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
-
 module EpubName.Format.MagEclipse
    ( fmtMagEclipse )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 
 import EpubName.Format.Util ( format )
+import EpubName.Util
 
 
-fmtMagEclipse :: (MonadError String m) => Metadata -> m (String, String)
+fmtMagEclipse :: Metadata -> EN (String, String)
 fmtMagEclipse = format "MagEclipse"
    ".*" (const "")
    "^(Eclipse) ([^ ]+)$" titleMagEclipse
