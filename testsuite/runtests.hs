@@ -11,12 +11,13 @@ import Test.HUnit ( Counts, Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
 import EpubName.Formatters ( tryFormatting )
+import EpubName.Opts
 import EpubName.Util
 
 
 assertNewName :: String -> Metadata -> (String, String) -> Assertion
 assertNewName desc meta expected = do
-   result <- runBN $ tryFormatting ("", meta)
+   result <- runEN defaultOptions $ tryFormatting ("", meta)
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 

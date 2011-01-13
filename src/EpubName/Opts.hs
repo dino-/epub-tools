@@ -5,6 +5,7 @@
 
 module EpubName.Opts
    ( Options (..)
+   , defaultOptions
    , parseOpts, usageText
    )
    where
