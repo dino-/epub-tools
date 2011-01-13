@@ -708,7 +708,7 @@ testBkpText = TestCase $
          }
       expected =
          ( "AuthorBasic"
-         , "MelvilleHerman-MobyDick_AcmePublishingInc.epub"
+         , "MelvilleHerman-MobyDick.epub"
          )
 
 

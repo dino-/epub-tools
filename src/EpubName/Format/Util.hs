@@ -185,8 +185,6 @@ extractPublisher md True  = maybe "" ('_' :)
 
    where
       maybePub (MetaCreator (Just "bkp") (Just fa) _ ) = Just fa
-      maybePub (MetaCreator (Just "bkp") _         di) = 
-         Just . filterCommon $ di
       maybePub _                                       = Nothing
 
 
