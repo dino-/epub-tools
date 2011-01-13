@@ -21,6 +21,7 @@ import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
 
+import EpubName.Opts
 import EpubName.Util
 
 
@@ -177,6 +178,18 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
    Nothing -> throwError "formatTitle failed"
 
 
+extractPublisher :: Metadata -> Bool -> String
+extractPublisher _  False = ""
+extractPublisher md True  = maybe "" ('_' :)
+   (foldr mplus Nothing (map maybePub $ metaContributors md))
+
+   where
+      maybePub (MetaCreator (Just "bkp") (Just fa) _ ) = Just fa
+      maybePub (MetaCreator (Just "bkp") _         di) = 
+         Just . filterCommon $ di
+      maybePub _                                       = Nothing
+
+
 {- This is the main work performing function that's called by every 
    formatter. It expects to see a regexp pattern and format function 
    for both author and title parts of the book info. And then the map 
@@ -203,9 +216,11 @@ format label authorPat authorFmt titlePat titleFmt md = do
    let year = extractYear md
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
+   publisher <- fmap (extractPublisher md) $ asks optPublisher
+
    return
       ( label
-      , printf "%s%s.epub" newAuthor newTitle
+      , printf "%s%s%s.epub" newAuthor newTitle publisher
       )
 
 

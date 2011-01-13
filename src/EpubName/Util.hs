@@ -5,6 +5,7 @@
 module EpubName.Util
    ( EN , runEN
    , throwError
+   , asks
    )
    where
 

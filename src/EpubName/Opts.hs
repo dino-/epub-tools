@@ -18,6 +18,7 @@ import System.Exit
 data Options = Options
    { optHelp :: Bool
    , optNoAction :: Bool
+   , optPublisher :: Bool
    , optVerbose :: Maybe Int
    }
 
@@ -26,6 +27,7 @@ defaultOptions :: Options
 defaultOptions = Options
    { optHelp = False
    , optNoAction = False
+   , optPublisher = False
    , optVerbose = Nothing
    }
 
@@ -38,6 +40,9 @@ options =
    , Option ['n'] ["no-action"]
       (NoArg (\opts -> opts { optNoAction = True } )) 
       "Display what would be done, but do nothing"
+   , Option ['p'] ["publisher"]
+      (NoArg (\opts -> opts { optPublisher = True } )) 
+      "Include book publisher if present. See below"
    , Option ['v'] ["verbose"]
       ( OptArg
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
@@ -77,19 +82,21 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "Book names are constructed by examining creator tags, the title tag, and one of the date tags in the OPF Package metadata."
          , ""
          , "For books with a single author:"
-         , "   LastFirst[Middle]-TitleText[_Year].epub"
+         , "   LastFirst[Middle]-TitleText[_Year][_Publisher].epub"
          , ""
          , "For books with multiple authors:"
-         , "   Last1_Last2[_Last3...]-TitleText[_Year].epub"
+         , "   Last1_Last2[_Last3...]-TitleText[_Year][_Publisher].epub"
          , ""
          , "For books that have no clear authors, such as compilations:"
-         , "   TitleText[_Year].epub"
+         , "   TitleText[_Year][_Publisher].epub"
          , ""
          , "Only creator tags with either a role attribute of 'aut' or no role at all are considered authors. If a file-as attribute is present, this will be the preferred string. If not, the program tries to do some intelligent parsing of the name."
          , ""
          , "The date is taken from the first date tag with an event attribute of 'original-publication', if present. The OPF spec is a little thin on this. I noticed frequent use of this attribute in books, and so went with that."
          , ""
-         , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming code for specific magazines. This means that support for future magazines will likely have to be hand-coded into future versions of this utility."
+         , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers but still named properly. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). But then use a file-as attribute on that tag to contain a small string to be used in the filename. If no file-as is given, something will be done with the tag contents. But the idea here is short and sweet for the file-as."
+         , ""
+         , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming code for specific magazines. This means that support for future magazines will likely have to be hand-coded into future versions of this utility. Modifying this just isn't very non-programmer friendly."
          , ""
          , "Version 2.0.1  Dino Morelli <dino@ui3.info>"
          ]
