@@ -66,7 +66,6 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          ]
       footer = init $ unlines
          [ "Verbosity levels:"
-         , "   <none> - Just display the oldname -> newname output"
          , "   1      - Include which formatter processed the file"
          , "   2      - Include the OPF Package and Metadata info"
          , ""
