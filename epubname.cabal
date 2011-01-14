@@ -7,10 +7,11 @@ license-file:        LICENSE
 copyright:           2008-2011 Dino Morelli 
 author:              Dino Morelli 
 maintainer:          Dino Morelli <dino@ui3.info>
-stability:           experimental
---homepage:            http://ui3.info/d/proj/epubname.html
+stability:           stable
+homepage:            http://ui3.info/d/proj/epubname.html
 synopsis:            Rename epub ebook files based on meta information
-description:         Command-line utility for renaming/moving epub ebook files based on metadata contained within the file. Written in Haskell.
+description:         Command-line utility for renaming epub ebook files 
+                     based on the OPF Package metadata.
 category:            Unclassified
 tested-with:         GHC>=6.12.3
 
