@@ -79,7 +79,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   1 - bad options"
          , "   2 - failed to process one or more of the files given"
          , ""
-         , "Book names are constructed by examining creator tags, the title tag, and one of the date tags in the OPF Package metadata."
+         , "Book names are constructed by examining parts of the OPF Package metadata such as the title, creators, contributors and dates."
          , ""
          , "For books with a single author:"
          , "   LastFirst[Middle]-TitleText[_year][_publisher].epub"
