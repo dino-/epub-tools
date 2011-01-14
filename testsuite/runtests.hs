@@ -75,6 +75,7 @@ tests = TestList
    , testBkpFileAs
    , testBkpText
    , testBkpMissing
+   , testMagUniverse
    ]
 
 
@@ -727,4 +728,22 @@ testBkpMissing = TestCase $
       expected =
          ( "AuthorBasic"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testMagUniverse :: Test
+testMagUniverse = TestCase $
+   assertNewNameOpts opts 
+      "Jim Baen's Universe Magazine"
+      meta expected
+   where
+      opts = defaultOptions { optPublisher = True }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Jim Baen's Universe"]
+         , metaTitles = [MetaTitle Nothing "Jim Baen's Universe-Vol 4 Num 6"]
+         }
+      expected =
+         ( "MagUniverse"
+         , "JimBaensUniverseVol04Num06.epub"
          )

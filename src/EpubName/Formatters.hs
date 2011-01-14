@@ -30,6 +30,7 @@ import EpubName.Format.MagNameIssue
 import EpubName.Format.MagNemesis
 import EpubName.Format.MagRageMachine
 import EpubName.Format.MagSomethingWicked
+import EpubName.Format.MagUniverse
 import EpubName.Format.SFBestOf
 import EpubName.Util
 
@@ -56,6 +57,7 @@ formatters =
    , fmtMagBcs
    , fmtMagApex
    , fmtMagNameIssue
+   , fmtMagUniverse
    , fmtSFBestOf
    , fmtAuthorDouble
 
