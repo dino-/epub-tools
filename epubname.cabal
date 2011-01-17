@@ -12,7 +12,7 @@ homepage:            http://ui3.info/d/proj/epubname.html
 synopsis:            Rename epub ebook files based on meta information
 description:         Command-line utility for renaming epub ebook files 
                      based on the OPF Package metadata.
-category:            Unclassified
+category:            Application, Console
 tested-with:         GHC>=6.12.3
 
 executable           epubname
