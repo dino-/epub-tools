@@ -20,6 +20,7 @@ data Options = Options
    , optNoAction :: Bool
    , optPublisher :: Bool
    , optVerbose :: Maybe Int
+   , optYear :: Bool
    }
 
 
@@ -29,6 +30,7 @@ defaultOptions = Options
    , optNoAction = False
    , optPublisher = False
    , optVerbose = Nothing
+   , optYear = True
    }
 
 
@@ -48,6 +50,9 @@ options =
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
          "LEVEL")
       "Verbosity level: 1, 2"
+   , Option ['y'] ["year"]
+      (NoArg (\opts -> opts { optPublisher = True } )) 
+      "Suppress inclusion of original publication year, if present"
    ]
 
 

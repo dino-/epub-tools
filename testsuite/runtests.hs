@@ -48,6 +48,7 @@ tests = TestList
    , testNoTitle
    , testAllPunctuation
    , testPubYear
+   , testPubYearUnwanted
    , testMagAeon
    , testMagAEon
    , testMagApexLong
@@ -283,6 +284,24 @@ testPubYear = TestCase $
       expected =
          ( "AuthorBasic"
          , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearUnwanted :: Test
+testPubYearUnwanted = TestCase $
+   assertNewNameOpts opts
+      "book with a publication year but we don't want"
+      meta expected
+   where
+      opts = defaultOptions { optYear = False }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Jim Jones"]
+         , metaTitles = [MetaTitle Nothing "A Timeless Story"]
+         , metaDates = [MetaDate (Just "original-publication") "2003"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "JonesJim-ATimelessStory.epub"
          )
 
 

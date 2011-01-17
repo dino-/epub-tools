@@ -169,13 +169,15 @@ formatTitle re f year s = case matchRegex (mkRegex re) s of
 {- Look for a date tag with event="original-publication" in the
    metadata
 -}
-extractYear :: Metadata -> String
-extractYear md = maybe "" ('_' :)
-   (foldr mplus Nothing (map maybeYear $ metaDates md))
+extractYear :: Metadata -> EN String
+extractYear md = do
+   inclY <- asks optYear
+   return . maybe "" ('_' :) $
+      (foldr mplus Nothing (map (maybeYear inclY) $ metaDates md))
 
    where
-      maybeYear (MetaDate (Just "original-publication") d) = Just d
-      maybeYear _                                          = Nothing
+      maybeYear True (MetaDate (Just "original-publication") d) = Just d
+      maybeYear _    _                                          = Nothing
 
 
 extractPublisher :: Metadata -> Bool -> String
@@ -211,7 +213,7 @@ format label authorPat authorFmt titlePat titleFmt md = do
    (MetaTitle _ oldTitle) <- case metaTitles md of
       [] -> throwError "format failed, no title present"
       ts -> return . head $ ts
-   let year = extractYear md
+   year <- extractYear md
    newTitle <- formatTitle titlePat titleFmt year oldTitle
 
    publisher <- fmap (extractPublisher md) $ asks optPublisher
