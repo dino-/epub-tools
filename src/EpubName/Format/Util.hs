@@ -72,18 +72,6 @@ filterCommon :: String -> String
 filterCommon s = foldl' (flip id) s commonFilters
 
 
-{- Look for a date tag with event="original-publication" in the
-   metadata
--}
-extractYear :: Metadata -> String
-extractYear md = maybe "" ('_' :)
-   (foldr mplus Nothing (map maybeYear $ metaDates md))
-
-   where
-      maybeYear (MetaDate (Just "original-publication") d) = Just d
-      maybeYear _                                          = Nothing
-
-
 {- Convert an English month name (with creative ranges and variations)
    into number form
 -}
@@ -176,6 +164,18 @@ formatTitle
 formatTitle re f year s = case matchRegex (mkRegex re) s of
    Just xs -> return $ f year xs
    Nothing -> throwError "formatTitle failed"
+
+
+{- Look for a date tag with event="original-publication" in the
+   metadata
+-}
+extractYear :: Metadata -> String
+extractYear md = maybe "" ('_' :)
+   (foldr mplus Nothing (map maybeYear $ metaDates md))
+
+   where
+      maybeYear (MetaDate (Just "original-publication") d) = Just d
+      maybeYear _                                          = Nothing
 
 
 extractPublisher :: Metadata -> Bool -> String
