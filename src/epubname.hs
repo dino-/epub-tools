@@ -7,12 +7,12 @@ import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
 import Control.Monad.Trans
+import System.Directory ( renameFile )
 import System.Environment ( getArgs )
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdout, stderr 
                  )
-import System.Posix.Files ( rename )
 import Text.Printf
 
 import EpubName.Formatters ( tryFormatting )
@@ -51,7 +51,7 @@ processBook opts oldPath = do
       pkg <- parseEpubOpf oldPath
       let md = opMeta pkg
       (fmtUsed, newPath) <- tryFormatting (oldPath, md)
-      unless (optNoAction opts) $ liftIO $ rename oldPath newPath
+      unless (optNoAction opts) $ liftIO $ renameFile oldPath newPath
       return (oldPath, newPath, fmtUsed, pkg)
 
    let (success, report) = either ((,) False)

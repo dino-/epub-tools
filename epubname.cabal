@@ -17,7 +17,7 @@ tested-with:         GHC >= 6.12.3
 
 executable           epubname
    main-is:          epubname.hs
-   build-depends:    base >= 3 && < 5, epub-metadata >= 2.0.2, mtl, 
-                     regex-compat, unix
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.0.2, 
+                     mtl, regex-compat
    ghc-options:      -Wall
    hs-source-dirs:   src
