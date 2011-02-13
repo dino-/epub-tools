@@ -19,5 +19,8 @@ executable           epubname
    main-is:          epubname.hs
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.0.2, 
                      mtl, regex-compat
-   ghc-options:      -Wall -optl-s
    hs-source-dirs:   src
+
+   -- To strip debug symbols from the binary, for Windows, not portable
+   --ghc-options:      -Wall -optl-s
+   ghc-options:      -Wall
