@@ -1,0 +1,23 @@
+Installation information for the Windows binary distribution
+
+
+First, understand that this is command-line software. You don't run
+it with the mouse. There is no icon. It's not going in your Start
+menu. It's to be run from within a command shell.
+
+
+Although not my preferred way, epubname will run from the Windows
+cmd.exe shell.
+
+What I would do is install the cygwin tools and run it from a
+bash shell. Having cygwin in place, I would place the binary in
+/usr/local/bin, which should be on your PATH in cygwin shells. And
+you're good to go.
+
+
+If you're confused about how to use epubname, do this in your shell:
+
+   > epubname.exe --help
+
+
+And if you find bugs or problems, email: dino@ui3.info
