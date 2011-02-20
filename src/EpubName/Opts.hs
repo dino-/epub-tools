@@ -103,5 +103,5 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming code for specific magazines. This means that support for future magazines will likely have to be hand-coded into future versions of this utility. Modifying this just isn't very non-programmer friendly."
          , ""
-         , "Version 2.3.1  Dino Morelli <dino@ui3.info>"
+         , "Version 2.3.2  Dino Morelli <dino@ui3.info>"
          ]
