@@ -18,6 +18,7 @@ import System.Exit
 data Options = Options
    { optHelp :: Bool
    , optNoAction :: Bool
+   , optOverwrite :: Bool
    , optPublisher :: Bool
    , optVerbose :: Maybe Int
    , optYear :: Bool
@@ -28,6 +29,7 @@ defaultOptions :: Options
 defaultOptions = Options
    { optHelp = False
    , optNoAction = False
+   , optOverwrite = False
    , optPublisher = False
    , optVerbose = Nothing
    , optYear = True
@@ -42,6 +44,9 @@ options =
    , Option ['n'] ["no-action"]
       (NoArg (\opts -> opts { optNoAction = True } )) 
       "Display what would be done, but do nothing"
+   , Option ['o'] ["overwrite"]
+      (NoArg (\opts -> opts { optOverwrite = True } )) 
+      "Overwrite existing file with new name"
    , Option ['p'] ["publisher"]
       (NoArg (\opts -> opts { optPublisher = True } )) 
       "Include book publisher if present. See below"

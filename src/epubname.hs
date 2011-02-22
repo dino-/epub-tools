@@ -7,7 +7,7 @@ import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
 import Control.Monad.Trans
-import System.Directory ( renameFile )
+import System.Directory ( doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
@@ -51,7 +51,14 @@ processBook opts oldPath = do
       pkg <- parseEpubOpf oldPath
       let md = opMeta pkg
       (fmtUsed, newPath) <- tryFormatting (oldPath, md)
+
+      when (not $ optOverwrite opts) $ do
+         fileExists <- liftIO $ doesFileExist newPath
+         when fileExists $ throwError $ 
+            printf "ERROR: File %s already exists!" newPath
+
       unless (optNoAction opts) $ liftIO $ renameFile oldPath newPath
+
       return (oldPath, newPath, fmtUsed, pkg)
 
    let (success, report) = either ((,) False)
