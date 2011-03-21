@@ -1,0 +1,22 @@
+Trying to unify my epub manipulation utilities into one project
+
+Utils included here:
+
+- epubmeta (move from epub-metadata project)
+- epub-repair (move from scripts project)
+- epub-zip (move from scripts project)
++ epubname (move from epubname project
+
+
+This project may benefit from the use of some other tools out here
+such as epubcheck, zip and unzip
+
+- Tools unzipping can try to fall back on unzip upon failure
+
+- epubmeta needs write capability
+
+- epub creation, think about this
+
+- always release Windows binaries
+
+- OSX too?
