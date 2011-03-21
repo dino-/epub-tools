@@ -1,6 +1,6 @@
-name:                epubname
+name:                epub-tools
 cabal-version:       >= 1.2
-version:             2.3.2
+version:             1.0.0.0
 build-type:          Simple
 license:             BSD3
 license-file:        LICENSE
@@ -8,10 +8,10 @@ copyright:           2008-2011 Dino Morelli
 author:              Dino Morelli 
 maintainer:          Dino Morelli <dino@ui3.info>
 stability:           stable
-homepage:            http://ui3.info/d/proj/epubname.html
-synopsis:            Rename epub ebook files based on meta information
-description:         Command-line utility for renaming epub ebook files 
-                     based on the OPF Package metadata.
+--homepage:            http://ui3.info/d/proj/epubname.html
+--synopsis:            Rename epub ebook files based on meta information
+--description:         Command-line utility for renaming epub ebook files 
+--                     based on the OPF Package metadata.
 category:            Application, Console
 tested-with:         GHC >= 6.12.3
 
