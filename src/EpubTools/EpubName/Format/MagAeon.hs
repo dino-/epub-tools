@@ -2,14 +2,14 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagAeon
+module EpubTools.EpubName.Format.MagAeon
    ( fmtMagAeon )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 
-import EpubName.Format.Util ( format )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( format )
+import EpubTools.EpubName.Util
 
 
 fmtMagAeon :: Metadata -> EN (String, String)

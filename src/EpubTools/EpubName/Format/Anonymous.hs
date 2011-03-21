@@ -4,17 +4,17 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module EpubName.Format.Anonymous
+module EpubTools.EpubName.Format.Anonymous
    ( fmtAnonymous )
    where
 
 import Control.Monad.Error
 
-import EpubName.Format.Util
+import EpubTools.EpubName.Format.Util
    ( format
    , authorSingle , titleSimple
    )
-import EpubName.Util ( Fields )
+import EpubTools.EpubName.Util ( Fields )
 
 
 fmtAnonymous :: (MonadError String m) => Fields -> m (String, String)

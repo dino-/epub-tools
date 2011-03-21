@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.AuthorDouble
+module EpubTools.EpubName.Format.AuthorDouble
    ( fmtAuthorDouble )
    where
 
@@ -12,9 +12,9 @@ import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
 
-import EpubName.Format.Util ( filterCommon, format, justAuthors, 
+import EpubTools.EpubName.Format.Util ( filterCommon, format, justAuthors, 
    titleSimple )
-import EpubName.Util
+import EpubTools.EpubName.Util
 
 
 fmtAuthorDouble :: Metadata -> EN (String, String)

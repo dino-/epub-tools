@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Util
+module EpubTools.EpubName.Util
    ( EN , runEN
    , throwError
    , asks
@@ -12,7 +12,7 @@ module EpubName.Util
 import Control.Monad.Error
 import Control.Monad.Reader
 
-import EpubName.Opts
+import EpubTools.EpubName.Opts
 
 
 type EN a = ReaderT Options (ErrorT String IO) a

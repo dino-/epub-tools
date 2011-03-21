@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagLightspeed
+module EpubTools.EpubName.Format.MagLightspeed
    ( fmtMagLightspeed )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( format, monthNum )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( format, monthNum )
+import EpubTools.EpubName.Util
 
 
 fmtMagLightspeed :: Metadata -> EN (String, String)

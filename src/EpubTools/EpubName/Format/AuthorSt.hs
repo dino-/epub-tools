@@ -4,17 +4,17 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module EpubName.Format.AuthorSt
+module EpubTools.EpubName.Format.AuthorSt
    ( fmtAuthorSt )
    where
 
 import Control.Monad.Error
 
-import EpubName.Format.Util
+import EpubTools.EpubName.Format.Util
    ( format
    , authorSingle, titleSimple
    )
-import EpubName.Util ( Fields )
+import EpubTools.EpubName.Util ( Fields )
 
 
 fmtAuthorSt :: (MonadError String m) => Fields -> m (String, String)

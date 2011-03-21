@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagNameIssue
+module EpubTools.EpubName.Format.MagNameIssue
    ( fmtMagNameIssue )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( filterCommon, format )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( filterCommon, format )
+import EpubTools.EpubName.Util
 
 
 fmtMagNameIssue :: Metadata -> EN (String, String)

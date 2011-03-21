@@ -3,7 +3,7 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 
-module EpubName.Opts
+module EpubTools.EpubName.Opts
    ( Options (..)
    , defaultOptions
    , parseOpts, usageText

@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagAnalog
+module EpubTools.EpubName.Format.MagAnalog
    ( fmtMagAnalog )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( filterCommon, format, monthNum )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubTools.EpubName.Util
 
 
 fmtMagAnalog :: Metadata -> EN (String, String)

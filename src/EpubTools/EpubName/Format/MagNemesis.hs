@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagNemesis
+module EpubTools.EpubName.Format.MagNemesis
    ( fmtMagNemesis )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( filterCommon, format )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( filterCommon, format )
+import EpubTools.EpubName.Util
 
 
 fmtMagNemesis :: Metadata -> EN (String, String)

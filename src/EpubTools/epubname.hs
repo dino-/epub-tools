@@ -15,9 +15,9 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
-import EpubName.Formatters ( tryFormatting )
-import EpubName.Opts ( Options (..), parseOpts, usageText )
-import EpubName.Util
+import EpubTools.EpubName.Formatters ( tryFormatting )
+import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
+import EpubTools.EpubName.Util
 
 
 {- Construct additional verbose output

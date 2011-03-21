@@ -2,14 +2,14 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagEclipse
+module EpubTools.EpubName.Format.MagEclipse
    ( fmtMagEclipse )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 
-import EpubName.Format.Util ( format )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( format )
+import EpubTools.EpubName.Util
 
 
 fmtMagEclipse :: Metadata -> EN (String, String)

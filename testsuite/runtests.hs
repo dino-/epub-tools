@@ -10,9 +10,9 @@ import Control.Monad.Error
 import Test.HUnit ( Counts, Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
-import EpubName.Formatters ( tryFormatting )
-import EpubName.Opts
-import EpubName.Util
+import EpubTools.EpubName.Formatters ( tryFormatting )
+import EpubTools.EpubName.Opts
+import EpubTools.EpubName.Util
 
 
 assertNewNameOpts :: Options -> String -> Metadata 

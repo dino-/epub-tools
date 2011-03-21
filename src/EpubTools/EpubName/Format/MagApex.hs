@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagApex
+module EpubTools.EpubName.Format.MagApex
    ( fmtMagApex )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( format )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( format )
+import EpubTools.EpubName.Util
 
 
 fmtMagApex :: Metadata -> EN (String, String)

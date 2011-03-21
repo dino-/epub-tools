@@ -16,7 +16,7 @@ category:            Application, Console
 tested-with:         GHC >= 6.12.3
 
 executable           epubname
-   main-is:          epubname.hs
+   main-is:          EpubTools/epubname.hs
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.0.2, 
                      mtl, regex-compat
    hs-source-dirs:   src

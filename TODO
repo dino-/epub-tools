@@ -1,5 +1,3 @@
-- Repackage existing epubname to co-exist with the other utilities
-
 - Move epubmeta here from epub-metadata and repackage as well
 
 - How will we handle installing software that's not Haskell like

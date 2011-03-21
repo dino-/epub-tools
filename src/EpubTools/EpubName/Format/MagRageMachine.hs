@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagRageMachine
+module EpubTools.EpubName.Format.MagRageMachine
    ( fmtMagRageMachine )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( filterCommon, format, monthNum )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubTools.EpubName.Util
 
 
 fmtMagRageMachine :: Metadata -> EN (String, String)

@@ -2,15 +2,15 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubName.Format.MagFutureOrbits
+module EpubTools.EpubName.Format.MagFutureOrbits
    ( fmtMagFutureOrbits )
    where
 
 import Codec.Epub.Opf.Package.Metadata
 import Text.Printf
 
-import EpubName.Format.Util ( filterCommon, format, monthNum )
-import EpubName.Util
+import EpubTools.EpubName.Format.Util ( filterCommon, format, monthNum )
+import EpubTools.EpubName.Util
 
 
 fmtMagFutureOrbits :: Metadata -> EN (String, String)
