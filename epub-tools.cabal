@@ -17,7 +17,7 @@ tested-with:         GHC >= 6.12.3
 
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs
-   build-depends:    base >= 3 && < 5, epub-metadata >= 2.0.2
+   build-depends:    base >= 3 && < 5, epub-metadata >= 2.2
    hs-source-dirs:   src
 
    -- To strip debug symbols from the binary, for Windows, not portable
@@ -26,8 +26,17 @@ executable           epubmeta
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.0.2, 
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.2, 
                      mtl, regex-compat
+   hs-source-dirs:   src
+
+   -- To strip debug symbols from the binary, for Windows, not portable
+   --ghc-options:      -Wall -optl-s
+   ghc-options:      -Wall
+
+executable           epubzip
+   main-is:          EpubTools/epubzip.hs
+   build-depends:    base >= 3 && < 5, epub-metadata >= 2.2
    hs-source-dirs:   src
 
    -- To strip debug symbols from the binary, for Windows, not portable
