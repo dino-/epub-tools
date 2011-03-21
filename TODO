@@ -1,4 +1,6 @@
-- Move epubmeta here from epub-metadata and repackage as well
+-----
+epubzip
 
-- How will we handle installing software that's not Haskell like
-  epub-repair and epubzip?
+- Program should respond to the args it gets like this:
+   directory name: generate name with naming API and put there
+   file name: just use that name
