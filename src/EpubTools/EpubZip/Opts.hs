@@ -47,5 +47,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "Options:"
          ]
       footer = init $ unlines
-         [ "Version 1.0.0.0  Dino Morelli <dino@ui3.info>"
+         [ "WARNING: This utility will silently overwrite EPUBFILE if present"
+         , ""
+         , "Version 1.0.0.0  Dino Morelli <dino@ui3.info>"
          ]
