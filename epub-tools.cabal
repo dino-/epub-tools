@@ -36,7 +36,7 @@ executable           epubname
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
-   build-depends:    base >= 3 && < 5, epub-metadata >= 2.2
+   build-depends:    base >= 3 && < 5, epub-metadata >= 2.2, filepath
    hs-source-dirs:   src
 
    -- To strip debug symbols from the binary, for Windows, not portable

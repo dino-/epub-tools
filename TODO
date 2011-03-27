@@ -19,6 +19,3 @@ epubmeta
 -----
 epubzip
 
-- Program should respond to the args it gets like this:
-   directory name: generate name with naming API and put there
-   file name: just use that name

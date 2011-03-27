@@ -3,23 +3,54 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 import Codec.Epub.Archive
+import Codec.Epub.IO
+import Codec.Epub.Opf.Package
+import Codec.Epub.Opf.Parse
 import Control.Monad
+import System.Directory
 import System.Environment
 import System.Exit
+import System.FilePath
+import Text.Printf
 
+import EpubTools.EpubName.Formatters ( tryFormatting )
+import qualified EpubTools.EpubName.Opts as EN
+import EpubTools.EpubName.Util ( runEN )
 import EpubTools.EpubZip.Opts
+
+
+exitFail :: String -> IO ()
+exitFail msg = do
+      putStrLn msg
+      exitWith $ ExitFailure 1
 
 
 main :: IO ()
 main = do
    (opts, paths) <- getArgs >>= parseOpts
 
-   when ((optHelp opts) || (null paths)) $ do
-      putStrLn usageText
-      exitWith $ ExitFailure 1
+   when ((optHelp opts) || (null paths)) $ exitFail usageText
 
-   let zipPath = head paths
+   let inputPath = head paths
+   isDir <- doesDirectoryExist inputPath
+   en <- if isDir
+         then runEN EN.defaultOptions $ do
+            package <- opfContentsFromDir "." >>= parseXmlToOpf
+            (_, newPath) <- tryFormatting
+               ("CURRENT DIRECTORY", opMeta package)
+            return $ inputPath </> newPath
+         else return . Right $ inputPath
 
-   archive <- mkEpubArchive "."
+   case en of
+      Right zipPath -> do
+         exists <- doesFileExist zipPath
+         when ((not . optOverwrite $ opts) && exists) $ do
+            exitFail $
+               printf "File %s exists, use --overwrite to force" zipPath
 
-   writeArchive zipPath archive
+         archive <- mkEpubArchive "."
+         writeArchive zipPath archive
+
+         printf "Book created: %s\n" zipPath
+
+      Left errorMsg -> exitFail errorMsg
