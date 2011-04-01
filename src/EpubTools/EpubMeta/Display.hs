@@ -7,13 +7,12 @@ module EpubTools.EpubMeta.Display
 
 import Codec.Epub.Opf.Format.Package
 import Codec.Epub.Opf.Parse
-import Control.Monad.Error
 
 import EpubTools.EpubMeta.Opts
+import EpubTools.EpubMeta.Util
 
 
-displayMeta :: Options -> FilePath -> IO ()
-displayMeta opts zipPath = do
-   result <- runErrorT $ parseEpubOpf zipPath
-
-   putStr $ either id (formatPackage (optVerbose opts)) result
+display :: Options -> FilePath -> EM ()
+display opts zipPath = do
+   meta <- parseEpubOpf zipPath
+   liftIO $ putStr $ formatPackage (optVerbose opts) meta
