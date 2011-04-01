@@ -35,7 +35,9 @@ main = do
    isDir <- doesDirectoryExist inputPath
    en <- if isDir
          then runEN EN.defaultOptions $ do
-            package <- opfContentsFromDir "." >>= parseXmlToOpf
+            package <- do
+               (_, contents) <- opfContentsFromDir "."
+               parseXmlToOpf contents
             (_, newPath) <- tryFormatting
                ("CURRENT DIRECTORY", opMeta package)
             return $ inputPath </> newPath
