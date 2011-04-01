@@ -2,12 +2,11 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-import Codec.Epub.Opf.Format.Package
-import Codec.Epub.Opf.Parse
-import Control.Monad.Error
+import Control.Monad
 import System.Environment ( getArgs )
 import System.Exit
 
+import EpubTools.EpubMeta.Display
 import EpubTools.EpubMeta.Opts
 
 
@@ -20,6 +19,4 @@ main = do
       exitWith $ ExitFailure 1
 
    let zipPath = head paths
-   result <- runErrorT $ parseEpubOpf zipPath
-
-   putStr $ either id (formatPackage (optVerbose opts)) result
+   displayMeta opts zipPath
