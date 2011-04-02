@@ -5,7 +5,7 @@
 module EpubTools.EpubMeta.Opts
    ( Edit (..)
    , Export (..)
-   , Options (..)
+   , Options (..), defaultOptions
    , parseOpts, usageText
    )
    where
@@ -20,6 +20,7 @@ data Edit
    = Backup String
    | NoBackup
    | NotEditing
+   deriving Eq
 
 
 maybeToEdit :: Maybe String -> Edit

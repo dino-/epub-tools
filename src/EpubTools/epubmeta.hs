@@ -7,6 +7,7 @@ import System.Environment ( getArgs )
 import System.Exit
 
 import EpubTools.EpubMeta.Display
+import EpubTools.EpubMeta.Edit
 import EpubTools.EpubMeta.Export
 import EpubTools.EpubMeta.Import
 import EpubTools.EpubMeta.Opts
@@ -20,7 +21,7 @@ exitFail msg = do
 
 
 dispatch :: Options -> [FilePath] -> EM ()
---dispatch opts (f:[]) | optEdit opts /= NotEditing = edit opts f
+dispatch opts (f:[]) | optEdit opts /= NotEditing = edit opts f
 dispatch opts (f:[]) | isJust . optImport $ opts  = importOpf opts f
 dispatch opts (f:[]) | optExport opts /= NoExport = exportOpf opts f
 dispatch opts (f:[])                              = display opts f
