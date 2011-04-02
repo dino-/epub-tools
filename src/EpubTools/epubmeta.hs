@@ -14,12 +14,6 @@ import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-exitFail :: String -> IO ()
-exitFail msg = do
-   putStrLn msg
-   exitWith $ ExitFailure 1
-
-
 dispatch :: Options -> [FilePath] -> EM ()
 dispatch opts (f:[]) | optEdit opts /= NotEditing = edit opts f
 dispatch opts (f:[]) | isJust . optImport $ opts  = importOpf opts f
@@ -33,3 +27,8 @@ main = do
    result <- runEM $
       liftIO getArgs >>= parseOpts >>= uncurry dispatch
    either exitFail (const (exitWith ExitSuccess)) result
+
+   where
+      exitFail msg = do
+         putStrLn msg
+         exitWith $ ExitFailure 1
