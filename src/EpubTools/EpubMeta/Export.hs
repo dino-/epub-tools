@@ -3,7 +3,7 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 module EpubTools.EpubMeta.Export
-   ( export )
+   ( exportOpf )
    where
 
 import Codec.Epub.IO
@@ -19,8 +19,8 @@ write path contents = liftIO $ do
    putStrLn $ "OPF XML saved as: " ++ path
 
 
-export :: Options -> FilePath -> EM ()
-export opts = export' (optExport opts)
+exportOpf :: Options -> FilePath -> EM ()
+exportOpf opts = export' (optExport opts)
 
 
 export' :: Export -> FilePath -> EM ()

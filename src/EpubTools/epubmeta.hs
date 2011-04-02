@@ -2,11 +2,13 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
+import Data.Maybe
 import System.Environment ( getArgs )
 import System.Exit
 
 import EpubTools.EpubMeta.Display
 import EpubTools.EpubMeta.Export
+import EpubTools.EpubMeta.Import
 import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
@@ -19,8 +21,8 @@ exitFail msg = do
 
 dispatch :: Options -> [FilePath] -> EM ()
 --dispatch opts (f:[]) | optEdit opts /= NotEditing = edit opts f
---dispatch opts (f:[]) | isJust . optImport $ opts = import opts f
-dispatch opts (f:[]) | optExport opts /= NoExport = export opts f
+dispatch opts (f:[]) | isJust . optImport $ opts  = importOpf opts f
+dispatch opts (f:[]) | optExport opts /= NoExport = exportOpf opts f
 dispatch opts (f:[])                              = display opts f
 dispatch _    _                                   = throwError usageText
 
