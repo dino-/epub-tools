@@ -5,17 +5,9 @@ general
 
 - Some notes in README about installing epubcheck if possible
 
-- Need a corresponding epubunzip utility? Can do convenient dir
-  top-level dir creation with it
-
 
 -----
 epubmeta
 
-- Need to add modification of files. Start with dumping the OPF XML
-  document and then repacking a new book with changed file
-
-
------
-epubzip
+- Maybe more options for modifying metadata from the command-line
 
