@@ -3,11 +3,13 @@
 if [ -z "$1" ]
 then
    echo "ERROR: Please give basename for zip file"
-   echo "example: ./util/win-dist.sh epubname-2.3.1-win"
+   echo "example: ./util/win-dist.sh epub-tools-2.3.1-win"
    exit 1
 fi
 
 zipFile="$1.zip"
 
 rm $zipFile
-zip -j $zipFile doc/INSTALL dist/build/epubname/epubname.exe
+
+buildDir="dist/build"
+zip -j $zipFile doc/INSTALL $buildDir/epubmeta/epubmeta.exe $buildDir/epubname/epubname.exe $buildDir/epubzip/epubzip.exe
