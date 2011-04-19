@@ -99,7 +99,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
       footer = init $ unlines
          [ "When -v or no options are given, epubmeta will display the OPF package data in a human-readable form."
          , ""
-         , "The -e feature will look for an editor in this order: the EDITOR env var, the VISUAL env var, /usr/bin/vi"
+         , "The -e feature will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi"
          , ""
          , "Version 1.0.0.0  Dino Morelli <dino@ui3.info>"
          ]
