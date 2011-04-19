@@ -3,7 +3,7 @@
 if [ -z "$1" ]
 then
    echo "ERROR: Please give basename for zip file"
-   echo "example: ./util/win-dist.sh epub-tools-2.3.1-win"
+   echo "example: ./util/win-dist.sh epub-tools-1.0.0.0-win"
    exit 1
 fi
 
