@@ -20,6 +20,7 @@ import EpubTools.EpubName.Format.MagAnalog
 import EpubTools.EpubName.Format.MagApex
 import EpubTools.EpubName.Format.MagBcs
 import EpubTools.EpubName.Format.MagChallengingDestiny
+import EpubTools.EpubName.Format.MagClarkesworld
 import EpubTools.EpubName.Format.MagEclipse
 import EpubTools.EpubName.Format.MagFsf
 import EpubTools.EpubName.Format.MagFutureOrbits
@@ -47,6 +48,7 @@ formatters =
    , fmtMagAeon
    , fmtMagEclipse
    , fmtMagChallengingDestiny
+   , fmtMagClarkesworld
    , fmtMagGud
    , fmtMagInterzone
    , fmtMagLightspeed
