@@ -15,8 +15,8 @@ import EpubTools.EpubName.Util
 
 fmtMagLightspeed :: Metadata -> EN (String, String)
 fmtMagLightspeed = format "MagInterzone"
-   ".*Adams.*" (const "")
-   "(Lightspeed) .*, (.*) (.*)" title
+   ".*" (const "")
+   "(Lightspeed) Magazine, (.*) (.*)" title
 
 
 title :: String -> [String] -> String
