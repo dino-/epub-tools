@@ -14,7 +14,7 @@ import EpubTools.EpubName.Util
 
 
 fmtMagClarkesworld :: Metadata -> EN (String, String)
-fmtMagClarkesworld = format "MagApex"
+fmtMagClarkesworld = format "MagClarkesworld"
    ".*" (const "")
    "^(Clarkesworld)[^0-9]*([0-9]+)$" title
 
