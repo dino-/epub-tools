@@ -77,6 +77,7 @@ tests = TestList
    , testBkpText
    , testBkpMissing
    , testMagUniverse
+   , testMagClarkesworld
    ]
 
 
@@ -765,4 +766,21 @@ testMagUniverse = TestCase $
       expected =
          ( "MagUniverse"
          , "JimBaensUniverseVol04Num06.epub"
+         )
+
+
+testMagClarkesworld :: Test
+testMagClarkesworld = TestCase $
+   assertNewName "Clarkesworld Magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Kowal, Mary Robinette")
+            "Mary Robinette Kowal"]
+         , metaTitles = [MetaTitle Nothing
+            "Clarkesworld Magazine - Issue 21"]
+         }
+      expected =
+         ( "MagClarkesworld"
+         , "Clarkesworld021.epub"
          )
