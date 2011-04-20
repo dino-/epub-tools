@@ -108,5 +108,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming code for specific magazines. This means that support for future magazines will likely have to be hand-coded into future versions of this utility. Modifying this just isn't very non-programmer friendly."
          , ""
+         , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , ""
          , "Version 1.0.0.0  Dino Morelli <dino@ui3.info>"
          ]

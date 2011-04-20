@@ -101,5 +101,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "The -e feature will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi"
          , ""
+         , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , ""
          , "Version 1.0.0.0  Dino Morelli <dino@ui3.info>"
          ]
