@@ -16,18 +16,6 @@ import EpubTools.EpubName.Opts
 import EpubTools.EpubName.Util
 
 
-assertNewNameOpts :: Options -> String -> Metadata 
-   -> (String, String) -> Assertion
-assertNewNameOpts opts desc meta expected = do
-   result <- runEN opts $ tryFormatting ("", meta)
-   let actual = either (\em -> ("NO FORMATTER", em)) id result
-   assertEqual desc expected actual
-
-
-assertNewName :: String -> Metadata -> (String, String) -> Assertion
-assertNewName = assertNewNameOpts defaultOptions
-
-
 main :: IO ()
 main = do
    counts <- runTestTT tests
@@ -89,6 +77,18 @@ tests = TestList
    , testMagUniverse
    , testMagClarkesworld
    ]
+
+
+assertNewNameOpts :: Options -> String -> Metadata 
+   -> (String, String) -> Assertion
+assertNewNameOpts opts desc meta expected = do
+   result <- runEN opts $ tryFormatting ("", meta)
+   let actual = either (\em -> ("NO FORMATTER", em)) id result
+   assertEqual desc expected actual
+
+
+assertNewName :: String -> Metadata -> (String, String) -> Assertion
+assertNewName = assertNewNameOpts defaultOptions
 
 
 testAuthorMinimal :: Test
