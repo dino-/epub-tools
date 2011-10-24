@@ -34,6 +34,12 @@ executable           epubname
    --ghc-options:      -Wall -optl-s
    ghc-options:      -Wall
 
+test-suite           epubname-tests
+   type:             exitcode-stdio-1.0
+   main-is:          epubname.hs
+   build-depends:    base, HUnit
+   hs-source-dirs:   src testsuite
+
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
    build-depends:    base >= 3 && < 5, epub-metadata >= 2.2, filepath
