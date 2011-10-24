@@ -7,7 +7,8 @@ module Main
 
 import Codec.Epub.Opf.Package.Metadata
 import Control.Monad.Error
-import Test.HUnit ( Counts, Test (..), assertEqual, runTestTT )
+import System.Exit
+import Test.HUnit ( Counts (..), Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
 import EpubTools.EpubName.Formatters ( tryFormatting )
@@ -29,8 +30,17 @@ assertNewName = assertNewNameOpts defaultOptions
 
 main :: IO ()
 main = do
-   runTestTT tests
-   return ()
+   counts <- runTestTT tests
+   exit $ testsPassed counts
+
+
+exit :: Bool -> IO ()
+exit True  = exitWith ExitSuccess
+exit False = exitWith $ ExitFailure 1
+
+
+testsPassed :: Counts -> Bool
+testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
 
 
 tests :: Test
