@@ -20,9 +20,11 @@ executable           epubmeta
                      process, zip-archive
    hs-source-dirs:   src
 
-   -- To strip debug symbols from the binary, for Windows, not portable
-   --ghc-options:      -Wall -optl-s
-   ghc-options:      -Wall
+   if os(windows)
+      -- Strip debug symbols from the binary, for Windows, not portable
+      ghc-options:   -Wall -optl-s
+   else
+      ghc-options:   -Wall
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
@@ -30,9 +32,11 @@ executable           epubname
                      mtl, regex-compat
    hs-source-dirs:   src
 
-   -- To strip debug symbols from the binary, for Windows, not portable
-   --ghc-options:      -Wall -optl-s
-   ghc-options:      -Wall
+   if os(windows)
+      -- Strip debug symbols from the binary, for Windows, not portable
+      ghc-options:   -Wall -optl-s
+   else
+      ghc-options:   -Wall
 
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
@@ -45,6 +49,8 @@ executable           epubzip
    build-depends:    base >= 3 && < 5, epub-metadata >= 2.2, filepath
    hs-source-dirs:   src
 
-   -- To strip debug symbols from the binary, for Windows, not portable
-   --ghc-options:      -Wall -optl-s
-   ghc-options:      -Wall
+   if os(windows)
+      -- Strip debug symbols from the binary, for Windows, not portable
+      ghc-options:   -Wall -optl-s
+   else
+      ghc-options:   -Wall
