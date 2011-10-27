@@ -31,12 +31,7 @@ executable           epubmeta
                      EpubTools.EpubMeta.Import
                      EpubTools.EpubMeta.Opts
                      EpubTools.EpubMeta.Util
-
-   if os(windows)
-      -- Strip debug symbols from the binary, for Windows, not portable
-      ghc-options:   -Wall -optl-s
-   else
-      ghc-options:   -Wall
+   ghc-options:      -Wall
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
@@ -70,13 +65,7 @@ executable           epubname
                      EpubTools.EpubName.Format.Util
                      EpubTools.EpubName.Opts
                      EpubTools.EpubName.Util
-
-
-   if os(windows)
-      -- Strip debug symbols from the binary, for Windows, not portable
-      ghc-options:   -Wall -optl-s
-   else
-      ghc-options:   -Wall
+   ghc-options:      -Wall
 
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
@@ -90,10 +79,4 @@ executable           epubzip
                      filepath, mtl, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubZip.Opts
-
-
-   if os(windows)
-      -- Strip debug symbols from the binary, for Windows, not portable
-      ghc-options:   -Wall -optl-s
-   else
-      ghc-options:   -Wall
+   ghc-options:      -Wall
