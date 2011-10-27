@@ -13,6 +13,11 @@ synopsis:            Command line utilities for working with epub files
 description:         A suite of command-line utilities for creating and manipulating epub book files. Included are: epubmeta, epubname, epubzip
 category:            Application, Console
 tested-with:         GHC >= 7.0.3
+extra-source-files:  testsuite/*.hs
+
+source-repository    head
+   type:             darcs
+   location:         http://ui3.info/darcs/epub-tools/
 
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs
