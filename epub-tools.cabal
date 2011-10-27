@@ -72,6 +72,7 @@ test-suite           epubname-tests
    main-is:          epubname.hs
    build-depends:    base, epub-metadata >= 2.2, HUnit, mtl, regex-compat
    hs-source-dirs:   src testsuite
+   ghc-options:      -Wall
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs

@@ -6,7 +6,6 @@ module Main
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import Control.Monad.Error
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
