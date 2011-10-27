@@ -21,8 +21,9 @@ source-repository    head
 
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs
-   build-depends:    base >= 3 && < 5, bytestring, epub-metadata >= 2.2, 
-                     process, zip-archive
+   build-depends:    base >= 3 && < 5, bytestring, directory,
+                     epub-metadata >= 2.2, filepath, mtl, process,
+                     zip-archive
    hs-source-dirs:   src
 
    if os(windows)
@@ -46,12 +47,13 @@ executable           epubname
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
    main-is:          epubname.hs
-   build-depends:    base, HUnit
+   build-depends:    base, epub-metadata >= 2.2, HUnit, mtl, regex-compat
    hs-source-dirs:   src testsuite
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
-   build-depends:    base >= 3 && < 5, epub-metadata >= 2.2, filepath
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.2,
+                     filepath, mtl, regex-compat
    hs-source-dirs:   src
 
    if os(windows)
