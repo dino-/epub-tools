@@ -25,6 +25,12 @@ executable           epubmeta
                      epub-metadata >= 2.2, filepath, mtl, process,
                      zip-archive
    hs-source-dirs:   src
+   other-modules:    EpubTools.EpubMeta.Display
+                     EpubTools.EpubMeta.Edit
+                     EpubTools.EpubMeta.Export
+                     EpubTools.EpubMeta.Import
+                     EpubTools.EpubMeta.Opts
+                     EpubTools.EpubMeta.Util
 
    if os(windows)
       -- Strip debug symbols from the binary, for Windows, not portable
@@ -37,6 +43,34 @@ executable           epubname
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.2, 
                      mtl, regex-compat
    hs-source-dirs:   src
+   other-modules:    EpubTools.EpubName.Format.Anonymous
+                     EpubTools.EpubName.Format.AuthorBasic
+                     EpubTools.EpubName.Format.AuthorDouble
+                     EpubTools.EpubName.Format.AuthorSt
+                     EpubTools.EpubName.Format.AuthorThird
+                     EpubTools.EpubName.Format.MagAeon
+                     EpubTools.EpubName.Format.MagAnalog
+                     EpubTools.EpubName.Format.MagApex
+                     EpubTools.EpubName.Format.MagBcs
+                     EpubTools.EpubName.Format.MagChallengingDestiny
+                     EpubTools.EpubName.Format.MagClarkesworld
+                     EpubTools.EpubName.Format.MagEclipse
+                     EpubTools.EpubName.Format.MagFsf
+                     EpubTools.EpubName.Format.MagFutureOrbits
+                     EpubTools.EpubName.Format.MagGud
+                     EpubTools.EpubName.Format.MagInterzone
+                     EpubTools.EpubName.Format.MagLightspeed
+                     EpubTools.EpubName.Format.MagNameIssue
+                     EpubTools.EpubName.Format.MagNemesis
+                     EpubTools.EpubName.Format.MagRageMachine
+                     EpubTools.EpubName.Format.MagSomethingWicked
+                     EpubTools.EpubName.Format.MagUniverse
+                     EpubTools.EpubName.Format.SFBestOf
+                     EpubTools.EpubName.Formatters
+                     EpubTools.EpubName.Format.Util
+                     EpubTools.EpubName.Opts
+                     EpubTools.EpubName.Util
+
 
    if os(windows)
       -- Strip debug symbols from the binary, for Windows, not portable
@@ -55,6 +89,8 @@ executable           epubzip
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.2,
                      filepath, mtl, regex-compat
    hs-source-dirs:   src
+   other-modules:    EpubTools.EpubZip.Opts
+
 
    if os(windows)
       -- Strip debug symbols from the binary, for Windows, not portable
