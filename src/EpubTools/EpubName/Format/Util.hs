@@ -15,7 +15,6 @@ import Codec.Epub.Opf.Package
 import Control.Monad.Error
 import Data.Char
 import Data.List ( foldl', intercalate, isPrefixOf )
-import Data.Maybe ( fromJust )
 --import Debug.Trace
 import Prelude hiding ( last )
 import Text.Printf
@@ -232,17 +231,30 @@ formatSingleAuthor (MetaCreator _ (Just fa) di) =
       else authorSingle [fa]
 
 formatSingleAuthor (MetaCreator _ _         di) = 
-   authorSingle . reverse $ parts
-   where
-      parts = fromJust .
-         (matchRegex (mkRegex "(.*) ([^ ]+)$")) $ di
+   authorSingle . reverse . nameParts $ di
 
+
+nameParts :: String -> [String]
+nameParts s = maybe [] id $ foldl mplus Nothing matches
+   where
+      matches =
+         [ matchRegex (mkRegex "(.*) ([^ ]+)$") s
+         , matchRegex (mkRegex "(.*)") s
+         ]
+
+
+lastName' :: String -> String
+lastName' s = maybe "" head $ foldl mplus Nothing matches
+   where
+      matches =
+         [ matchRegex (mkRegex "(.*),.*") s
+         , matchRegex (mkRegex ".* (.*)") s
+         , matchRegex (mkRegex "(.*)") s
+         ]
 
 lastName :: MetaCreator -> String
-lastName (MetaCreator _ (Just fa) _ ) = head . fromJust .
-   (matchRegex (mkRegex "(.*),.*")) $ fa
-lastName (MetaCreator _ _         di) = head . fromJust .
-   (matchRegex (mkRegex ".* (.*)")) $ di
+lastName (MetaCreator _ (Just fa) _ ) = lastName' fa
+lastName (MetaCreator _ _         di) = lastName' di
 
 
 formatMultiAuthors :: [MetaCreator] -> String

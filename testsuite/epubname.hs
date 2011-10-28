@@ -33,6 +33,7 @@ testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
 tests :: Test
 tests = TestList
    [ testAuthorMinimal
+   , testAuthorOneName
    , testAuthorRole
    , testAuthorFileas
    , testAuthorFull
@@ -103,6 +104,20 @@ testAuthorMinimal = TestCase $
       expected =
          ( "AuthorBasic"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorOneName :: Test
+testAuthorOneName = TestCase $
+   assertNewName "author is a single word" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Melville"]
+         , metaTitles = [MetaTitle Nothing "Moby Dick"]
+         }
+      expected =
+         ( "AuthorBasic"
+         , "Melville-MobyDick.epub"
          )
 
 
