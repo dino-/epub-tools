@@ -57,7 +57,8 @@ executable           epubname
                      EpubTools.EpubName.Format.MagFutureOrbits
                      EpubTools.EpubName.Format.MagGud
                      EpubTools.EpubName.Format.MagInterzone
-                     EpubTools.EpubName.Format.MagLightspeed
+                     EpubTools.EpubName.Format.MagLightspeedDate
+                     EpubTools.EpubName.Format.MagLightspeedIssue
                      EpubTools.EpubName.Format.MagNameIssue
                      EpubTools.EpubName.Format.MagNemesis
                      EpubTools.EpubName.Format.MagRageMachine

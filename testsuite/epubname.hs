@@ -75,6 +75,8 @@ tests = TestList
    , testBkpMissing
    , testMagUniverse
    , testMagClarkesworld
+   , testLightspeedDate
+   , testLightspeedIssue
    ]
 
 
@@ -792,4 +794,35 @@ testMagClarkesworld = TestCase $
       expected =
          ( "MagClarkesworld"
          , "Clarkesworld021.epub"
+         )
+
+
+testLightspeedDate :: Test
+testLightspeedDate = TestCase $
+   assertNewName "Lightspeed Magazine, date in title" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing
+            "Edited by John Joseph Adams"]
+         , metaTitles = [MetaTitle Nothing 
+            "Lightspeed Magazine, June 2010"]
+         }
+      expected =
+         ( "MagLightspeedDate"
+         , "Lightspeed2010-06.epub"
+         )
+
+
+testLightspeedIssue :: Test
+testLightspeedIssue = TestCase $
+   assertNewName "Lightspeed Magazine, issue number in title" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") (Just "Magazine, Lightspeed & Clark, Maggie & Valentine, Genevieve & Baxter, Stephen & Okorafor, Nnedi & Wilison, Daniel H. & Reed, Robert & Sedia, Ekaterina") "Lightspeed Magazine"]
+         , metaTitles = [MetaTitle Nothing 
+            "Lightspeed Magazine Issue 10"]
+         }
+      expected =
+         ( "MagLightspeedIssue"
+         , "Lightspeed010.epub"
          )

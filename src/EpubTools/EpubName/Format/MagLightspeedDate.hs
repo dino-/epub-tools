@@ -2,8 +2,8 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubTools.EpubName.Format.MagLightspeed
-   ( fmtMagLightspeed )
+module EpubTools.EpubName.Format.MagLightspeedDate
+   ( fmtMagLightspeedDate )
    where
 
 import Codec.Epub.Opf.Package.Metadata
@@ -13,8 +13,8 @@ import EpubTools.EpubName.Format.Util ( format, monthNum )
 import EpubTools.EpubName.Util
 
 
-fmtMagLightspeed :: Metadata -> EN (String, String)
-fmtMagLightspeed = format "MagInterzone"
+fmtMagLightspeedDate :: Metadata -> EN (String, String)
+fmtMagLightspeedDate = format "MagLightspeedDate"
    ".*" (const "")
    "(Lightspeed) Magazine, (.*) (.*)" title
 

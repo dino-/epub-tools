@@ -26,7 +26,8 @@ import EpubTools.EpubName.Format.MagFsf
 import EpubTools.EpubName.Format.MagFutureOrbits
 import EpubTools.EpubName.Format.MagGud
 import EpubTools.EpubName.Format.MagInterzone
-import EpubTools.EpubName.Format.MagLightspeed
+import EpubTools.EpubName.Format.MagLightspeedDate
+import EpubTools.EpubName.Format.MagLightspeedIssue
 import EpubTools.EpubName.Format.MagNameIssue
 import EpubTools.EpubName.Format.MagNemesis
 import EpubTools.EpubName.Format.MagRageMachine
@@ -51,7 +52,8 @@ formatters =
    , fmtMagClarkesworld
    , fmtMagGud
    , fmtMagInterzone
-   , fmtMagLightspeed
+   , fmtMagLightspeedDate
+   , fmtMagLightspeedIssue
    , fmtMagSomethingWicked
    , fmtMagRageMachine
    , fmtMagFsf
