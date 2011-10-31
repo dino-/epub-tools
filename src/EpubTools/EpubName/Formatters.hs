@@ -33,6 +33,7 @@ import EpubTools.EpubName.Format.MagNemesis
 import EpubTools.EpubName.Format.MagRageMachine
 import EpubTools.EpubName.Format.MagSomethingWicked
 import EpubTools.EpubName.Format.MagUniverse
+import EpubTools.EpubName.Format.MagWeirdTales
 import EpubTools.EpubName.Format.SFBestOf
 import EpubTools.EpubName.Util
 
@@ -62,6 +63,7 @@ formatters =
    , fmtMagApex
    , fmtMagNameIssue
    , fmtMagUniverse
+   , fmtMagWeirdTales
    , fmtSFBestOf
    , fmtAuthorDouble
 

@@ -78,6 +78,7 @@ tests = TestList
    , testMagClarkesworld
    , testLightspeedDate
    , testLightspeedIssue
+   , testMagWeirdTales
    ]
 
 
@@ -840,4 +841,24 @@ testLightspeedIssue = TestCase $
       expected =
          ( "MagLightspeedIssue"
          , "Lightspeed010.epub"
+         )
+
+
+testMagWeirdTales :: Test
+testMagWeirdTales = TestCase $
+   assertNewName "Weird Tales magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ MetaCreator (Just "aut") Nothing "VanderMeer"
+            , MetaCreator (Just "aut") Nothing "Ann"
+            , MetaCreator (Just "aut") Nothing "Spinrad"
+            , MetaCreator (Just "aut") Nothing "Norman"
+            ]
+         , metaTitles = [MetaTitle Nothing 
+            "Weird Tales #350"]
+         }
+      expected =
+         ( "MagWeirdTales"
+         , "WeirdTales350.epub"
          )

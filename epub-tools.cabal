@@ -64,6 +64,7 @@ executable           epubname
                      EpubTools.EpubName.Format.MagRageMachine
                      EpubTools.EpubName.Format.MagSomethingWicked
                      EpubTools.EpubName.Format.MagUniverse
+                     EpubTools.EpubName.Format.MagWeirdTales
                      EpubTools.EpubName.Format.SFBestOf
                      EpubTools.EpubName.Formatters
                      EpubTools.EpubName.Format.Util
