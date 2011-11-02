@@ -10,7 +10,7 @@ cd /var/local/archive/doc/books/fiction
 tempDir="/home/dino/temp"
 allFile="epubname-all"
 
-find . -name '*.epub' | xargs -n 30 epubname -n -v1 > $tempDir/$allFile
+find . -name '*.epub' | xargs -n 30 epubname -n -o -v1 > $tempDir/$allFile
 
 cd $tempDir
 
