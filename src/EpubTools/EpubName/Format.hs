@@ -28,6 +28,7 @@ formatters =
    , magChallengingDestiny
    , magClarkesworld
    , magEclipse
+   , magFantasyMag
    , magFsf
    , magFutureOrbits
    , magGud
@@ -116,6 +117,15 @@ magEclipse md = do
    let title = printf "%s%s" prefix (wordNum issue)
 
    return ("magEclipse", [title])
+
+
+magFantasyMag :: Metadata -> EN (String, [String])
+magFantasyMag md = do
+   (prefix:issue:_) <-
+      extractTitle md "^(Fantasy Magazine)[^0-9]+([0-9]+).*"
+   let title = printf "%s%03d" (filterCommon prefix) (read issue :: Int)
+
+   return ("magFantasyMag", [title])
 
 
 magFsf :: Metadata -> EN (String, [String])

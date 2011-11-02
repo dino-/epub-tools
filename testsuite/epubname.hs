@@ -57,6 +57,7 @@ tests = TestList
    , testChallengingDestinyLong
    , testAnalog
    , testAsimovs
+   , testFantasyMagazine
    , testFsfShort
    , testFsfLong
    , testFsfAmpersand
@@ -493,6 +494,28 @@ testAsimovs = TestCase $
       expected =
          ( "magAnalog"
          , "AsimovsSF2003-08.epub"
+         )
+
+testFantasyMagazine :: Test
+testFantasyMagazine = TestCase $
+   assertNewName "Fantasy Magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ MetaCreator (Just "aut") (Just "Howard, Kat & Tanzer, Molly & Beagle, Peter S. & Howard, Jonathan L. & Valentine, Genevieve & Vaughn, Carrie & Pilinovsky, Helen") "Kat Howard"
+            , MetaCreator (Just "aut") Nothing "Molly Tanzer"
+            , MetaCreator (Just "aut") Nothing "Peter S. Beagle"
+            , MetaCreator (Just "aut") Nothing "Jonathan L. Howard"
+            , MetaCreator (Just "aut") Nothing "Genevieve Valentine"
+            , MetaCreator (Just "aut") Nothing "Carrie Vaughn"
+            , MetaCreator (Just "aut") Nothing "Helen Pilinovsky"
+            ]
+         , metaTitles = [MetaTitle Nothing
+            "Fantasy Magazine Issue 49"]
+         }
+      expected =
+         ( "magFantasyMag"
+         , "FantasyMagazine049.epub"
          )
 
 
