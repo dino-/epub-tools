@@ -64,6 +64,7 @@ tests = TestList
    , testMagFutureOrbits
    , testGudShort
    , testGudLong
+   , testGudVeryLong
    , testInterzoneShort
    , testInterzoneLong
    , testNemesisShort
@@ -610,6 +611,22 @@ testGudLong = TestCase $
       expected =
          ( "magGud"
          , "GUDMagazine02.epub"
+         )
+
+
+testGudVeryLong :: Test
+testGudVeryLong = TestCase $
+   assertNewName "Gud Magazine, very long" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "GUD Magazine Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "Greatest Uncommon Denominator Magazine Issue 4 :: Spring 2009"]
+         }
+      expected =
+         ( "magGud"
+         , "GUDMagazine04.epub"
          )
 
 

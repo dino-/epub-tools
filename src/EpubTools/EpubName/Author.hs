@@ -95,15 +95,15 @@ authorSingle [n]           = printf "%s-" $ filterCommon n
 authorSingle _             = undefined
 
 
-{- True if any author contains the pattern
+{- Throws an error if no author matches the pattern
 -}
-authorMatches :: Metadata -> String -> Bool
-authorMatches md re =
-   any isJust $ map authorMatches' $ justAuthors md
-
-   where
-      authorMatches' (MetaCreator _ _ di) =
+authorMatches :: Metadata -> String -> EN ()
+authorMatches md re = do
+   let authorMatches' (MetaCreator _ _ di) =
          matchRegex (mkRegex re) di
+
+   unless (any isJust $ map authorMatches' $ justAuthors md) $
+      throwError "Specific author string not found"
 
 
 {- Author names with a postfix like II, III, Jr. or Sr.

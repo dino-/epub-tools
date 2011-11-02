@@ -130,8 +130,7 @@ magFantasyMag md = do
 
 magFsf :: Metadata -> EN (String, [String])
 magFsf md = do
-   unless (authorMatches md "Spilogale") $
-      throwError "Specific author string not found"
+   authorMatches md "Spilogale"
 
    (month:year:_) <- extractTitle md ".* ([^ ]+) ([0-9]{4})$"
    let title = printf "FantasyScienceFiction%s-%s"
@@ -152,8 +151,10 @@ magFutureOrbits md = do
 
 magGud :: Metadata -> EN (String, [String])
 magGud md = do
+   authorMatches md "GUD Magazine Authors"
+
    (issue:_) <-
-      extractTitle md "GUD Magazine Issue ([0-9]+).*"
+      extractTitle md ".* Magazine Issue ([0-9]+) ::.*"
    let title = printf "GUDMagazine%02d" (read issue :: Int)
 
    return ("magGud", [title])
