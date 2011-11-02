@@ -120,7 +120,10 @@ magEclipse md = do
 
 magFsf :: Metadata -> EN (String, [String])
 magFsf md = do
-   (month:year:_) <- extractTitle md "^FSF.* ([^ ]+) ([0-9]+)$"
+   unless (authorMatches md "Spilogale") $
+      throwError "Specific author string not found"
+
+   (month:year:_) <- extractTitle md ".* ([^ ]+) ([0-9]{4})$"
    let title = printf "FantasyScienceFiction%s-%s"
          year (monthNum month)
 

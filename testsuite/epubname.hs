@@ -59,6 +59,7 @@ tests = TestList
    , testAsimovs
    , testFsfShort
    , testFsfLong
+   , testFsfAmpersand
    , testMagFutureOrbits
    , testGudShort
    , testGudLong
@@ -523,6 +524,21 @@ testFsfLong = TestCase $
       expected =
          ( "magFsf"
          , "FantasyScienceFiction2006-04.epub"
+         )
+
+
+testFsfAmpersand :: Test
+testFsfAmpersand = TestCase $
+   assertNewName "FSF Magazine, ampersand" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Spilogale"]
+         , metaTitles = [MetaTitle Nothing "F & SF Dec 2003"]
+         }
+      expected =
+         ( "magFsf"
+         , "FantasyScienceFiction2003-12.epub"
          )
 
 

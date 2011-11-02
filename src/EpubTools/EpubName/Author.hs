@@ -4,12 +4,14 @@
 
 module EpubTools.EpubName.Author
    ( extractAuthors
+   , authorMatches
    )
    where
 
 import Codec.Epub.Opf.Package
 import Control.Monad
 import Data.List ( intercalate )
+import Data.Maybe ( isJust )
 import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
@@ -91,6 +93,17 @@ authorSingle (last:rest:_) =
    printf "%s%s-" (filterCommon last) (filterCommon rest)
 authorSingle [n]           = printf "%s-" $ filterCommon n
 authorSingle _             = undefined
+
+
+{- True if any author contains the pattern
+-}
+authorMatches :: Metadata -> String -> Bool
+authorMatches md re =
+   any isJust $ map authorMatches' $ justAuthors md
+
+   where
+      authorMatches' (MetaCreator _ _ di) =
+         matchRegex (mkRegex re) di
 
 
 {- Author names with a postfix like II, III, Jr. or Sr.
