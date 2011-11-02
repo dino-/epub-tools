@@ -13,7 +13,7 @@ import System.Exit
 import System.FilePath
 import Text.Printf
 
-import EpubTools.EpubName.Formatters ( tryFormatting )
+import EpubTools.EpubName.Format ( tryFormatting )
 import qualified EpubTools.EpubName.Opts as EN
 import EpubTools.EpubName.Util ( runEN )
 import EpubTools.EpubZip.Opts
@@ -39,7 +39,7 @@ main = do
                (_, contents) <- opfContentsFromDir "."
                parseXmlToOpf contents
             (_, newPath) <- tryFormatting
-               ("CURRENT DIRECTORY", opMeta package)
+               "CURRENT DIRECTORY" $ opMeta package
             return $ inputPath </> newPath
          else return . Right $ inputPath
 

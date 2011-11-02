@@ -10,7 +10,7 @@ import System.Exit
 import Test.HUnit ( Counts (..), Test (..), assertEqual, runTestTT )
 import Test.HUnit.Base ( Assertion )
 
-import EpubTools.EpubName.Formatters ( tryFormatting )
+import EpubTools.EpubName.Format ( tryFormatting )
 import EpubTools.EpubName.Opts
 import EpubTools.EpubName.Util
 
@@ -37,9 +37,11 @@ tests = TestList
    , testAuthorRole
    , testAuthorFileas
    , testAuthorFull
-   , testAuthorDoubleAnd
+   , testAuthorSeveral
+   , testSeveralAuthors
    , testNoAuthor
-   , testNoAuthorPubDate
+   , testCreatorsNoAuthor
+   , testCreatorsNoAuthorPubDate
    , testCapsTitle
    , testColon
    , testBracketTitle
@@ -53,7 +55,6 @@ tests = TestList
    , testMagApexShort
    , testChallengingDestinyShort
    , testChallengingDestinyLong
-   , testChallengingDestinyPub
    , testAnalog
    , testAsimovs
    , testFsfShort
@@ -85,7 +86,7 @@ tests = TestList
 assertNewNameOpts :: Options -> String -> Metadata 
    -> (String, String) -> Assertion
 assertNewNameOpts opts desc meta expected = do
-   result <- runEN opts $ tryFormatting ("", meta)
+   result <- runEN opts $ tryFormatting "" meta
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 
@@ -103,7 +104,7 @@ testAuthorMinimal = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
          )
 
@@ -117,7 +118,7 @@ testAuthorOneName = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "Melville-MobyDick.epub"
          )
 
@@ -132,7 +133,7 @@ testAuthorRole = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
          )
 
@@ -148,7 +149,7 @@ testAuthorFileas = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
          )
 
@@ -164,14 +165,51 @@ testAuthorFull = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorSeveral :: Test
+testAuthorSeveral = TestCase $
+   assertNewName "several authors" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ MetaCreator (Just "aut") Nothing
+               "James Patrick Kelly"
+            , MetaCreator (Just "aut") (Just "Kessel, John")
+               "John Kessel"
+            , MetaCreator (Just "aut") Nothing
+               "Jonathan Lethem"
+            ]
+         , metaTitles = [MetaTitle Nothing
+            "Ninety Percent of Everything"]
+         }
+      expected =
+         ( "book"
+         , "Kelly_Kessel_Lethem-NinetyPercentOfEverything.epub"
          )
 
 
 testNoAuthor :: Test
 testNoAuthor = TestCase $
-   assertNewName "no author(s) at all" meta expected
+   assertNewName "no creator(s) at all" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = []
+         , metaTitles = [MetaTitle Nothing
+            "Some Collection of Fine Stories, Volume 1"]
+         }
+      expected =
+         ( "book"
+         , "SomeCollectionOfFineStoriesVolume1.epub"
+         )
+
+
+testCreatorsNoAuthor :: Test
+testCreatorsNoAuthor = TestCase $
+   assertNewName "creators, but no author(s) at all" meta expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -184,14 +222,14 @@ testNoAuthor = TestCase $
             "Some Collection of Fine Stories, Volume 1"]
          }
       expected =
-         ( "SFBestOf"
+         ( "book"
          , "SomeCollectionOfFineStoriesVolume1.epub"
          )
 
 
-testNoAuthorPubDate :: Test
-testNoAuthorPubDate = TestCase $
-   assertNewName "no author(s) at all, with publication date" 
+testCreatorsNoAuthorPubDate :: Test
+testCreatorsNoAuthorPubDate = TestCase $
+   assertNewName "creators, but no author(s) at all, with pub date" 
       meta expected
    where
       meta = emptyMetadata
@@ -207,23 +245,23 @@ testNoAuthorPubDate = TestCase $
             "2008"]
          }
       expected =
-         ( "SFBestOf"
+         ( "book"
          , "SomeCollectionOfFineStoriesVolume1_2008.epub"
          )
 
 
-testAuthorDoubleAnd :: Test
-testAuthorDoubleAnd = TestCase $
-   assertNewName "two authors separated by and" meta expected
+testSeveralAuthors :: Test
+testSeveralAuthors = TestCase $
+   assertNewName "more than one author separated by & and/or and" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing
-            "Kevin J. Anderson and Rebecca Moesta"]
-         , metaTitles = [MetaTitle Nothing "Rough Draft"]
+            "Yvonne Q. Anderson & Eva Tunglewacker and Jefferson Milner"]
+         , metaTitles = [MetaTitle Nothing "Big Trouble"]
          }
       expected =
-         ( "AuthorDouble"
-         , "Anderson_Moesta-RoughDraft.epub"
+         ( "book"
+         , "Anderson_Tunglewacker_Milner-BigTrouble.epub"
          )
 
 
@@ -236,7 +274,7 @@ testCapsTitle = TestCase $
          , metaTitles = [MetaTitle Nothing "EON"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "BearGreg-Eon.epub"
          )
 
@@ -251,7 +289,7 @@ testColon = TestCase $
             "Book 1: 3rd World Products, Inc."]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
          )
 
@@ -265,7 +303,7 @@ testBracketTitle = TestCase $
          , metaTitles = [MetaTitle Nothing "SKitty [Shipscat series #1]"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "LackeyMercedes-Skitty_ShipscatSeries1.epub"
          )
 
@@ -295,7 +333,7 @@ testAllPunctuation = TestCase $
             "The *crazy*: Sand-box. Of Smedley's discontent, fear & Malnourishment? (Maybe not!); [Part #2]"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2.epub"
          )
 
@@ -310,7 +348,7 @@ testPubYear = TestCase $
          , metaDates = [MetaDate (Just "original-publication") "2003"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "JonesJim-ATimelessStory_2003.epub"
          )
 
@@ -328,7 +366,7 @@ testPubYearUnwanted = TestCase $
          , metaDates = [MetaDate (Just "original-publication") "2003"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "JonesJim-ATimelessStory.epub"
          )
 
@@ -342,7 +380,7 @@ testMagAeon = TestCase $
          , metaTitles = [MetaTitle Nothing "Aeon Eight"]
          }
       expected =
-         ( "MagAeon"
+         ( "magAeon"
          , "AeonMagazine08.epub"
          )
 
@@ -356,7 +394,7 @@ testMagAEon = TestCase $
          , metaTitles = [MetaTitle Nothing "Aeon Thirteen"]
          }
       expected =
-         ( "MagAeon"
+         ( "magAeon"
          , "AeonMagazine13.epub"
          )
 
@@ -372,7 +410,7 @@ testMagApexLong = TestCase $
             "Apex Science Fiction and Horror Digest #9"]
          }
       expected =
-         ( "MagApex"
+         ( "magApex"
          , "ApexMagazine009.epub"
          )
 
@@ -388,14 +426,14 @@ testMagApexShort = TestCase $
             "Apex Magazine Issue 17"]
          }
       expected =
-         ( "MagApex"
+         ( "magApex"
          , "ApexMagazine017.epub"
          )
 
 
 testChallengingDestinyShort :: Test
 testChallengingDestinyShort = TestCase $
-   assertNewName "Challenging Destiny Magazine, short" meta expected
+   assertNewName "Challenging Destiny Magazine, short title" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing
@@ -404,14 +442,14 @@ testChallengingDestinyShort = TestCase $
             "Challenging Destiny #23"]
          }
       expected =
-         ( "MagChallengingDestiny"
+         ( "magChallengingDestiny"
          , "ChallengingDestinyMagazine023.epub"
          )
 
 
 testChallengingDestinyLong :: Test
 testChallengingDestinyLong = TestCase $
-   assertNewName "Challenging Destiny Magazine, long" meta expected
+   assertNewName "Challenging Destiny Magazine, long title" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing 
@@ -420,25 +458,8 @@ testChallengingDestinyLong = TestCase $
             "Challenging Destiny #24: August 2007"]
          }
       expected =
-         ( "MagChallengingDestiny"
+         ( "magChallengingDestiny"
          , "ChallengingDestinyMagazine024.epub"
-         )
-
-
-testChallengingDestinyPub :: Test
-testChallengingDestinyPub = TestCase $
-   assertNewName "Challenging Destiny Magazine, Publishing in author"
-      meta expected
-   where
-      meta = emptyMetadata
-         { metaCreators = [MetaCreator Nothing Nothing 
-            "Crystalline Sphere Publishing"]
-         , metaTitles = [MetaTitle Nothing 
-            "Challenging Destiny #18"]
-         }
-      expected =
-         ( "MagChallengingDestiny"
-         , "ChallengingDestinyMagazine018.epub"
          )
 
 
@@ -453,7 +474,7 @@ testAnalog = TestCase $
             "Analog SFF, July-August 2003"]
          }
       expected =
-         ( "MagAnalog"
+         ( "magAnalog"
          , "AnalogSF2003-07_08.epub"
          )
 
@@ -469,7 +490,7 @@ testAsimovs = TestCase $
             "Asimov's SF, August 2003"]
          }
       expected =
-         ( "MagAnalog"
+         ( "magAnalog"
          , "AsimovsSF2003-08.epub"
          )
 
@@ -484,7 +505,7 @@ testFsfShort = TestCase $
          , metaTitles = [MetaTitle Nothing "FSF, April 2008"]
          }
       expected =
-         ( "MagFsf"
+         ( "magFsf"
          , "FantasyScienceFiction2008-04.epub"
          )
 
@@ -500,7 +521,7 @@ testFsfLong = TestCase $
             "FSF Magazine, April 2006"]
          }
       expected =
-         ( "MagFsf"
+         ( "magFsf"
          , "FantasyScienceFiction2006-04.epub"
          )
 
@@ -516,7 +537,7 @@ testMagFutureOrbits = TestCase $
             "Future Orbits Issue 5, June/July 2002"]
          }
       expected =
-         ( "MagFutureOrbits"
+         ( "magFutureOrbits"
          , "FutureOrbitsMagazine05_2002-06_07.epub"
          )
 
@@ -532,7 +553,7 @@ testGudShort = TestCase $
             "GUD Magazine Issue 0 :: Spring 2007"]
          }
       expected =
-         ( "MagGud"
+         ( "magGud"
          , "GUDMagazine00.epub"
          )
 
@@ -548,7 +569,7 @@ testGudLong = TestCase $
             "GUD Magazine Issue 2 :: Spring 2008"]
          }
       expected =
-         ( "MagGud"
+         ( "magGud"
          , "GUDMagazine02.epub"
          )
 
@@ -564,7 +585,7 @@ testInterzoneShort = TestCase $
             "Interzone SFF #212"]
          }
       expected =
-         ( "MagInterzone"
+         ( "magInterzone"
          , "InterzoneSFF212.epub"
          )
 
@@ -580,7 +601,7 @@ testInterzoneLong = TestCase $
             "Interzone Science Fiction and Fantasy Magazine #216"]
          }
       expected =
-         ( "MagInterzone"
+         ( "magInterzone"
          , "InterzoneSFF216.epub"
          )
 
@@ -596,7 +617,7 @@ testNemesisShort = TestCase $
             "Nemesis Magazine #2"]
          }
       expected =
-         ( "MagNemesis"
+         ( "magNemesis"
          , "NemesisMag002.epub"
          )
 
@@ -612,7 +633,7 @@ testNemesisLong = TestCase $
             "Nemesis Magazine #7: Featuring Victory Rose in Death Stalks the Ruins"]
          }
       expected =
-         ( "MagNemesis"
+         ( "magNemesis"
          , "NemesisMag007.epub"
          )
 
@@ -628,7 +649,7 @@ testMagSomethingWicked = TestCase $
             "Something Wicked SF and Horror Magazine #5"]
          }
       expected =
-         ( "MagSomethingWicked"
+         ( "magSomethingWicked"
          , "SomethingWickedMagazine05.epub"
          )
 
@@ -644,7 +665,7 @@ testSFBestOf = TestCase $
             "Science Fiction: The Best of the Year, 2007 Edition"]
          }
       expected =
-         ( "SFBestOf"
+         ( "sfBestOfYear"
          , "ScienceFiction_TheBestOfTheYear2007Edition.epub"
          )
 
@@ -660,7 +681,7 @@ testMagBlackStatic = TestCase $
             "Black Static Horror Magazine #5"]
          }
       expected =
-         ( "MagNameIssue"
+         ( "magBlackStatic"
          , "BlackStaticHorrorMagazine05.epub"
          )
 
@@ -676,7 +697,7 @@ testRageMachineMag = TestCase $
             "Rage Machine Magazine #1--December 2005"]
          }
       expected =
-         ( "MagRageMachine"
+         ( "magRageMachine"
          , "RageMachineMagazine1_2005-12.epub"
          )
 
@@ -693,7 +714,7 @@ testEclipseMag = TestCase $
             "Eclipse One"]
          }
       expected =
-         ( "MagEclipse"
+         ( "magEclipse"
          , "Eclipse01.epub"
          )
 
@@ -715,7 +736,7 @@ testBcs = TestCase $
             "Beneath Ceaseless Skies #32"]
          }
       expected =
-         ( "MagBcs"
+         ( "magBcs"
          , "BeneathCeaselessSkies_Issue032.epub"
          )
 
@@ -735,7 +756,7 @@ testBkpFileAs = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick_acme.epub"
          )
 
@@ -755,7 +776,7 @@ testBkpText = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
          )
 
@@ -773,7 +794,7 @@ testBkpMissing = TestCase $
          , metaTitles = [MetaTitle Nothing "Moby Dick"]
          }
       expected =
-         ( "AuthorBasic"
+         ( "book"
          , "MelvilleHerman-MobyDick.epub"
          )
 
@@ -791,7 +812,7 @@ testMagUniverse = TestCase $
          , metaTitles = [MetaTitle Nothing "Jim Baen's Universe-Vol 4 Num 6"]
          }
       expected =
-         ( "MagUniverse"
+         ( "magUniverse"
          , "JimBaensUniverseVol04Num06.epub"
          )
 
@@ -808,7 +829,7 @@ testMagClarkesworld = TestCase $
             "Clarkesworld Magazine - Issue 21"]
          }
       expected =
-         ( "MagClarkesworld"
+         ( "magClarkesworld"
          , "Clarkesworld021.epub"
          )
 
@@ -824,7 +845,7 @@ testLightspeedDate = TestCase $
             "Lightspeed Magazine, June 2010"]
          }
       expected =
-         ( "MagLightspeedDate"
+         ( "magLightspeedDate"
          , "Lightspeed2010-06.epub"
          )
 
@@ -839,7 +860,7 @@ testLightspeedIssue = TestCase $
             "Lightspeed Magazine Issue 10"]
          }
       expected =
-         ( "MagLightspeedIssue"
+         ( "magLightspeedIssue"
          , "Lightspeed010.epub"
          )
 
@@ -859,6 +880,6 @@ testMagWeirdTales = TestCase $
             "Weird Tales #350"]
          }
       expected =
-         ( "MagWeirdTales"
+         ( "magWeirdTales"
          , "WeirdTales350.epub"
          )

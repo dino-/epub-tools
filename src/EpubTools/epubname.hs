@@ -15,7 +15,7 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
-import EpubTools.EpubName.Formatters ( tryFormatting )
+import EpubTools.EpubName.Format ( tryFormatting )
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
 import EpubTools.EpubName.Util
 
@@ -50,7 +50,7 @@ processBook opts oldPath = do
    result <- runEN opts $ do
       pkg <- parseEpubOpf oldPath
       let md = opMeta pkg
-      (fmtUsed, newPath) <- tryFormatting (oldPath, md)
+      (fmtUsed, newPath) <- tryFormatting oldPath md
 
       when (not $ optOverwrite opts) $ do
          fileExists <- liftIO $ doesFileExist newPath
