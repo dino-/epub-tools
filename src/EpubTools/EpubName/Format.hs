@@ -237,7 +237,7 @@ magWeirdTales md = do
 
 sfBestOfYear :: Metadata -> EN (String, [String])
 sfBestOfYear md = do
-   (title:_) <- extractTitle md "(.*The Best of the Year.*)"
+   (title:_) <- extractTitle md "(.*of the Year.*)"
 
    return ("sfBestOfYear", [filterCommon title])
 
