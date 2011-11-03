@@ -72,6 +72,8 @@ tests = TestList
    , testMagSomethingWicked
    , testMagSomethingWickedMonth
    , testSFBestOf
+   , testBestSF
+   , testYearsBest
    , testMagBlackStatic
    , testRageMachineMag
    , testEclipseMag
@@ -739,8 +741,42 @@ testSFBestOf = TestCase $
             "Science Fiction: The Best of the Year, 2007 Edition"]
          }
       expected =
-         ( "sfBestOfYear"
+         ( "compOfTheYear"
          , "ScienceFiction_TheBestOfTheYear2007Edition.epub"
+         )
+
+
+testBestSF :: Test
+testBestSF = TestCase $
+   assertNewName "The Best Science Fiction and Fantasy of the Year"
+      meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Strahan, Jonathan")
+            "Jonathan Strahan"]
+         , metaTitles = [MetaTitle Nothing 
+            "The Best Science Fiction and Fantasy of the Year: Volume 2"]
+         }
+      expected =
+         ( "compOfTheYear"
+         , "TheBestScienceFictionAndFantasyOfTheYear_Volume2.epub"
+         )
+
+
+testYearsBest :: Test
+testYearsBest = TestCase $
+   assertNewName "The Year's Best SF" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut") Nothing 
+            "Rich Horton, Michael Swanwick, Karen Joy Fowler"]
+         , metaTitles = [MetaTitle Nothing 
+            "The Year's Best Science Fiction: 2008 Edition"]
+         }
+      expected =
+         ( "compYearsBest"
+         , "TheYearsBestScienceFiction_2008Edition.epub"
          )
 
 

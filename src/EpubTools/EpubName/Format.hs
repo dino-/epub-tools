@@ -40,7 +40,8 @@ formatters =
    , magSomethingWicked
    , magWeirdTales
    , magUniverse
-   , sfBestOfYear
+   , compOfTheYear
+   , compYearsBest
    , book   -- Kind of always want this one last as a catch-all
    ]
 
@@ -235,11 +236,18 @@ magWeirdTales md = do
    return ("magWeirdTales", [title])
 
 
-sfBestOfYear :: Metadata -> EN (String, [String])
-sfBestOfYear md = do
+compOfTheYear :: Metadata -> EN (String, [String])
+compOfTheYear md = do
    (title:_) <- extractTitle md "(.*of the Year.*)"
 
-   return ("sfBestOfYear", [filterCommon title])
+   return ("compOfTheYear", [filterCommon title])
+
+
+compYearsBest :: Metadata -> EN (String, [String])
+compYearsBest md = do
+   (title:_) <- extractTitle md "(.*Year's Best.*)"
+
+   return ("compYearsBest", [filterCommon title])
 
 
 book :: Metadata -> EN (String, [String])
