@@ -209,8 +209,8 @@ magRageMachine md = do
 
 magSomethingWicked :: Metadata -> EN (String, [String])
 magSomethingWicked md = do
-   (prefix:issue:_) <- extractTitle md "^(Something Wicked)[^0-9]*([0-9]+)$"
-   let title = printf "%sMagazine%02d"
+   (prefix:issue:_) <- extractTitle md "^(Something Wicked)[^0-9]*([0-9]+)"
+   let title = printf "%s%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magSomethingWicked", [title])

@@ -70,6 +70,7 @@ tests = TestList
    , testNemesisShort
    , testNemesisLong
    , testMagSomethingWicked
+   , testMagSomethingWickedMonth
    , testSFBestOf
    , testMagBlackStatic
    , testRageMachineMag
@@ -706,7 +707,24 @@ testMagSomethingWicked = TestCase $
          }
       expected =
          ( "magSomethingWicked"
-         , "SomethingWickedMagazine05.epub"
+         , "SomethingWicked005.epub"
+         )
+
+
+testMagSomethingWickedMonth :: Test
+testMagSomethingWickedMonth = TestCase $
+   assertNewName "Something Wicked Magazine, month in title" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Authors, Something Wicked")
+            "Something Wicked Authors"]
+         , metaTitles = [MetaTitle Nothing 
+            "Something Wicked #14 (October 2011)"]
+         }
+      expected =
+         ( "magSomethingWicked"
+         , "SomethingWicked014.epub"
          )
 
 
