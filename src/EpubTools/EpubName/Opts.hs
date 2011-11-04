@@ -81,8 +81,8 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          ]
       footer = init $ unlines
          [ "Verbosity levels:"
-         , "   1      - Include which formatter processed the file"
-         , "   2      - Include the OPF Package and Metadata info"
+         , "   1 - Include which formatter processed the file"
+         , "   2 - Include the OPF Package and Metadata info"
          , ""
          , "Exit codes:"
          , "   0 - success"
@@ -90,6 +90,8 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   2 - failed to process one or more of the files given"
          , ""
          , "Book names are constructed by examining parts of the OPF Package metadata such as the title, creators, contributors and dates."
+         , ""
+         , "Strings from the OPF metadata fields are stripped of punctuation, CamelCased and stripped of spaces. Resulting file names look like this:"
          , ""
          , "For books with a single author:"
          , "   LastFirst[Middle]-TitleText[_year][_publisher].epub"
