@@ -12,3 +12,5 @@ general
 epubmeta
 
 - Maybe more options for modifying metadata from the command-line
+
+- Ability to dump the actual Haskell Metadata structure out. Could be used to make unit tests for epubname.
