@@ -1,13 +1,14 @@
--- Copyright: 2008-2011 Dino Morelli
+-- Copyright: 2011 Dino Morelli
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module Main
+module EpubTools.Test.EpubName.Format
+   ( formatTests
+   )
    where
 
 import Codec.Epub.Opf.Package.Metadata
-import System.Exit
-import Test.HUnit ( Counts (..), Test (..), assertEqual, runTestTT )
+import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
 import EpubTools.EpubName.Format ( tryFormatting )
@@ -15,23 +16,8 @@ import EpubTools.EpubName.Opts
 import EpubTools.EpubName.Util
 
 
-main :: IO ()
-main = do
-   counts <- runTestTT tests
-   exit $ testsPassed counts
-
-
-exit :: Bool -> IO ()
-exit True  = exitWith ExitSuccess
-exit False = exitWith $ ExitFailure 1
-
-
-testsPassed :: Counts -> Bool
-testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
-
-
-tests :: Test
-tests = TestList
+formatTests :: Test
+formatTests = TestLabel "Format" $ TestList
    [ testAuthorMinimal
    , testAuthorOneName
    , testAuthorRole
