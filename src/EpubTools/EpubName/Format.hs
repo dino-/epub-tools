@@ -15,6 +15,7 @@ import Text.Regex
 
 import EpubTools.EpubName.Author
 import EpubTools.EpubName.Opts
+import EpubTools.EpubName.PubYear
 import EpubTools.EpubName.Util
 
 
@@ -253,7 +254,7 @@ compYearsBest md = do
 book :: Metadata -> EN (String, [String])
 book md = do
    (title:_) <- extractTitle md "(.*)"
-   year <- extractYear md
+   year <- getPubYear md
 
    return ("book", [extractAuthors md, filterCommon title, year])
 
@@ -281,20 +282,6 @@ extractTitle md re = do
    case matchRegex (mkRegex re) oldTitle of
       Just matches -> return matches
       Nothing      -> throwError $ printf "extract title failed: %s" re
-
-
-{- Look for a date tag with event="original-publication" in the
-   metadata
--}
-extractYear :: Metadata -> EN String
-extractYear md = do
-   inclY <- asks optYear
-   return . maybe "" ('_' :) $
-      (foldr mplus Nothing (map (maybeYear inclY) $ metaDates md))
-
-   where
-      maybeYear True (MetaDate (Just "original-publication") d) = Just d
-      maybeYear _    _                                          = Nothing
 
 
 extractPublisher :: Metadata -> Bool -> String

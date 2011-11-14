@@ -44,6 +44,7 @@ executable           epubname
    other-modules:    EpubTools.EpubName.Author
                      EpubTools.EpubName.Format
                      EpubTools.EpubName.Opts
+                     EpubTools.EpubName.PubYear
                      EpubTools.EpubName.Util
 
    -- Strip symbols from binary, for Windows, not portable, see [1] below
