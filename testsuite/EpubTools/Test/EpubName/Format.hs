@@ -34,6 +34,7 @@ formatTests = TestLabel "Format" $ TestList
    , testNoTitle
    , testAllPunctuation
    , testPubYear
+   , testPubYearAny
    , testPubYearUnwanted
    , testMagAeon
    , testMagAEon
@@ -233,7 +234,7 @@ testCreatorsNoAuthorPubDate = TestCase $
             ]
          , metaTitles = [MetaTitle Nothing
             "Some Collection of Fine Stories, Volume 1"]
-         , metaDates = [MetaDate (Just "original-publication")
+         , metaDates = [MetaDate (Just "publication")
             "2008"]
          }
       expected =
@@ -337,6 +338,24 @@ testPubYear = TestCase $
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing "Jim Jones"]
          , metaTitles = [MetaTitle Nothing "A Timeless Story"]
+         , metaDates = [MetaDate (Just "publication") "2003"]
+         }
+      expected =
+         ( "book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAny :: Test
+testPubYearAny = TestCase $
+   assertNewNameOpts opts
+      "book with original-publication attr and --any-date"
+      meta expected
+   where
+      opts = defaultOptions { optPubYear = AnyDate }
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing "Jim Jones"]
+         , metaTitles = [MetaTitle Nothing "A Timeless Story"]
          , metaDates = [MetaDate (Just "original-publication") "2003"]
          }
       expected =
@@ -351,7 +370,7 @@ testPubYearUnwanted = TestCase $
       "book with a publication year but we don't want"
       meta expected
    where
-      opts = defaultOptions { optYear = False }
+      opts = defaultOptions { optPubYear = NoDate }
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing "Jim Jones"]
          , metaTitles = [MetaTitle Nothing "A Timeless Story"]

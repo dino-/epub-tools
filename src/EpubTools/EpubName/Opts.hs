@@ -4,7 +4,7 @@
 
 
 module EpubTools.EpubName.Opts
-   ( Options (..)
+   ( PubYear (..), Options (..)
    , defaultOptions
    , parseOpts, usageText
    )
@@ -15,13 +15,19 @@ import System.Console.GetOpt
 import System.Exit
 
 
+data PubYear
+   = Publication  -- Default, use date event='publication' or 'original-publication'
+   | AnyDate      -- Use first date element found
+   | NoDate       -- Don't do publication date at all
+
+
 data Options = Options
    { optHelp :: Bool
    , optNoAction :: Bool
    , optOverwrite :: Bool
    , optPublisher :: Bool
    , optVerbose :: Maybe Int
-   , optYear :: Bool
+   , optPubYear :: PubYear
    }
 
 
@@ -32,13 +38,19 @@ defaultOptions = Options
    , optOverwrite = False
    , optPublisher = False
    , optVerbose = Nothing
-   , optYear = True
+   , optPubYear = Publication
    }
 
 
 options :: [OptDescr (Options -> Options)]
 options =
-   [ Option ['h'] ["help"] 
+   [ Option ['d'] ["any-date"]
+      (NoArg (\opts -> opts { optPubYear = AnyDate } )) 
+      "If no publication year found, use first date element of any kind"
+   , Option ['D'] ["no-date"]
+      (NoArg (\opts -> opts { optPubYear = NoDate } )) 
+      "Suppress inclusion of original publication year"
+   , Option ['h'] ["help"] 
       (NoArg (\opts -> opts { optHelp = True } ))
       "This help text"
    , Option ['n'] ["no-action"]
@@ -55,9 +67,6 @@ options =
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
          "LEVEL")
       "Verbosity level: 1, 2"
-   , Option ['y'] ["year"]
-      (NoArg (\opts -> opts { optPublisher = True } )) 
-      "Suppress inclusion of original publication year, if present"
    ]
 
 
@@ -104,7 +113,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Only creator tags with either a role attribute of 'aut' or no role at all are considered authors. If a file-as attribute is present, this will be the preferred string. If not, the program tries to do some intelligent parsing of the name."
          , ""
-         , "The publication year is searched for as follows: a date tag with an event attribute of 'original-publication', or a date tag with an event attribute of 'publication'. If neither of those is found, the first date tag of any kind that has a parsable year will be used."
+         , "The OPF spec suggests there may be a <dc:date event='publication'>2011</date> element representing original publication date. If this is present, or event='original-publication', it will be used by default. The --any-date switch will fall back to the first date found as necessary. The year can be parsed out of many date formats, it's very flexible."
          , ""
          , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
          , ""

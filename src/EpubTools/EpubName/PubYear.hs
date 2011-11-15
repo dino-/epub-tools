@@ -20,20 +20,20 @@ import EpubTools.EpubName.Util
 -}
 getPubYear :: Metadata -> EN String
 getPubYear md = do
-   inclY <- asks optYear
+   yearHandling <- asks optPubYear
 
-   case inclY of
-      True  -> do
-         return . maybe "" ('_' :) $ foldr mplus Nothing $
-            map (\f -> f (metaDates md)) getters
-
-      False -> return ""
+   case yearHandling of
+      Publication -> getPubYear' pubAttrs
+      AnyDate -> getPubYear' $ pubAttrs ++ [getFirstDate]
+      NoDate -> return ""
 
    where
-      getters =
-         [ getDateWithAttr "original-publication"
-         , getDateWithAttr "publication"
-         , getFirstDate
+      getPubYear' = return . maybe "" ('_' :) . foldr mplus Nothing .
+         map (\f -> f (metaDates md))
+
+      pubAttrs =
+         [ getDateWithAttr "publication"
+         , getDateWithAttr "original-publication"
          ]
 
 
