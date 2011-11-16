@@ -21,6 +21,8 @@ pubYearTests = TestLabel "PubYear" $ TestList
    , testExtractYear "2009-11-19T07:00:00+00:00" "2009"
    , testExtractYear "2010-09-21" "2010"
    , testExtractYear "2010-02-14T21:47:47.682882+00:00" "2010"
+   , testExtractYear "2011-11-16T09:19:50-0500" "2011"
+   , testExtractYear "2011-11-16T14:19:52Z" "2011"
    ]
 
 
