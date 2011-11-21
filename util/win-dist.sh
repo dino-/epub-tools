@@ -1,15 +1,13 @@
 #! /bin/bash
 
-if [ -z "$1" ]
-then
-   echo "ERROR: Please give basename for zip file"
-   echo "example: ./util/win-dist.sh epub-tools-1.0.0.0-win"
-   exit 1
-fi
+version=$(awk '/^[Vv]ersion/ { print $2 }' epub-tools.cabal)
 
-zipFile="$1.zip"
+buildDir="dist/build"
+
+binaries="$buildDir/epubmeta/epubmeta.exe $buildDir/epubname/epubname.exe $buildDir/epubzip/epubzip.exe"
+
+strip $binaries
 
 rm $zipFile
 
-buildDir="dist/build"
-zip -j $zipFile doc/INSTALL $buildDir/epubmeta/epubmeta.exe $buildDir/epubname/epubname.exe $buildDir/epubzip/epubzip.exe
+zip -j dist/epub-tools-$version-win.zip doc/INSTALL $binaries
