@@ -4,9 +4,9 @@ general
 - Some notes in README about installing epubcheck if possible
 
 - Would like to way to be able to insert a publishing year tag into the OPF data like this:
-   <dc:date opf:event="original-publication">2011</dc:date>
+   <dc:date opf:event="publication">2011</dc:date>
 
-   Also take a peek at all the date fields in all the books, what do they collectively look like?
+   Perhaps as part of epubmeta?
 
 -----
 epubmeta
