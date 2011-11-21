@@ -32,9 +32,6 @@ executable           epubmeta
                      EpubTools.EpubMeta.Import
                      EpubTools.EpubMeta.Opts
                      EpubTools.EpubMeta.Util
-
-   -- Strip symbols from binary, for Windows, not portable, see [1] below
-   --ghc-options:      -Wall -optl-s
    ghc-options:      -Wall
 
 executable           epubname
@@ -47,9 +44,6 @@ executable           epubname
                      EpubTools.EpubName.Opts
                      EpubTools.EpubName.PubYear
                      EpubTools.EpubName.Util
-
-   -- Strip symbols from binary, for Windows, not portable, see [1] below
-   --ghc-options:      -Wall -optl-s
    ghc-options:      -Wall
 
 test-suite           epubname-tests
@@ -66,12 +60,4 @@ executable           epubzip
                      filepath, mtl, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubZip.Opts
-
-   -- Strip symbols from binary, for Windows, not portable, see [1] below
-   --ghc-options:      -Wall -optl-s
    ghc-options:      -Wall
-
-
--- [1] The right way to handle this should be an if os(windows) block
---     but that makes this package unacceptable to Hackage. Sorry,
---     you'll have to use comments to switch this on.
