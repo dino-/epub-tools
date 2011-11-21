@@ -8,6 +8,8 @@ binaries="$buildDir/epubmeta/epubmeta.exe $buildDir/epubname/epubname.exe $build
 
 strip $binaries
 
+zipFile="dist/epub-tools-$version-win.zip"
+
 rm $zipFile
 
-zip -j dist/epub-tools-$version-win.zip doc/INSTALL $binaries
+zip -j $zipFile doc/INSTALL $binaries
