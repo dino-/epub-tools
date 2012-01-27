@@ -8,9 +8,17 @@ general
 
    Perhaps as part of epubmeta?
 
+- Perform util/win-dist.sh behavior in post-build step of Setup.hs? I think it makes sense.
+
 -----
 epubmeta
 
 - Maybe more options for modifying metadata from the command-line
 
 - Ability to dump the actual Haskell Metadata structure out. Could be used to make unit tests for epubname.
+
+-----
+epubname
+
+- Maybe have an interactive mode that shows the changes and asks?
+   Seeing a usage pattern where I use -n first and then run again without -n. Thinking about streamlining that process.
