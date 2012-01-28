@@ -64,6 +64,7 @@ formatTests = TestLabel "Format" $ TestList
    , testMagBlackStatic
    , testRageMachineMag
    , testEclipseMag
+   , testEclipseMagNum
    , testBcs
    , testBkpFileAs
    , testBkpText
@@ -831,6 +832,23 @@ testEclipseMag = TestCase $
       expected =
          ( "magEclipse"
          , "Eclipse01.epub"
+         )
+
+
+testEclipseMagNum :: Test
+testEclipseMagNum = TestCase $
+   assertNewName "Eclipse Magazine" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator (Just "aut")
+            (Just "Strahan, Jonathan")
+            "Jonathan Strahan"]
+         , metaTitles = [MetaTitle Nothing 
+            "Eclipse 4: New Science Fiction and Fantasy"]
+         }
+      expected =
+         ( "magEclipse"
+         , "Eclipse04.epub"
          )
 
 

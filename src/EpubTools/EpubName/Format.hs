@@ -10,6 +10,7 @@ module EpubTools.EpubName.Format
 import Codec.Epub.Opf.Package
 import Control.Monad.Error
 import Data.List ( isPrefixOf )
+import Data.Maybe ( fromJust )
 import Text.Printf
 import Text.Regex
 
@@ -114,9 +115,16 @@ magClarkesworld md = do
 
 magEclipse :: Metadata -> EN (String, [String])
 magEclipse md = do
-   (prefix:issue:_) <-
-      extractTitle md "^(Eclipse) ([^ ]+)$"
-   let title = printf "%s%s" prefix (wordNum issue)
+   authorMatches md "Jonathan Strahan"
+
+   (prefix:issueRaw:_) <- extractTitle md "^(Eclipse) ([^ :]+)"
+
+   let issue = fromJust $
+         mbWordNum issueRaw
+         `mplus`
+         (Just $ printf "%02d" (read issueRaw :: Int))
+
+   let title = printf "%s%s" prefix issue
 
    return ("magEclipse", [title])
 
@@ -361,24 +369,27 @@ monthNum x                    = "[ERROR monthNum " ++ x ++ "]"
 {- Convert an English word for a number into number form
 -}
 wordNum :: String -> String
-wordNum "One"       = "01"
-wordNum "Two"       = "02"
-wordNum "Three"     = "03"
-wordNum "Four"      = "04"
-wordNum "Five"      = "05"
-wordNum "Six"       = "06"
-wordNum "Seven"     = "07"
-wordNum "Eight"     = "08"
-wordNum "Nine"      = "09"
-wordNum "Ten"       = "10"
-wordNum "Eleven"    = "11"
-wordNum "Twelve"    = "12"
-wordNum "Thirteen"  = "13"
-wordNum "Fourteen"  = "14"
-wordNum "Fifteen"   = "15"
-wordNum "Sixteen"   = "16"
-wordNum "Seventeen" = "17"
-wordNum "Eighteen"  = "18"
-wordNum "Nineteen"  = "19"
-wordNum "Twenty"    = "20"
-wordNum x           = "[ERROR wordNum " ++ x ++ "]"
+wordNum s = maybe ("[ERROR mbWordNum " ++ s ++ "]") id $ mbWordNum s
+
+mbWordNum :: String -> Maybe String
+mbWordNum "One"       = Just "01"
+mbWordNum "Two"       = Just "02"
+mbWordNum "Three"     = Just "03"
+mbWordNum "Four"      = Just "04"
+mbWordNum "Five"      = Just "05"
+mbWordNum "Six"       = Just "06"
+mbWordNum "Seven"     = Just "07"
+mbWordNum "Eight"     = Just "08"
+mbWordNum "Nine"      = Just "09"
+mbWordNum "Ten"       = Just "10"
+mbWordNum "Eleven"    = Just "11"
+mbWordNum "Twelve"    = Just "12"
+mbWordNum "Thirteen"  = Just "13"
+mbWordNum "Fourteen"  = Just "14"
+mbWordNum "Fifteen"   = Just "15"
+mbWordNum "Sixteen"   = Just "16"
+mbWordNum "Seventeen" = Just "17"
+mbWordNum "Eighteen"  = Just "18"
+mbWordNum "Nineteen"  = Just "19"
+mbWordNum "Twenty"    = Just "20"
+mbWordNum _           = Nothing
