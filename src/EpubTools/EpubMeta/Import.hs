@@ -9,8 +9,8 @@ module EpubTools.EpubMeta.Import
 import Codec.Archive.Zip ( Entry (..), addEntryToArchive, readEntry, toArchive )
 import Codec.Epub.Archive ( writeArchive )
 import Codec.Epub.IO ( opfContentsFromBS )
-import qualified Data.ByteString as S
-import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString as BS
+import qualified Data.ByteString.Lazy as BL
 import Data.Maybe ( fromJust )
 import System.Directory ( removeFile )
 
@@ -27,15 +27,14 @@ importOpf opts zipPath = do
    tempEntry <- liftIO $ readEntry [] pathToNewOpf
 
    -- The path in the book where new file must go
-   strictBytes <- liftIO $ S.readFile zipPath
-   let bytes = B.fromChunks [strictBytes]
-   (pathToOldFile, _) <- opfContentsFromBS bytes
+   strictBytes <- liftIO $ BS.readFile zipPath
+   (pathToOldFile, _) <- opfContentsFromBS strictBytes
 
    -- Adjust the entry's path
    let newEntry = tempEntry { eRelativePath = pathToOldFile }
 
    -- Bytes of existing archive already loaded, make an Archive from that
-   let oldArchive = toArchive bytes
+   let oldArchive = toArchive . BL.fromChunks $ [strictBytes]
 
    -- Add new entry to it (replacing old one)
    let newArchive = addEntryToArchive newEntry oldArchive
