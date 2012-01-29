@@ -113,7 +113,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Only creator tags with either a role attribute of 'aut' or no role at all are considered authors. If a file-as attribute is present, this will be the preferred string. If not, the program tries to do some intelligent parsing of the name."
          , ""
-         , "The OPF spec suggests there may be a <dc:date event='publication'>2011</date> element representing original publication date. If this is present, or event='original-publication', it will be used by default. The --any-date switch will fall back to the first date found as necessary. The year can be parsed out of many date formats, it's very flexible."
+         , "The OPF spec suggests there may be a <dc:date opf:event='publication'>2011</date> element representing original publication date. If this (or opf:event='original-publication') is present, it will be used by default for _year as in the above examples. The --any-date switch will use the first date tag found, regardless of attributes. The year can be parsed out of many date formats, it's very flexible."
          , ""
          , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
          , ""
