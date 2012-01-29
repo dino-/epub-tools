@@ -4,7 +4,7 @@ version:             1.1.2
 build-type:          Simple
 license:             BSD3
 license-file:        LICENSE
-copyright:           2008-2011 Dino Morelli 
+copyright:           2008-2012 Dino Morelli 
 author:              Dino Morelli 
 maintainer:          Dino Morelli <dino@ui3.info>
 stability:           stable
