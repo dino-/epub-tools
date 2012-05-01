@@ -80,7 +80,7 @@ formatTests = TestLabel "Format" $ TestList
 assertNewNameOpts :: Options -> String -> Metadata 
    -> (String, String) -> Assertion
 assertNewNameOpts opts desc meta expected = do
-   result <- runEN opts $ tryFormatting "" meta
+   let result = runEN (Globals opts meta) $ tryFormatting ""
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 

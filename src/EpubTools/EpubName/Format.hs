@@ -20,7 +20,7 @@ import EpubTools.EpubName.PubYear
 import EpubTools.EpubName.Util
 
 
-formatters :: [Metadata -> EN (String, [String])]
+formatters :: [EN (String, [String])]
 formatters =
    [ magAeon
    , magAnalog
@@ -48,18 +48,18 @@ formatters =
    ]
 
 
-magAeon :: Metadata -> EN (String, [String])
-magAeon md = do
-   (issue:_) <- extractTitle md "^A[eE]on ([^ ]+)$"
+magAeon :: EN (String, [String])
+magAeon = do
+   (issue:_) <- extractTitle "^A[eE]on ([^ ]+)$"
    let title = printf "AeonMagazine%s" (wordNum issue)
 
    return ("magAeon", [title])
 
 
-magAnalog :: Metadata -> EN (String, [String])
-magAnalog md = do
+magAnalog :: EN (String, [String])
+magAnalog = do
    (prefix:month:year:_) <-
-      extractTitle md "^(A[^ ]*).*, ([^ ]+) ([0-9]{4})$"
+      extractTitle "^(A[^ ]*).*, ([^ ]+) ([0-9]{4})$"
 
    let title = printf "%sSF%s-%s"
          (filterCommon prefix) year (monthNum month)
@@ -67,57 +67,57 @@ magAnalog md = do
    return ("magAnalog", [title])
 
 
-magApex :: Metadata -> EN (String, [String])
-magApex md = do
-   (prefix:issue:_) <- extractTitle md "^(Apex)[^0-9]*([0-9]+)$"
+magApex :: EN (String, [String])
+magApex = do
+   (prefix:issue:_) <- extractTitle "^(Apex)[^0-9]*([0-9]+)$"
    let title = printf "%sMagazine%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magApex", [title])
 
 
-magBcs :: Metadata -> EN (String, [String])
-magBcs md = do
+magBcs :: EN (String, [String])
+magBcs = do
    (prefix:issue:_) <-
-      extractTitle md "(Beneath Ceaseless.*) #([0-9]+).*"
+      extractTitle "(Beneath Ceaseless.*) #([0-9]+).*"
    let title = printf "%s_Issue%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magBcs", [title])
 
 
-magBlackStatic :: Metadata -> EN (String, [String])
-magBlackStatic md = do
+magBlackStatic :: EN (String, [String])
+magBlackStatic = do
    (prefix:issue:_) <-
-      extractTitle md "^(Black Static Horror Magazine)[^0-9]*([0-9]+)$"
+      extractTitle "^(Black Static Horror Magazine)[^0-9]*([0-9]+)$"
    let title = printf "%s%02d" (filterCommon prefix) (read issue :: Int)
 
    return ("magBlackStatic", [title])
 
 
-magChallengingDestiny :: Metadata -> EN (String, [String])
-magChallengingDestiny md = do
-   (prefix:issue:_) <- extractTitle md "^(Challenging Destiny) #([0-9]+).*"
+magChallengingDestiny :: EN (String, [String])
+magChallengingDestiny = do
+   (prefix:issue:_) <- extractTitle "^(Challenging Destiny) #([0-9]+).*"
    let title = printf "%sMagazine%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magChallengingDestiny", [title])
 
 
-magClarkesworld :: Metadata -> EN (String, [String])
-magClarkesworld md = do
+magClarkesworld :: EN (String, [String])
+magClarkesworld = do
    (prefix:issue:_) <-
-      extractTitle md "^(Clarkesworld)[^0-9]*([0-9]+)$"
+      extractTitle "^(Clarkesworld)[^0-9]*([0-9]+)$"
    let title = printf "%s%03d" prefix (read issue :: Int)
 
    return ("magClarkesworld", [title])
 
 
-magEclipse :: Metadata -> EN (String, [String])
-magEclipse md = do
-   authorMatches md "Jonathan Strahan"
+magEclipse :: EN (String, [String])
+magEclipse = do
+   authorMatches "Jonathan Strahan"
 
-   (prefix:issueRaw:_) <- extractTitle md "^(Eclipse) ([^ :]+)"
+   (prefix:issueRaw:_) <- extractTitle "^(Eclipse) ([^ :]+)"
 
    let issue = fromJust $
          mbWordNum issueRaw
@@ -129,29 +129,29 @@ magEclipse md = do
    return ("magEclipse", [title])
 
 
-magFantasyMag :: Metadata -> EN (String, [String])
-magFantasyMag md = do
+magFantasyMag :: EN (String, [String])
+magFantasyMag = do
    (prefix:issue:_) <-
-      extractTitle md "^(Fantasy Magazine)[^0-9]+([0-9]+).*"
+      extractTitle "^(Fantasy Magazine)[^0-9]+([0-9]+).*"
    let title = printf "%s%03d" (filterCommon prefix) (read issue :: Int)
 
    return ("magFantasyMag", [title])
 
 
-magFsf :: Metadata -> EN (String, [String])
-magFsf md = do
-   authorMatches md "Spilogale"
+magFsf :: EN (String, [String])
+magFsf = do
+   authorMatches "Spilogale"
 
-   (month:year:_) <- extractTitle md ".* ([^ ]+) ([0-9]{4})$"
+   (month:year:_) <- extractTitle ".* ([^ ]+) ([0-9]{4})$"
    let title = printf "FantasyScienceFiction%s-%s"
          year (monthNum month)
 
    return ("magFsf", [title])
 
 
-magFutureOrbits :: Metadata -> EN (String, [String])
-magFutureOrbits md = do
-   (prefix:issue:month:year:_) <- extractTitle md
+magFutureOrbits :: EN (String, [String])
+magFutureOrbits = do
+   (prefix:issue:month:year:_) <- extractTitle
       "(Future Orbits) Issue ([0-9]+), ([^ ]+) ([0-9]{4})$"
    let title = printf "%sMagazine%02d_%s-%s" (filterCommon prefix)
          (read issue :: Int) year (monthNum month)
@@ -159,130 +159,136 @@ magFutureOrbits md = do
    return ("magFutureOrbits", [title])
 
 
-magGud :: Metadata -> EN (String, [String])
-magGud md = do
-   authorMatches md "GUD Magazine Authors"
+magGud :: EN (String, [String])
+magGud = do
+   authorMatches "GUD Magazine Authors"
 
    (issue:_) <-
-      extractTitle md ".* Magazine Issue ([0-9]+) ::.*"
+      extractTitle ".* Magazine Issue ([0-9]+) ::.*"
    let title = printf "GUDMagazine%02d" (read issue :: Int)
 
    return ("magGud", [title])
 
 
-magInterzone :: Metadata -> EN (String, [String])
-magInterzone md = do
+magInterzone :: EN (String, [String])
+magInterzone = do
    (prefix:issue:_) <-
-      extractTitle md "^(Interzone)[^0-9]*([0-9]+)$"
+      extractTitle "^(Interzone)[^0-9]*([0-9]+)$"
    let title = printf "%sSFF%03d" prefix (read issue :: Int)
 
    return ("magInterzone", [title])
 
 
-magLightspeedDate :: Metadata -> EN (String, [String])
-magLightspeedDate md = do
+magLightspeedDate :: EN (String, [String])
+magLightspeedDate = do
    (prefix:month:year:_) <-
-      extractTitle md "(Lightspeed) Magazine, (.*) (.*)"
+      extractTitle "(Lightspeed) Magazine, (.*) (.*)"
    let title = printf "%s%s-%s"
          prefix year (monthNum month)
 
    return ("magLightspeedDate", [title])
 
 
-magLightspeedIssue :: Metadata -> EN (String, [String])
-magLightspeedIssue md = do
+magLightspeedIssue :: EN (String, [String])
+magLightspeedIssue = do
    (prefix:issue:_) <-
-      extractTitle md "(Lightspeed) Magazine Issue (.*)"
+      extractTitle "(Lightspeed) Magazine Issue (.*)"
    let title = printf "%s%03d" prefix (read issue :: Int)
 
    return ("magLightspeedIssue", [title])
 
 
-magNemesis :: Metadata -> EN (String, [String])
-magNemesis md = do
+magNemesis :: EN (String, [String])
+magNemesis = do
    (prefix:issue:_) <-
-      extractTitle md "(Nemesis Mag)azine #([0-9]+).*"
+      extractTitle "(Nemesis Mag)azine #([0-9]+).*"
    let title = printf "%s%03d" (filterCommon prefix) (read issue :: Int)
 
    return ("magNemesis", [title])
 
 
-magRageMachine :: Metadata -> EN (String, [String])
-magRageMachine md = do
+magRageMachine :: EN (String, [String])
+magRageMachine = do
    (prefix:month:year:_) <-
-      extractTitle md "(Rage Machine.*)--([^ ]+) ([0-9]{4})$"
+      extractTitle "(Rage Machine.*)--([^ ]+) ([0-9]{4})$"
    let title = printf "%s_%s-%s"
          (filterCommon prefix) year (monthNum month)
 
    return ("magRageMachine", [title])
 
 
-magSomethingWicked :: Metadata -> EN (String, [String])
-magSomethingWicked md = do
-   (prefix:issue:_) <- extractTitle md "^(Something Wicked)[^0-9]*([0-9]+)"
+magSomethingWicked :: EN (String, [String])
+magSomethingWicked = do
+   (prefix:issue:_) <- extractTitle "^(Something Wicked)[^0-9]*([0-9]+)"
    let title = printf "%s%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magSomethingWicked", [title])
 
 
-magUniverse :: Metadata -> EN (String, [String])
-magUniverse md = do
+magUniverse :: EN (String, [String])
+magUniverse = do
    (prefix:vol:num:_) <-
-      extractTitle md "^(Jim Baen's Universe)-Vol ([^ ]+) Num ([^ ]+)"
+      extractTitle "^(Jim Baen's Universe)-Vol ([^ ]+) Num ([^ ]+)"
    let title = printf "%sVol%02dNum%02d" (filterCommon prefix)
          (read vol :: Int) (read num :: Int)
 
    return ("magUniverse", [title])
 
 
-magWeirdTales :: Metadata -> EN (String, [String])
-magWeirdTales md = do
-   (prefix:issue:_) <- extractTitle md "^(Weird Tales)[^0-9]*([0-9]+)$"
+magWeirdTales :: EN (String, [String])
+magWeirdTales = do
+   (prefix:issue:_) <- extractTitle "^(Weird Tales)[^0-9]*([0-9]+)$"
    let title = printf "%s%03d"
          (filterCommon prefix) (read issue :: Int)
 
    return ("magWeirdTales", [title])
 
 
-compOfTheYear :: Metadata -> EN (String, [String])
-compOfTheYear md = do
-   (title:_) <- extractTitle md "(.*of the Year.*)"
+compOfTheYear :: EN (String, [String])
+compOfTheYear = do
+   (title:_) <- extractTitle "(.*of the Year.*)"
 
    return ("compOfTheYear", [filterCommon title])
 
 
-compYearsBest :: Metadata -> EN (String, [String])
-compYearsBest md = do
-   (title:_) <- extractTitle md "(.*Year's Best.*)"
+compYearsBest :: EN (String, [String])
+compYearsBest = do
+   (title:_) <- extractTitle "(.*Year's Best.*)"
 
    return ("compYearsBest", [filterCommon title])
 
 
-book :: Metadata -> EN (String, [String])
-book md = do
-   (title:_) <- extractTitle md "(.*)"
-   year <- getPubYear md
+book :: EN (String, [String])
+book = do
+   (title:_) <- extractTitle "(.*)"
+   year <- getPubYear
 
-   return ("book", [extractAuthors md, filterCommon title, year])
+   authors <- extractAuthors
+
+   return ("book", [authors, filterCommon title, year])
 
 
-tryFormatting :: FilePath -> Metadata -> EN (String, String)
-tryFormatting oldPath md = do
+tryFormatting :: FilePath -> EN (String, String)
+tryFormatting oldPath = do
    foldr mplus
       (throwError $ printf "%s [ERROR No formatter found]" oldPath) $
-      map (\f -> f md >>= finish md) formatters
+      map (\f -> f >>= finish) formatters
 
 
-finish :: Metadata -> (String, [String]) -> EN (String, String)
-finish md (label, parts) = do
-   publisher <- fmap (extractPublisher md) $ asks optPublisher
+finish :: (String, [String]) -> EN (String, String)
+finish (label, parts) = do
+   md <- asks gMetadata
+
+   publisher <- fmap (extractPublisher md) $ asks $ optPublisher . gOpts
    return ( label
       , foldr1 (++) (parts ++ [publisher, ".epub"]))
 
 
-extractTitle :: Metadata -> String -> EN [String]
-extractTitle md re = do
+extractTitle :: String -> EN [String]
+extractTitle re = do
+   md <- asks gMetadata
+
    (MetaTitle _ oldTitle) <- case metaTitles md of
       [] -> throwError "format failed, no title present"
       ts -> return . head $ ts

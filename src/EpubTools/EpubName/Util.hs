@@ -3,14 +3,17 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 module EpubTools.EpubName.Util
-   ( EN , runEN
+   ( Globals (..)
+   , EN , runEN
    , throwError
    , asks
    , filterCommon
    )
    where
 
+import Codec.Epub.Opf.Package
 import Control.Monad.Error
+import Control.Monad.Identity
 import Control.Monad.Reader
 import Data.Char
 import Data.List ( foldl' )
@@ -19,10 +22,15 @@ import Text.Regex
 import EpubTools.EpubName.Opts
 
 
-type EN a = ReaderT Options (ErrorT String IO) a
+data Globals = Globals
+   { gOpts :: Options
+   , gMetadata :: Metadata
+   }
 
-runEN :: Options -> EN a -> IO (Either String a)
-runEN env ev = runErrorT $ runReaderT ev env
+type EN a = ReaderT Globals (ErrorT String Identity) a
+
+runEN :: Globals -> EN a -> Either String a
+runEN env ev = runIdentity (runErrorT (runReaderT ev env))
 
 
 {- Convenience function to make a regex replacer for a given pattern 

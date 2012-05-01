@@ -19,8 +19,9 @@ import Text.Regex
 import EpubTools.EpubName.Util
 
 
-extractAuthors :: Metadata -> String
-extractAuthors = fmtAuthor . separateCombined . justAuthors
+extractAuthors :: EN String
+extractAuthors = do
+   fmap (fmtAuthor . separateCombined . justAuthors) $ asks gMetadata
    where
       fmtAuthor []  = ""
       fmtAuthor [c] = formatSingleAuthor c
@@ -97,11 +98,12 @@ authorSingle _             = undefined
 
 {- Throws an error if no author matches the pattern
 -}
-authorMatches :: Metadata -> String -> EN ()
-authorMatches md re = do
+authorMatches :: String -> EN ()
+authorMatches re = do
    let authorMatches' (MetaCreator _ _ di) =
          matchRegex (mkRegex re) di
 
+   md <- asks gMetadata
    unless (any isJust $ map authorMatches' $ justAuthors md) $
       throwError "Specific author string not found"
 

@@ -7,6 +7,7 @@ import Codec.Epub.IO
 import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
+import Control.Monad.Error
 import System.Directory
 import System.Environment
 import System.Exit
@@ -15,7 +16,7 @@ import Text.Printf
 
 import EpubTools.EpubName.Format ( tryFormatting )
 import qualified EpubTools.EpubName.Opts as EN
-import EpubTools.EpubName.Util ( runEN )
+import EpubTools.EpubName.Util ( Globals (..), runEN )
 import EpubTools.EpubZip.Opts
 
 
@@ -34,12 +35,15 @@ main = do
    let inputPath = head paths
    isDir <- doesDirectoryExist inputPath
    en <- if isDir
-         then runEN EN.defaultOptions $ do
+         then runErrorT $ do
             package <- do
                (_, contents) <- opfContentsFromDir "."
                parseXmlToOpf contents
-            (_, newPath) <- tryFormatting
-               "CURRENT DIRECTORY" $ opMeta package
+
+            let efmt = runEN (Globals EN.defaultOptions
+                  (opMeta package)) $ tryFormatting "CURRENT DIRECTORY"
+            (_, newPath) <- either throwError return efmt
+
             return $ inputPath </> newPath
          else return . Right $ inputPath
 

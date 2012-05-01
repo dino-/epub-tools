@@ -6,7 +6,7 @@ import Codec.Epub.Opf.Format.Package
 import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
-import Control.Monad.Trans
+import Control.Monad.Error
 import System.Directory ( doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.Exit
@@ -47,10 +47,11 @@ makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
 -}
 processBook :: Options -> FilePath -> IO Bool
 processBook opts oldPath = do
-   result <- runEN opts $ do
+   result <- runErrorT $ do
       pkg <- parseEpubOpf oldPath
-      let md = opMeta pkg
-      (fmtUsed, newPath) <- tryFormatting oldPath md
+
+      let efmt = runEN (Globals opts (opMeta pkg)) $ tryFormatting oldPath
+      (fmtUsed, newPath) <- either throwError return efmt
 
       when (not $ optOverwrite opts) $ do
          fileExists <- liftIO $ doesFileExist newPath

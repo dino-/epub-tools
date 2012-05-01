@@ -18,17 +18,18 @@ import EpubTools.EpubName.Util
 
 {- Look for publication date, return "" if none found
 -}
-getPubYear :: Metadata -> EN String
-getPubYear md = do
-   yearHandling <- asks optPubYear
+getPubYear :: EN String
+getPubYear = do
+   yearHandling <- asks $ optPubYear . gOpts
+   md <- asks gMetadata
 
    case yearHandling of
-      Publication -> getPubYear' pubAttrs
-      AnyDate -> getPubYear' $ pubAttrs ++ [getFirstDate]
+      Publication -> getPubYear' md pubAttrs
+      AnyDate -> getPubYear' md $ pubAttrs ++ [getFirstDate]
       NoDate -> return ""
 
    where
-      getPubYear' = return . maybe "" ('_' :) . foldr mplus Nothing .
+      getPubYear' md = return . maybe "" ('_' :) . foldr mplus Nothing .
          map (\f -> f (metaDates md))
 
       pubAttrs =
