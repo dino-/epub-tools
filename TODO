@@ -37,6 +37,13 @@ epubname
 
 - Better location for default.epubname  Needs to be deployed and this has to work right from epubname.hs  i.e. What's the conf file search path?
 
+   Good names for these files?
+   - resources/
+      default.rules
+      default.tests
+
+   To be also copied to: $HOME/.epubname/
+
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
 
 - New module hierarchy:
@@ -59,6 +66,8 @@ epubname
 
 - Need to separate commonFilters to make sure to never make a crazy, illegal filename. Even if nobody ever calls Format.Format.scrub
 
-- Commit these large architecture changes
-
 - Fix Format.addPublisher code. It's currently commented out.
+
+- Tighter import EpubName.Format.Format list in epubname.hs
+
+- Make base ordinary_book formatter come from default rules file instead of static? Can do this once resources install and conf load path is working.
