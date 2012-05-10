@@ -15,10 +15,10 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
-import EpubTools.EpubName.Compile
-import EpubTools.EpubName.Format
+import EpubTools.EpubName.Format.Compile
+import EpubTools.EpubName.Format.Format
+import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
-import EpubTools.EpubName.Util
 
 
 {- Construct additional verbose output

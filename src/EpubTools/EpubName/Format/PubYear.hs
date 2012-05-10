@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubTools.EpubName.PubYear
+module EpubTools.EpubName.Format.PubYear
    ( extractYear
    , getPubYear
    )
@@ -13,7 +13,7 @@ import Control.Monad
 import Text.Regex
 
 import EpubTools.EpubName.Opts
-import EpubTools.EpubName.Util
+import EpubTools.EpubName.Format.Util
 
 
 {- Look for publication date, return "" if none found

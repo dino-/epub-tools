@@ -14,9 +14,10 @@ import System.Exit
 import System.FilePath
 import Text.Printf
 
-import EpubTools.EpubName.Format ( tryFormatting, ordinaryBookFormatter )
+import EpubTools.EpubName.Format.Format
+   ( tryFormatting, ordinaryBookFormatter )
 import qualified EpubTools.EpubName.Opts as EN
-import EpubTools.EpubName.Util ( Globals (..), runEN )
+import EpubTools.EpubName.Format.Util ( Globals (..), runEN )
 import EpubTools.EpubZip.Opts
 
 

@@ -4,7 +4,7 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-module EpubTools.EpubName.Format
+module EpubTools.EpubName.Format.Format
    ( ReplF
    , authors, index, literal, monthNum, pad, scrub, wordNum, year
    , Formatter (..)
@@ -20,10 +20,10 @@ import Data.List ( isPrefixOf )
 import Text.Printf
 import Text.Regex
 
-import EpubTools.EpubName.Author
+import EpubTools.EpubName.Format.Author
+import EpubTools.EpubName.Format.PubYear
+import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Opts
-import EpubTools.EpubName.PubYear
-import EpubTools.EpubName.Util
 
 
 type ReplF = [String] -> EN String

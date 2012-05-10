@@ -26,6 +26,11 @@ epubname
 - Extensive documentation in share, viewed when you do --help or maybe --help-?? some switch for more detailed info
 
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC
+   module hierarchy:
+      EpubName/
+         Test/
+            Compile
+            Test
 
 - magFsf is maybe a tiny bit too generic. It gets a lot of things that it shouldn't with ease.
 
@@ -45,19 +50,6 @@ epubname
    To be also copied to: $HOME/.epubname/
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
-
-- New module hierarchy:
-   EpubName/
-      Format/
-         Author
-         Compile
-         Format
-         PutYear
-         Util
-      Opts
-      Test/
-         Compile
-         Test
 
 - Move these functions to Format.Format: Util.
    capFirstAndDeSpace, commonFilters, filterCommon

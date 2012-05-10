@@ -39,12 +39,13 @@ executable           epubname
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3, 
                      mtl, parsec, regex-compat
    hs-source-dirs:   src
-   other-modules:    EpubTools.EpubName.Author
-                     EpubTools.EpubName.Compile
-                     EpubTools.EpubName.Format
+   other-modules:    EpubTools.EpubName.Format.Author
+                     EpubTools.EpubName.Format.Compile
+                     EpubTools.EpubName.Format.Format
+                     EpubTools.EpubName.Format.PubYear
+                     EpubTools.EpubName.Format.Util
                      EpubTools.EpubName.Opts
-                     EpubTools.EpubName.PubYear
-                     EpubTools.EpubName.Util
+
    ghc-options:      -Wall
 
 test-suite           epubname-tests

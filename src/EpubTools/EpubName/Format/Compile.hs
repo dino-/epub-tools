@@ -4,13 +4,13 @@
 
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
-module EpubTools.EpubName.Compile
+module EpubTools.EpubName.Format.Compile
    where
 
 import Text.ParserCombinators.Parsec
 
-import EpubTools.EpubName.Author
-import EpubTools.EpubName.Format
+import EpubTools.EpubName.Format.Author
+import EpubTools.EpubName.Format.Format
 
 
 parseRules :: FilePath -> IO (Either ParseError [Formatter])

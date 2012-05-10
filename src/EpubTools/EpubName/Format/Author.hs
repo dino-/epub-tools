@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-module EpubTools.EpubName.Author
+module EpubTools.EpubName.Format.Author
    ( extractAuthors
    , authorMatches
    )
@@ -16,7 +16,7 @@ import Prelude hiding ( last )
 import Text.Printf
 import Text.Regex
 
-import EpubTools.EpubName.Util
+import EpubTools.EpubName.Format.Util
 
 
 extractAuthors :: EN String
