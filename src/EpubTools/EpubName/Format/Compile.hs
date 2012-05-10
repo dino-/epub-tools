@@ -70,7 +70,9 @@ pRepls = do
    char '"'
    rs <- many pExpr
    char '"'
-   return rs
+
+   let extension = literal ".epub"
+   return $ rs ++ [extension]
 
 
 {-

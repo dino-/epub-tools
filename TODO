@@ -20,8 +20,6 @@ epubmeta
 -----
 epubname
 
-- Fix end of name .epub suffix
-
 - Move these functions to Format.Format: Util.
    capFirstAndDeSpace, commonFilters, filterCommon
 
