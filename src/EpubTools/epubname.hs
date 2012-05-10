@@ -15,7 +15,8 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
-import EpubTools.EpubName.Format ( tryFormatting )
+import EpubTools.EpubName.Compile
+import EpubTools.EpubName.Format
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
 import EpubTools.EpubName.Util
 
@@ -45,12 +46,13 @@ makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
 
 {- Process an individual epub book file
 -}
-processBook :: Options -> FilePath -> IO Bool
-processBook opts oldPath = do
+processBook :: Options -> [Formatter] -> FilePath -> IO Bool
+processBook opts formatters oldPath = do
    result <- runErrorT $ do
       pkg <- parseEpubOpf oldPath
 
-      let efmt = runEN (Globals opts (opMeta pkg)) $ tryFormatting oldPath
+      let efmt = runEN (Globals opts (opMeta pkg))
+            $ tryFormatting formatters oldPath
       (fmtUsed, newPath) <- either throwError return efmt
 
       when (not $ optOverwrite opts) $ do
@@ -68,6 +70,17 @@ processBook opts oldPath = do
    return success
 
 
+loadFormatters :: FilePath -> IO (Either ExitCode [Formatter])
+loadFormatters confPath = do
+   parseResult <- parseRules confPath
+
+   case parseResult of
+      Left err  -> do
+         print err
+         return . Left . ExitFailure $ 3
+      Right fs  -> return . Right $ fs
+
+
 main :: IO ()
 main = do
    -- No buffering, it messes with the order of output
@@ -81,9 +94,11 @@ main = do
          return ExitSuccess
       else do
          when (optNoAction opts) (putStrLn "No-action specified")
-         codes <- mapM (processBook opts) paths
-         case all id codes of
-            True  -> return ExitSuccess
-            False -> return . ExitFailure $ 2
+         loadFormatters "/home/dino/dev/epub-tools/branches/dsl1/default.epubname" >>= either exitWith (\fs -> do
+            codes <- mapM (processBook opts fs) paths
+            case all id codes of
+               True  -> return ExitSuccess
+               False -> return . ExitFailure $ 2
+            )
 
    exitWith ec

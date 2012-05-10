@@ -22,3 +22,43 @@ epubname
 
 - Maybe have an interactive mode that shows the changes and asks?
    Seeing a usage pattern where I use -n first and then run again without -n. Thinking about streamlining that process.
+
+- Extensive documentation in share, viewed when you do --help or maybe --help-?? some switch for more detailed info
+
+- Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC
+
+- magFsf is maybe a tiny bit too generic. It gets a lot of things that it shouldn't with ease.
+
+- Fix end of name .epub suffix
+
+- Fix separator between author and title
+
+- Fix separator between title and pubyear
+
+- Better location for default.epubname  Needs to be deployed and this has to work right from epubname.hs  i.e. What's the conf file search path?
+
+- Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
+
+- New module hierarchy:
+   EpubName/
+      Format/
+         Author
+         Compile
+         Format
+         PutYear
+         Util
+      Opts
+      Test/
+         Compile
+         Test
+
+- Move these functions to Format.Format: Util.
+   capFirstAndDeSpace, commonFilters, filterCommon
+
+   And give them smarter names
+
+- Need to separate commonFilters to make sure to never make a crazy, illegal filename. Even if nobody ever calls Format.Format.scrub
+
+- Commit these large architecture changes
+
+- Fix Format.addPublisher code. It's currently commented out.

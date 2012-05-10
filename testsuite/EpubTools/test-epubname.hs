@@ -8,7 +8,7 @@ module Main
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), runTestTT )
 
-import EpubTools.Test.EpubName.Format
+--import EpubTools.Test.EpubName.Format
 import EpubTools.Test.EpubName.PubYear
 
 
@@ -29,6 +29,9 @@ testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
 
 tests :: Test
 tests = TestList
+{-
    [ formatTests
    , pubYearTests
+-}
+   [ pubYearTests
    ]

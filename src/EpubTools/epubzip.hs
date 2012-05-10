@@ -14,7 +14,7 @@ import System.Exit
 import System.FilePath
 import Text.Printf
 
-import EpubTools.EpubName.Format ( tryFormatting )
+import EpubTools.EpubName.Format ( tryFormatting, ordinaryBookFormatter )
 import qualified EpubTools.EpubName.Opts as EN
 import EpubTools.EpubName.Util ( Globals (..), runEN )
 import EpubTools.EpubZip.Opts
@@ -41,7 +41,9 @@ main = do
                parseXmlToOpf contents
 
             let efmt = runEN (Globals EN.defaultOptions
-                  (opMeta package)) $ tryFormatting "CURRENT DIRECTORY"
+                  -- FIXME Do better than this later, read conf?
+                  (opMeta package)) $ tryFormatting
+                     [ordinaryBookFormatter] "CURRENT DIRECTORY"
             (_, newPath) <- either throwError return efmt
 
             return $ inputPath </> newPath
