@@ -44,7 +44,7 @@ ordinaryBookFormatter = Formatter
    "ordinary_book"
    (return ())
    (extractTitle ".*")
-   [authors, literal "-", scrub "1", literal "_", year]
+   [authors, scrub "1", year]
 
 
 readE :: (MonadError String m, Read a) => String -> String -> m a

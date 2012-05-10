@@ -20,10 +20,6 @@ epubmeta
 -----
 epubname
 
-- Fix separator between author and title
-
-- Fix separator between title and pubyear
-
 - Fix end of name .epub suffix
 
 - Move these functions to Format.Format: Util.

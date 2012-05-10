@@ -93,4 +93,4 @@ compYearsBest
 
 ordinary_book
    titlePat "(.*)"
-   name "(authors)-(scrub 1)_(year)"
+   name "(authors)(scrub 1)(year)"
