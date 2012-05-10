@@ -121,5 +121,5 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""
-         , "Version 1.1.3  Dino Morelli <dino@ui3.info>"
+         , "Version 2.0.0  Dino Morelli <dino@ui3.info>"
          ]
