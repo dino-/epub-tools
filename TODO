@@ -32,6 +32,8 @@ epubname
 
 - Extensive documentation in share, viewed when you do --help or maybe --help-?? some switch for more detailed info
 
+   Be sure to document rules file search paths too
+
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC
    module hierarchy:
       EpubName/

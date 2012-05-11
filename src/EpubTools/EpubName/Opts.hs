@@ -12,7 +12,11 @@ module EpubTools.EpubName.Opts
 
 import Data.Maybe
 import System.Console.GetOpt
+import System.Environment
 import System.Exit
+import System.FilePath
+
+import Paths_epub_tools
 
 
 data PubYear
@@ -26,20 +30,34 @@ data Options = Options
    , optNoAction :: Bool
    , optOverwrite :: Bool
    , optPublisher :: Bool
+   , optRulesPaths :: [FilePath]
    , optVerbose :: Maybe Int
    , optPubYear :: PubYear
    }
 
 
-defaultOptions :: Options
-defaultOptions = Options
-   { optHelp = False
-   , optNoAction = False
-   , optOverwrite = False
-   , optPublisher = False
-   , optVerbose = Nothing
-   , optPubYear = Publication
-   }
+defaultOptions :: IO Options
+defaultOptions = do
+   let defaultRulesFile = "default.rules"
+
+   stockRulesPath <- getDataFileName defaultRulesFile
+
+   homeDir <- getEnv "HOME"
+   let userRulesPath = homeDir </> defaultRulesFile
+   --userRulesPath <- fmap (\h -> h </> defaultRulesFile) $ getEnv "HOME"
+
+   return Options
+      { optHelp = False
+      , optNoAction = False
+      , optOverwrite = False
+      , optPublisher = False
+      , optRulesPaths =
+         [ stockRulesPath
+         , userRulesPath
+         ]
+      , optVerbose = Nothing
+      , optPubYear = Publication
+      }
 
 
 options :: [OptDescr (Options -> Options)]
@@ -62,6 +80,9 @@ options =
    , Option ['p'] ["publisher"]
       (NoArg (\opts -> opts { optPublisher = True } )) 
       "Include book publisher if present. See below"
+   , Option ['r'] ["rules"]
+      (ReqArg (\p opts -> opts { optRulesPaths = [p] } ) "FILE")
+      "Specify a rules file for naming the books"
    , Option ['v'] ["verbose"]
       ( OptArg
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
@@ -71,9 +92,10 @@ options =
 
 
 parseOpts :: [String] -> IO (Either ExitCode (Options, [String]))
-parseOpts argv = 
+parseOpts argv = do
+   dos <- defaultOptions
    case getOpt Permute options argv of
-      (o,n,[]  ) -> return . Right $ (foldl (flip id) defaultOptions o, n)
+      (o,n,[]  ) -> return . Right $ (foldl (flip id) dos o, n)
       (_,_,errs) -> do
          putStrLn $ concat errs ++ usageText
          return . Left $ ExitFailure 1

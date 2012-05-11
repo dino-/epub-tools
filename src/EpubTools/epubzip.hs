@@ -41,7 +41,8 @@ main = do
                (_, contents) <- opfContentsFromDir "."
                parseXmlToOpf contents
 
-            let efmt = runEN (Globals EN.defaultOptions
+            dos <- liftIO EN.defaultOptions
+            let efmt = runEN (Globals dos
                   -- FIXME Do better than this later, read conf?
                   (opMeta package)) $ tryFormatting
                      [ordinaryBookFormatter] "CURRENT DIRECTORY"
