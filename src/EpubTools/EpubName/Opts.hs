@@ -2,6 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
+{-# LANGUAGE FlexibleContexts #-}
 
 module EpubTools.EpubName.Opts
    ( PubYear (..), Options (..)
@@ -10,6 +11,7 @@ module EpubTools.EpubName.Opts
    )
    where
 
+import Control.Monad.Error
 import Data.Maybe
 import System.Console.GetOpt
 import System.Environment
@@ -17,6 +19,7 @@ import System.Exit
 import System.FilePath
 
 import Paths_epub_tools
+import EpubTools.EpubName.Util
 
 
 data PubYear
@@ -44,7 +47,6 @@ defaultOptions = do
 
    homeDir <- getEnv "HOME"
    let userRulesPath = homeDir </> defaultRulesFile
-   --userRulesPath <- fmap (\h -> h </> defaultRulesFile) $ getEnv "HOME"
 
    return Options
       { optHelp = False
@@ -91,14 +93,15 @@ options =
    ]
 
 
-parseOpts :: [String] -> IO (Either ExitCode (Options, [String]))
+parseOpts :: (MonadError ExitCode m, MonadIO m) =>
+   [String] -> m (Options, [String])
 parseOpts argv = do
-   dos <- defaultOptions
+   dos <- liftIO defaultOptions
    case getOpt Permute options argv of
-      (o,n,[]  ) -> return . Right $ (foldl (flip id) dos o, n)
+      (o,n,[]  ) -> return (foldl (flip id) dos o, n)
       (_,_,errs) -> do
-         putStrLn $ concat errs ++ usageText
-         return . Left $ ExitFailure 1
+         liftIO $ putStrLn $ concat errs ++ usageText
+         throwError exitInitFailure
 
 
 usageText :: String

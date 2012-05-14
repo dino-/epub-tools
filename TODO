@@ -59,5 +59,3 @@ epubname
 - Tighter import EpubName.Format.Format list in epubname.hs
 
 - Make base ordinary_book formatter come from default rules file instead of static? Can do this once resources install and conf load path is working.
-
-- Need to factor out some of the code in epubname.hs so it can be more easily reused in epubzip. It's been getting steadily more complicated and the rules file loading stuff will push this over the edge, I think.

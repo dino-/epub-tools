@@ -4,7 +4,6 @@
 
 import Codec.Epub.Archive
 import Codec.Epub.IO
-import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
 import Control.Monad.Error
@@ -17,7 +16,6 @@ import Text.Printf
 import EpubTools.EpubName.Format.Format
    ( tryFormatting, ordinaryBookFormatter )
 import qualified EpubTools.EpubName.Opts as EN
-import EpubTools.EpubName.Format.Util ( Globals (..), runEN )
 import EpubTools.EpubZip.Opts
 
 
@@ -42,11 +40,9 @@ main = do
                parseXmlToOpf contents
 
             dos <- liftIO EN.defaultOptions
-            let efmt = runEN (Globals dos
-                  -- FIXME Do better than this later, read conf?
-                  (opMeta package)) $ tryFormatting
-                     [ordinaryBookFormatter] "CURRENT DIRECTORY"
-            (_, newPath) <- either throwError return efmt
+
+            (_, newPath) <- tryFormatting dos [ordinaryBookFormatter]
+               package "CURRENT DIRECTORY"
 
             return $ inputPath </> newPath
          else return . Right $ inputPath

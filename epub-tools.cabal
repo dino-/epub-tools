@@ -48,7 +48,9 @@ executable           epubname
                      EpubTools.EpubName.Format.Format
                      EpubTools.EpubName.Format.PubYear
                      EpubTools.EpubName.Format.Util
+                     EpubTools.EpubName.Main
                      EpubTools.EpubName.Opts
+                     EpubTools.EpubName.Util
 
    ghc-options:      -Wall
 

@@ -2,6 +2,8 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
+{-# LANGUAGE FlexibleContexts #-}
+
 import Codec.Epub.Opf.Format.Package
 import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
@@ -15,10 +17,10 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
-import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
+import EpubTools.EpubName.Util
 
 
 {- Construct additional verbose output
@@ -51,9 +53,7 @@ processBook opts formatters oldPath = do
    result <- runErrorT $ do
       pkg <- parseEpubOpf oldPath
 
-      let efmt = runEN (Globals opts (opMeta pkg))
-            $ tryFormatting formatters oldPath
-      (fmtUsed, newPath) <- either throwError return efmt
+      (fmtUsed, newPath) <- tryFormatting opts formatters pkg oldPath
 
       when (not $ optOverwrite opts) $ do
          fileExists <- liftIO $ doesFileExist newPath
@@ -70,35 +70,30 @@ processBook opts formatters oldPath = do
    return success
 
 
-loadFormatters :: FilePath -> IO (Either ExitCode [Formatter])
-loadFormatters confPath = do
-   parseResult <- parseRules confPath
-
-   case parseResult of
-      Left err  -> do
-         print err
-         return . Left . ExitFailure $ 3
-      Right fs  -> return . Right $ fs
-
-
 main :: IO ()
 main = do
    -- No buffering, it messes with the order of output
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
 
-   (opts, paths) <- getArgs >>= parseOpts >>= either exitWith return
+   either exitWith exitWith =<< (runErrorT $ do
+      -- Parse command-line arguments
+      (opts, paths) <- (liftIO getArgs) >>= parseOpts
 
-   ec <- if ((optHelp opts) || (null paths))
-      then do
-         putStrLn usageText
-         return ExitSuccess
-      else do
-         when (optNoAction opts) (putStrLn "No-action specified")
-         loadFormatters "/home/dino/dev/epub-tools/branches/dsl1/default.epubname" >>= either exitWith (\fs -> do
-            codes <- mapM (processBook opts fs) paths
-            case all id codes of
-               True  -> return ExitSuccess
-               False -> return . ExitFailure $ 2
-            )
+      -- User asked for help, this is a special termination case
+      when ((optHelp opts) || (null paths)) $ do
+         liftIO $ putStrLn usageText
+         throwError ExitSuccess
 
-   exitWith ec
+      when (optNoAction opts) $ liftIO
+         $ putStrLn "No-action specified"
+
+      -- Locate the rules file, load it and parse into a list of
+      -- formatters
+      fs <- initialize opts
+
+      -- Perform the formatting operation on the books
+      codes <- liftIO $ mapM (processBook opts fs) paths
+      case all id codes of
+         True  -> return ExitSuccess
+         False -> throwError exitProcessingFailure
+      )
