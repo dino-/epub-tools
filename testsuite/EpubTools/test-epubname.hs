@@ -5,16 +5,28 @@
 module Main
    where
 
+import Control.Monad.Error
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), runTestTT )
 
---import EpubTools.Test.EpubName.Format
+import EpubTools.EpubName.Format.Format
+import EpubTools.EpubName.Main
+import EpubTools.EpubName.Opts
+import EpubTools.Test.EpubName.Format
 import EpubTools.Test.EpubName.PubYear
 
 
 main :: IO ()
 main = do
-   counts <- runTestTT tests
+   dos <- defaultOptions
+   let testOpts = dos { optRulesPaths = ["resources/default.rules"] }
+   ir <- runErrorT $ initialize testOpts
+   either (exitWith) (runTests testOpts) ir
+   
+
+runTests :: Options -> [Formatter] -> IO ()
+runTests opts fs = do
+   counts <- runTestTT $ tests opts fs
    exit $ testsPassed counts
 
 
@@ -27,11 +39,8 @@ testsPassed :: Counts -> Bool
 testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
 
 
-tests :: Test
-tests = TestList
-{-
-   [ formatTests
+tests :: Options -> [Formatter] -> Test
+tests opts fs = TestList
+   [ formatTests opts fs
    , pubYearTests
--}
-   [ pubYearTests
    ]

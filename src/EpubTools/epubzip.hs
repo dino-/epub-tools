@@ -4,6 +4,7 @@
 
 import Codec.Epub.Archive
 import Codec.Epub.IO
+import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
 import Control.Monad.Error
@@ -42,7 +43,7 @@ main = do
             dos <- liftIO EN.defaultOptions
 
             (_, newPath) <- tryFormatting dos [ordinaryBookFormatter]
-               package "CURRENT DIRECTORY"
+               (opMeta package) "CURRENT DIRECTORY"
 
             return $ inputPath </> newPath
          else return . Right $ inputPath

@@ -9,7 +9,7 @@ module EpubTools.Test.EpubName.PubYear
 
 import Test.HUnit ( Test (..), assertEqual )
 
-import EpubTools.EpubName.PubYear
+import EpubTools.EpubName.Format.PubYear
 
 
 pubYearTests :: Test

@@ -53,7 +53,8 @@ processBook opts formatters oldPath = do
    result <- runErrorT $ do
       pkg <- parseEpubOpf oldPath
 
-      (fmtUsed, newPath) <- tryFormatting opts formatters pkg oldPath
+      (fmtUsed, newPath) <-
+         tryFormatting opts formatters (opMeta pkg) oldPath
 
       when (not $ optOverwrite opts) $ do
          fileExists <- liftIO $ doesFileExist newPath

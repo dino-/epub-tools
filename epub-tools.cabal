@@ -57,8 +57,8 @@ executable           epubname
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
    main-is:          EpubTools/test-epubname.hs
-   build-depends:    base, directory, epub-metadata >= 2.3, HUnit, mtl,
-                     regex-compat
+   build-depends:    base, directory, epub-metadata >= 2.3, filepath,
+                     HUnit, mtl, parsec, regex-compat
    hs-source-dirs:   src testsuite
    ghc-options:      -Wall
 
