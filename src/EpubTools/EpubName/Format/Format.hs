@@ -47,40 +47,57 @@ ordinaryBookFormatter = Formatter
    [authors, scrub "1", year]
 
 
+{- Wrapper functions to perform some basic operations in the Error
+   String monad
+-}
+
+-- general purpose read in the Error String monad
 readE :: (MonadError String m, Read a) => String -> String -> m a
 readE msg s = case reads s of
    [(x, "")] -> return x
    _         -> throwError msg
 
 
+-- read an Int in the Error String monad
 readIntE :: MonadError String m => String -> m Int
 readIntE = readE "Not a number"
 
 
+-- get list element at a specific index in the Error String monad
 elemE :: MonadError String m => [a] -> Int -> m a
 elemE l i
    | i < length l = return $ l !! i
    | otherwise    = throwError $ "Bad array index: " ++ show i
 
 
+{- Instructions in the book naming DSL. These instructions are used from
+   the rules file notation, in the name "..." command
+-}
+
+-- Get formatted authors from the metadata
 authors :: ReplF
 authors _ = extractAuthors
-   -- WARNING extractAuthors appends - to the string, it should not
 
 
+-- Retrieve a specific item from the title pattern match results
 index :: String -> ReplF
 index sIndex matches = readIntE sIndex >>= return . subtract 1
    >>= elemE matches
 
 
+-- Insert a specific string literal into the resulting name string
 literal :: String -> ReplF
 literal s = return . const s
 
 
+{- Construct a numeric month from a variety of English months strings
+   Including abbreviations and ranges
+-}
 monthNum :: String -> ReplF
 monthNum sIndex matches = index sIndex matches >>= monthStrToNumbers
 
 
+-- Pad a numeric value from the pattern match results
 pad :: String -> String -> ReplF
 pad sWidth sIndex matches = do
    width <- readIntE sWidth
@@ -88,10 +105,14 @@ pad sWidth sIndex matches = do
    return $ printf "%0*d" (width :: Int) (value :: Int)
 
 
+-- Clean up an item from the pattern match results
 scrub :: String -> ReplF
 scrub sIndex matches = fmap filterCommon $ index sIndex matches
 
 
+{- Construct a numeric string from an English word for a number,
+   with padding
+-}
 wordNum :: String -> String -> ReplF
 wordNum sWidth sIndex matches = do
    value <- index sIndex matches >>= numStrToInt
@@ -99,16 +120,40 @@ wordNum sWidth sIndex matches = do
    return $ printf "%0*d" (width :: Int) (value :: Int)
 
 
+-- Get the formatted publication year from the metadata
 year :: ReplF
 year _ = getPubYear
-   -- WARNING getPutYear prepends _ to the string, it should not
 
 
+{- Commands in the book naming DSL. These commands are used from the
+   rules file notation, in the rule blocks
+-}
+
+{- This is used by the titlePat command to construct a title pattern
+   matcher for a specific rule
+-}
+extractTitle :: String -> EN [String]
+extractTitle re = do
+   md <- asks gMetadata
+
+   (MetaTitle _ oldTitle) <- case metaTitles md of
+      [] -> throwError "format failed, no title present"
+      ts -> return . head $ ts
+
+   case matchRegex (mkRegex re) oldTitle of
+      Just matches -> return matches
+      Nothing      -> throwError $ printf "extract title failed: %s" re
+
+
+{- This is used by the name command to execute a series of the DSL
+   instructions above to create a new filename
+-}
 name :: [String] -> [ReplF] -> EN String
 name matches replacers =
    fmap concat $ sequence $ map (\a -> a matches) replacers
 
 
+-- Try a specific formatter
 tryFormatter :: Formatter -> EN (String, FilePath)
 tryFormatter (Formatter label authorMatch titlePat nameBuilders) = do
    authorMatch
@@ -117,6 +162,9 @@ tryFormatter (Formatter label authorMatch titlePat nameBuilders) = do
    return (label, newName)
 
 
+{- Try the entire list of formatters, one by one, in order, until one
+   succeeds or none do
+-}
 tryFormatting :: (MonadIO m, MonadError String m) =>
    Options -> [Formatter] -> Metadata -> FilePath -> m (String, FilePath)
 tryFormatting opts fs meta oldPath =
@@ -135,19 +183,6 @@ addPublisher (label, parts) = do
    return ( label
       , foldr1 (++) (parts ++ [publisher, ".epub"]))
 -}
-
-
-extractTitle :: String -> EN [String]
-extractTitle re = do
-   md <- asks gMetadata
-
-   (MetaTitle _ oldTitle) <- case metaTitles md of
-      [] -> throwError "format failed, no title present"
-      ts -> return . head $ ts
-
-   case matchRegex (mkRegex re) oldTitle of
-      Just matches -> return matches
-      Nothing      -> throwError $ printf "extract title failed: %s" re
 
 
 extractPublisher :: Metadata -> Bool -> String
