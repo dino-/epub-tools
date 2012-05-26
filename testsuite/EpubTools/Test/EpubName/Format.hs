@@ -978,7 +978,7 @@ testLightspeedDate (opts, fs) = TestCase $
             "Lightspeed Magazine, June 2010"]
          }
       expected =
-         ( "magLightspeedDate"
+         ( "magLightspeed_date"
          , "Lightspeed2010-06.epub"
          )
 
