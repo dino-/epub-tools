@@ -48,8 +48,10 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testAsimovs
       , testFantasyMagazine
       , testFsfShort
+      , testFsfShortComma
       , testFsfLong
       , testFsfAmpersand
+      , testFsfAmpersandSpaces
       , testMagFutureOrbits
       , testGudShort
       , testGudLong
@@ -536,6 +538,21 @@ testFsfShort (opts, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing
             "Spilogale Authors"]
+         , metaTitles = [MetaTitle Nothing "FSF Oct/Nov 2003"]
+         }
+      expected =
+         ( "magFsf"
+         , "FantasyScienceFiction2003-10_11.epub"
+         )
+
+
+testFsfShortComma :: (Options, [Formatter]) -> Test
+testFsfShortComma (opts, fs) = TestCase $
+   assertNewName opts fs "FSF Magazine, short, comma" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Spilogale Authors"]
          , metaTitles = [MetaTitle Nothing "FSF, April 2008"]
          }
       expected =
@@ -567,10 +584,25 @@ testFsfAmpersand (opts, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing
             "Spilogale"]
+         , metaTitles = [MetaTitle Nothing "F&SF, Apr 2004"]
+         }
+      expected =
+         ( "magFsf"
+         , "FantasyScienceFiction2004-04.epub"
+         )
+
+
+testFsfAmpersandSpaces :: (Options, [Formatter]) -> Test
+testFsfAmpersandSpaces (opts, fs) = TestCase $
+   assertNewName opts fs "FSF Magazine, ampersand, spaces" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing
+            "Spilogale"]
          , metaTitles = [MetaTitle Nothing "F & SF Dec 2003"]
          }
       expected =
-         ( "magFsf_ampersand"
+         ( "magFsf"
          , "FantasyScienceFiction2003-12.epub"
          )
 

@@ -39,11 +39,8 @@ magEclipse_num
    name "(1)(pad 2 2)"
 
 magFsf
-   titlePat "FSF.*, ([^ ]+) ([0-9]{4})$"
-   name "FantasyScienceFiction(2)-(monthNum 1)"
-
-magFsf_ampersand
-   titlePat "F & SF ([^ ]+) ([0-9]{4})$"
+   authorMatch "Spilogale"
+   titlePat ".* ([^ ]+) ([0-9]{4})$"
    name "FantasyScienceFiction(2)-(monthNum 1)"
 
 magFutureOrbits
