@@ -570,7 +570,7 @@ testFsfAmpersand (opts, fs) = TestCase $
          , metaTitles = [MetaTitle Nothing "F & SF Dec 2003"]
          }
       expected =
-         ( "magFsf"
+         ( "magFsf_ampersand"
          , "FantasyScienceFiction2003-12.epub"
          )
 

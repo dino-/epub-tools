@@ -41,8 +41,6 @@ epubname
             Compile
             Test
 
-- magFsf is maybe a tiny bit too generic. It gets a lot of things that it shouldn't with ease.
-
 - Better location for default.epubname  Needs to be deployed and this has to work right from epubname.hs  i.e. What's the conf file search path?
 
    Good names for these files?
