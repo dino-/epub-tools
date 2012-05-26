@@ -7,6 +7,7 @@
 module EpubTools.EpubName.Format.Compile
    where
 
+import Data.Maybe ( catMaybes )
 import Text.ParserCombinators.Parsec
 
 import EpubTools.EpubName.Format.Author
@@ -18,10 +19,10 @@ parseRules = parseFromFile pFormatters
 
 
 pFormatters :: Parser [Formatter]
-pFormatters = many pFormatter
+pFormatters = fmap catMaybes $ many pFormatter
 
 
-pFormatter :: Parser Formatter
+pFormatter :: Parser (Maybe Formatter)
 pFormatter = do
    l <- many1Till (noneOf " ") eol
    a <- optionMaybe $ try $ pCommand "authorMatch"
@@ -29,7 +30,9 @@ pFormatter = do
    n <- pName
    newline <|> return ' '
    let aReplF = maybe (return ()) authorMatches a
-   return $ Formatter l aReplF (extractTitle t) n
+   return $ case head l of
+      '!' -> Nothing
+      _   -> Just $ Formatter l aReplF (extractTitle t) n
 
    
 pName :: Parser [ReplF]
