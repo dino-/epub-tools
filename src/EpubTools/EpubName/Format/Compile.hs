@@ -75,7 +75,7 @@ pRepls = do
    char '"'
 
    let extension = literal ".epub"
-   return $ rs ++ [extension]
+   return $ rs ++ [publisher, extension]
 
 
 {-

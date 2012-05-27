@@ -6,7 +6,8 @@
 
 module EpubTools.EpubName.Format.Format
    ( ReplF
-   , authors, index, literal, monthNum, pad, scrub, wordNum, year
+   , authors, index, literal, monthNum, pad, publisher, scrub, wordNum
+   , year
    , Formatter (..)
    , ordinaryBookFormatter
    , tryFormatting
@@ -105,6 +106,12 @@ pad sWidth sIndex matches = do
    return $ printf "%0*d" (width :: Int) (value :: Int)
 
 
+publisher :: ReplF
+publisher _ = do
+   md <- asks gMetadata
+   fmap (extractPublisher md) $ asks $ optPublisher . gOpts
+
+
 -- Clean up an item from the pattern match results
 scrub :: String -> ReplF
 scrub sIndex matches = fmap filterCommon $ index sIndex matches
@@ -172,17 +179,6 @@ tryFormatting opts fs meta oldPath =
       foldr mplus
          (throwError $ printf "%s [ERROR No formatter found]" oldPath) $
          map tryFormatter fs
-
-
-{-
-addPublisher :: (String, [String]) -> EN (String, String)
-addPublisher (label, parts) = do
-   md <- asks gMetadata
-
-   publisher <- fmap (extractPublisher md) $ asks $ optPublisher . gOpts
-   return ( label
-      , foldr1 (++) (parts ++ [publisher, ".epub"]))
--}
 
 
 extractPublisher :: Metadata -> Bool -> String
