@@ -4,13 +4,15 @@
 # License: BSD3 (see LICENSE)
 # Author: Dino Morelli <dino@ui3.info>
 
+#epubname_bin=epubname
+epubname_bin=$(realpath dist/build/epubname/epubname)
 
 cd /var/local/archive/doc/books/fiction
 
 tempDir="/home/dino/temp"
 allFile="epubname-all"
 
-find . -name '*.epub' | xargs -n 30 epubname -n -o -v1 > $tempDir/$allFile
+find . -name '*.epub' | xargs -n 30 $epubname_bin -n -o -v1 2>&1 > $tempDir/$allFile
 
 cd $tempDir
 
