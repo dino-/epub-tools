@@ -51,7 +51,15 @@ makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
 processBook :: Options -> [Formatter] -> FilePath -> IO Bool
 processBook opts formatters oldPath = do
    result <- runErrorT $ do
-      pkg <- parseEpubOpf oldPath
+      {- If there is failure during parsing, we need to mark the result
+         up with the file path. Failures here will otherwise get lost
+         in the output when multiple books are processed at once.
+      -}
+      epkg <- runErrorT $ parseEpubOpf oldPath
+      pkg <- either
+         ( \msg -> throwError
+            $ printf "ERROR: File %s: %s" oldPath msg
+         ) return epkg
 
       (fmtUsed, newPath) <-
          tryFormatting opts formatters (opMeta pkg) oldPath
