@@ -33,8 +33,8 @@ getPubYear = do
          map (\f -> f (metaDates md))
 
       pubAttrs =
-         [ getDateWithAttr "publication"
-         , getDateWithAttr "original-publication"
+         [ getDateWithAttr "original-publication"
+         , getDateWithAttr "publication"
          ]
 
 
