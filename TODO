@@ -45,6 +45,4 @@ epubname
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
 
-- Tighter import EpubName.Format.Format list in epubname.hs
-
 - Make base ordinary_book formatter come from default rules file instead of static? Can do this once resources install and conf load path is working.
