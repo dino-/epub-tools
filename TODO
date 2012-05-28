@@ -41,14 +41,7 @@ epubname
             Compile
             Test
 
-- Better location for default.epubname  Needs to be deployed and this has to work right from epubname.hs  i.e. What's the conf file search path?
-
-   Good names for these files?
-   - resources/
-      default.rules
-      default.tests
-
-   To be also copied to: $HOME/.epubname/
+- Docs can talk about custom rules here: $HOME/.epubname/default.rules or similar
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
 

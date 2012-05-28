@@ -46,7 +46,7 @@ defaultOptions = do
    stockRulesPath <- getDataFileName defaultRulesFile
 
    homeDir <- getEnv "HOME"
-   let userRulesPath = homeDir </> defaultRulesFile
+   let userRulesPath = homeDir </> ".epubname" </> defaultRulesFile
 
    return Options
       { optHelp = False
@@ -82,8 +82,7 @@ options =
    , Option ['p'] ["publisher"]
       (NoArg (\opts -> opts { optPublisher = True } )) 
       "Include book publisher if present. See below"
-   , Option ['r'] ["rules"]
-      (ReqArg (\p opts -> opts { optRulesPaths = [p] } ) "FILE")
+   , Option ['r'] ["rules"] (ReqArg prependRulesPath "FILE")
       "Specify a rules file for naming the books"
    , Option ['v'] ["verbose"]
       ( OptArg
@@ -91,6 +90,12 @@ options =
          "LEVEL")
       "Verbosity level: 1, 2"
    ]
+
+
+prependRulesPath :: FilePath -> Options -> Options
+prependRulesPath p opts = opts { optRulesPaths = newlist }
+   where
+      newlist = p : optRulesPaths opts
 
 
 parseOpts :: (MonadError ExitCode m, MonadIO m) =>
