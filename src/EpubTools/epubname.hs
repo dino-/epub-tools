@@ -93,12 +93,12 @@ main = do
          liftIO $ putStrLn usageText
          throwError ExitSuccess
 
-      when (optNoAction opts) $ liftIO
-         $ putStrLn "No-action specified"
-
       -- Locate the rules file, load it and parse into a list of
       -- formatters
       fs <- initialize opts
+
+      when (optNoAction opts) $ liftIO
+         $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
       codes <- liftIO $ mapM (processBook opts fs) paths
