@@ -46,7 +46,7 @@ defaultOptions = do
    stockRulesPath <- getDataFileName defaultRulesFile
 
    homeDir <- getEnv "HOME"
-   let userRulesPath = homeDir </> ".epubname" </> defaultRulesFile
+   let userRulesPath = homeDir </> ".epubtools" </> defaultRulesFile
 
    return Options
       { optHelp = False
