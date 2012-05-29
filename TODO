@@ -20,11 +20,6 @@ epubmeta
 -----
 epubname
 
-- Move these functions to Format.Format: Util.
-   capFirstAndDeSpace, commonFilters, filterCommon
-
-   And give them smarter names
-
 - Need to separate commonFilters to make sure to never make a crazy, illegal filename. Even if nobody ever calls Format.Format.scrub
 
 - Maybe have an interactive mode that shows the changes and asks?

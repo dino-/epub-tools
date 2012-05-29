@@ -44,8 +44,8 @@ repl re rpl str = subRegex (mkRegex re) str rpl
 {- Transforms a string like this:
       "the quick brown McCheeseburger" -> "TheQuickBrownMccheeseburger"
 -}
-capFirstAndDeSpace :: String -> String
-capFirstAndDeSpace s = concat $ map capFirst $ words s
+camelCase :: String -> String
+camelCase s = concat $ map capFirst $ words s
    where
       capFirst (first:rest) = (toUpper first) : (map toLower rest)
       capFirst _ = undefined
@@ -68,7 +68,7 @@ commonFilters =
    -- Decided that I like the article included in titles
    --, repl "^The "         ""
    , repl "&"             " And "
-   , capFirstAndDeSpace
+   , camelCase
    ]
 
 
