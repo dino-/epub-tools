@@ -91,8 +91,8 @@ justAuthors = (filter isAut) . metaCreators
 -}
 authorSingle :: [String] -> String
 authorSingle (last:rest:_) =
-   printf "%s%s-" (filterCommon last) (filterCommon rest)
-authorSingle [n]           = printf "%s-" $ filterCommon n
+   printf "%s%s-" (scrubString last) (scrubString rest)
+authorSingle [n]           = printf "%s-" $ scrubString n
 authorSingle _             = undefined
 
 

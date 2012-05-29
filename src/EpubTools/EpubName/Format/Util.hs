@@ -7,7 +7,8 @@ module EpubTools.EpubName.Format.Util
    , EN , runEN
    , throwError
    , asks
-   , filterCommon
+   , scrubString
+   , sanitizeString
    )
    where
 
@@ -54,8 +55,8 @@ camelCase s = concat $ map capFirst $ words s
 {- A set of common string filters that apply to any and all parts
    of every single string we process in this project.
 -}
-commonFilters :: [(String -> String)]
-commonFilters =
+aggressiveFilters :: [(String -> String)]
+aggressiveFilters =
    [ repl "[',\\?();#’]"  ""
    , repl "\\."           " "
    , repl ":"             "_"
@@ -72,8 +73,17 @@ commonFilters =
    ]
 
 
-{- Utility function to apply the above commonFilters to a string,
-   giving you back the transformed string
+{- Utility function to apply the above filters to a string, giving you
+   back the transformed string
 -}
-filterCommon :: String -> String
-filterCommon s = foldl' (flip id) s commonFilters
+scrubString :: String -> String
+scrubString s = foldl' (flip id) s aggressiveFilters
+
+
+{- Utility function to apply a very basic filter to make a legal filename,
+   giving you back the transformed string. This is used on everything
+   at the very end, just before the new filename is returned from the
+   formatting machinery.
+-}
+sanitizeString :: String -> String
+sanitizeString s = foldl' (flip id) s [ repl "/" " " ]

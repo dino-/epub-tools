@@ -117,7 +117,7 @@ publisher _ = do
 
 -- Clean up an item from the pattern match results
 scrub :: String -> ReplF
-scrub sIndex matches = fmap filterCommon $ index sIndex matches
+scrub sIndex matches = fmap scrubString $ index sIndex matches
 
 
 {- Construct a numeric string from an English word for a number,
@@ -169,7 +169,7 @@ tryFormatter (Formatter label authorMatch titlePat nameBuilders) = do
    authorMatch
    matches <- titlePat
    newName <- name matches nameBuilders
-   return (label, newName)
+   return (label, sanitizeString newName)
 
 
 {- Try the entire list of formatters, one by one, in order, until one

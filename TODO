@@ -20,7 +20,7 @@ epubmeta
 -----
 epubname
 
-- Redesign the commonFilters code to have a base set of minimal changes that will make a legal filename without requiring the scrub instruction
+- I'd like to see the author name formatting be more flexible so you can opt to not have it call scrubString as is mandatory now.
 
 - Maybe have an interactive mode that shows the changes and asks?
    Seeing a usage pattern where I use -n first and then run again without -n. Thinking about streamlining that process.
