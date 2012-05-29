@@ -108,6 +108,7 @@ pad sWidth sIndex matches = do
    return $ printf "%0*d" (width :: Int) (value :: Int)
 
 
+-- Get the formatted publisher file-as string from the metadata
 publisher :: ReplF
 publisher _ = do
    md <- asks gMetadata
