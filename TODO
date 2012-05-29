@@ -20,7 +20,7 @@ epubmeta
 -----
 epubname
 
-- Need to separate commonFilters to make sure to never make a crazy, illegal filename. Even if nobody ever calls Format.Format.scrub
+- Redesign the commonFilters code to have a base set of minimal changes that will make a legal filename without requiring the scrub instruction
 
 - Maybe have an interactive mode that shows the changes and asks?
    Seeing a usage pattern where I use -n first and then run again without -n. Thinking about streamlining that process.

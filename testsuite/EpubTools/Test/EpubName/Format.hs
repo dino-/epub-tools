@@ -324,11 +324,11 @@ testAllPunctuation (opts, fs) = TestCase $
          { metaCreators = [MetaCreator Nothing Nothing
             "Dino Morelli"]
          , metaTitles = [MetaTitle Nothing
-            "The *crazy*: Sand-box. Of Smedley's discontent, fear & Malnourishment? (Maybe not!); [Part #2]"]
+            "The *crazy*: Sand-box. Of Smedley's discontent/loathing, fear & Malnourishment? (Maybe not!); [Part #2]"]
          }
       expected =
          ( "ordinary_book"
-         , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentFearAndMalnourishmentMaybeNot_Part2.epub"
+         , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentLoathingFearAndMalnourishmentMaybeNot_Part2.epub"
          )
 
 

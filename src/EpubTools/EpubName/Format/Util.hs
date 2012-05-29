@@ -63,7 +63,7 @@ commonFilters =
    , repl "]"             ""
    , repl "\\*"           ""
    , repl "!"             ""
-   , repl "-"             " "
+   , repl "[-/]"          " "
    , repl "\\["           "_ "
    -- Decided that I like the article included in titles
    --, repl "^The "         ""
