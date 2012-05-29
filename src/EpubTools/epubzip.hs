@@ -12,52 +12,68 @@ import System.Directory
 import System.Environment
 import System.Exit
 import System.FilePath
+import System.IO ( BufferMode ( NoBuffering )
+                 , hSetBuffering, stdout, stderr 
+                 )
 import Text.Printf
 
-import EpubTools.EpubName.Format.Format
-   ( tryFormatting, ordinaryBookFormatter )
+import EpubTools.EpubName.Format.Format ( tryFormatting )
+import EpubTools.EpubName.Main
 import qualified EpubTools.EpubName.Opts as EN
 import EpubTools.EpubZip.Opts
 
 
-exitFail :: String -> IO ()
-exitFail msg = do
-      putStrLn msg
-      exitWith $ ExitFailure 1
-
-
 main :: IO ()
 main = do
-   (opts, paths) <- getArgs >>= parseOpts
+   -- No buffering, it messes with the order of output
+   mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
 
-   when ((optHelp opts) || (null paths)) $ exitFail usageText
+   either exitWith exitWith =<< (runErrorT $ do
+      -- Parse command-line arguments
+      (opts, paths) <- liftIO $ getArgs >>= parseOpts
 
-   let inputPath = head paths
-   isDir <- doesDirectoryExist inputPath
-   en <- if isDir
-         then runErrorT $ do
-            package <- do
-               (_, contents) <- opfContentsFromDir "."
-               parseXmlToOpf contents
+      -- User asked for help, this is a special termination case
+      when ((optHelp opts) || (null paths)) $ do
+         liftIO $ putStrLn usageText
+         throwError ExitSuccess
 
-            dos <- liftIO EN.defaultOptions
+      let inputPath = head paths
+      isDir <- liftIO $ doesDirectoryExist inputPath
 
-            (_, newPath) <- tryFormatting dos [ordinaryBookFormatter]
-               (opMeta package) "CURRENT DIRECTORY"
+      en <- if isDir
+            then do
+               dos <- liftIO EN.defaultOptions
+               fs <- initialize dos
+               runErrorT $ do
+                  package <- do
+                     (_, contents) <- opfContentsFromDir "."
+                     parseXmlToOpf contents
 
-            return $ inputPath </> newPath
-         else return . Right $ inputPath
+                  (_, newPath) <- tryFormatting dos fs
+                     (opMeta package) "CURRENT DIRECTORY"
 
-   case en of
-      Right zipPath -> do
-         exists <- doesFileExist zipPath
-         when ((not . optOverwrite $ opts) && exists) $ do
-            exitFail $
-               printf "File %s exists, use --overwrite to force" zipPath
+                  return $ inputPath </> newPath
+            else return . Right $ inputPath
 
-         archive <- mkEpubArchive "."
-         writeArchive zipPath archive
+      case en of
+         Right zipPath -> do
+            exists <- liftIO $ doesFileExist zipPath
+            if ((not . optOverwrite $ opts) && exists)
+               then do
+                  _ <- liftIO $ printf
+                     "File %s exists, use --overwrite to force\n"
+                     zipPath
+                  throwError $ ExitFailure 1
+               else liftIO $ removeFile zipPath
 
-         printf "Book created: %s\n" zipPath
+            _ <- liftIO $ do
+               archive <- mkEpubArchive "."
+               writeArchive zipPath archive
+               printf "Book created: %s\n" zipPath
 
-      Left errorMsg -> exitFail errorMsg
+            return ExitSuccess
+
+         Left errorMsg -> do
+            liftIO $ putStrLn errorMsg
+            throwError $ ExitFailure 1
+      )

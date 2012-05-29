@@ -44,5 +44,3 @@ epubname
 - Docs can talk about custom rules here: $HOME/.epubname/default.rules or similar
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
-
-- Make base ordinary_book formatter come from default rules file instead of static? Can do this once resources install and conf load path is working.

@@ -9,7 +9,6 @@ module EpubTools.EpubName.Format.Format
    , authors, index, literal, monthNum, pad, publisher, scrub, wordNum
    , year
    , Formatter (..)
-   , ordinaryBookFormatter
    , tryFormatting
    , extractTitle
    )
@@ -40,12 +39,15 @@ data Formatter = Formatter
 {- A single, simple formatter that should handle most books with one or
    more author.
 -}
+{- Not using this at the moment, but I'm reluctant to remove it. Could
+   be useful someday.
 ordinaryBookFormatter :: Formatter
 ordinaryBookFormatter = Formatter
    "ordinary_book"
    (return ())
    (extractTitle ".*")
    [authors, scrub "1", year]
+-}
 
 
 {- Wrapper functions to perform some basic operations in the Error
