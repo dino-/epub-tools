@@ -74,7 +74,7 @@ processBook opts formatters oldPath = do
 
       unless (optNoAction opts) $ liftIO $ renameFile oldPath newPath
 
-      return (oldPath, newPath, fmtUsed, pkg)
+      return ()
 
    either (\errmsg -> do
       putStrLn errmsg
