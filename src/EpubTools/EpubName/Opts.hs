@@ -30,6 +30,7 @@ data PubYear
 
 data Options = Options
    { optHelp :: Bool
+   , optInteractive :: Bool
    , optNoAction :: Bool
    , optOverwrite :: Bool
    , optPublisher :: Bool
@@ -50,6 +51,7 @@ defaultOptions = do
 
    return Options
       { optHelp = False
+      , optInteractive = False
       , optNoAction = False
       , optOverwrite = False
       , optPublisher = False
@@ -73,6 +75,9 @@ options =
    , Option ['h'] ["help"] 
       (NoArg (\opts -> opts { optHelp = True } ))
       "This help text"
+   , Option ['i'] ["interactive"] 
+      (NoArg (\opts -> opts { optInteractive = True } ))
+      "Prompt user interactively"
    , Option ['n'] ["no-action"]
       (NoArg (\opts -> opts { optNoAction = True } )) 
       "Display what would be done, but do nothing"

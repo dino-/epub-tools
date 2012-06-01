@@ -13,13 +13,14 @@ import System.Directory ( doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
-                 , hSetBuffering, stdout, stderr 
+                 , hSetBuffering, stdin, stdout, stderr 
                  )
 import Text.Printf
 
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
+import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
 
 
@@ -49,8 +50,16 @@ displayResults opts oldPath newPath fmtUsed pkg =
 
 {- Process an individual epub book file
 -}
-processBook :: Options -> [Formatter] -> FilePath -> IO Bool
-processBook opts formatters oldPath = do
+processBook :: Options -> [Formatter] -> [FilePath] -> Bool -> Bool
+   -> IO Bool
+
+processBook _    _          []              _     priRes =
+   return priRes
+
+processBook _    _          _               False priRes =
+   return priRes
+
+processBook opts formatters (oldPath:paths) _     priRes = do
    result <- runErrorT $ do
       {- If there is failure during parsing, we need to mark the result
          up with the file path. Failures here will otherwise get lost
@@ -72,22 +81,33 @@ processBook opts formatters oldPath = do
 
       displayResults opts oldPath newPath fmtUsed pkg
 
-      unless (optNoAction opts) $ liftIO $ renameFile oldPath newPath
+      promptResult <- liftIO $ case (optInteractive opts) of
+         True  -> prompt
+         False -> return Yes
 
-      return ()
+      when ((promptResult == Yes) && (optNoAction opts == False)) $
+         liftIO $ renameFile oldPath newPath
 
-   either (\errmsg -> do
+      return $ continue promptResult
+
+   (thisRes, cont) <- either (\errmsg -> do
       putStrLn errmsg
-      return False
+      return (False, True)
       )
-      (const $ return True)
+      (\c -> return (True, c))
       result
+
+   let newRes = case (priRes, thisRes) of
+         (False, _) -> False
+         (_    , r) -> r
+
+   processBook opts formatters paths cont newRes
 
 
 main :: IO ()
 main = do
    -- No buffering, it messes with the order of output
-   mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
+   mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr, stdin ]
 
    either exitWith exitWith =<< (runErrorT $ do
       -- Parse command-line arguments
@@ -106,8 +126,8 @@ main = do
          $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
-      codes <- liftIO $ mapM (processBook opts fs) paths
-      case all id codes of
+      code <- liftIO $ processBook opts fs paths True True
+      case code of
          True  -> return ExitSuccess
          False -> throwError exitProcessingFailure
       )
