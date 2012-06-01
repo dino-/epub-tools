@@ -34,11 +34,12 @@ formatFM (fmtUsed, pkg) =
       (formatPackage False pkg)
 
 
-{- Format output for a book that was processed
+{- Format and display output for a book that was processed
 -}
-makeOutput :: Options -> (FilePath, FilePath, String, Package) -> String
-makeOutput opts (oldPath, newPath, fmtUsed, pkg) =
-   printf "%s -> %s%s" oldPath newPath
+displayResults :: (MonadError String m, MonadIO m) =>
+   Options -> FilePath -> FilePath -> String -> Package -> m ()
+displayResults opts oldPath newPath fmtUsed pkg =
+   liftIO $ printf "%s -> %s%s\n" oldPath newPath
       (additional (optVerbose opts) (fmtUsed, pkg))
    where
       additional Nothing  = const ""
@@ -69,14 +70,18 @@ processBook opts formatters oldPath = do
          when fileExists $ throwError $ 
             printf "ERROR: File %s already exists!" newPath
 
+      displayResults opts oldPath newPath fmtUsed pkg
+
       unless (optNoAction opts) $ liftIO $ renameFile oldPath newPath
 
       return (oldPath, newPath, fmtUsed, pkg)
 
-   let (success, report) = either ((,) False)
-         (\r -> (True, makeOutput opts r)) result
-   putStrLn report
-   return success
+   either (\errmsg -> do
+      putStrLn errmsg
+      return False
+      )
+      (const $ return True)
+      result
 
 
 main :: IO ()
