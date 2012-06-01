@@ -74,10 +74,9 @@ processBook opts formatters (oldPath:paths) _     priRes = do
       (fmtUsed, newPath) <-
          tryFormatting opts formatters (opMeta pkg) oldPath
 
-      when (not $ optOverwrite opts) $ do
-         fileExists <- liftIO $ doesFileExist newPath
-         when fileExists $ throwError $ 
-            printf "ERROR: File %s already exists!" newPath
+      fileExists <- liftIO $ doesFileExist newPath
+      when fileExists $ throwError $ 
+         printf "File %s already exists. No change." newPath
 
       displayResults opts oldPath newPath fmtUsed pkg
 

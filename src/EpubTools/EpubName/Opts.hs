@@ -32,7 +32,6 @@ data Options = Options
    { optHelp :: Bool
    , optInteractive :: Bool
    , optNoAction :: Bool
-   , optOverwrite :: Bool
    , optPublisher :: Bool
    , optRulesPaths :: [FilePath]
    , optVerbose :: Maybe Int
@@ -53,7 +52,6 @@ defaultOptions = do
       { optHelp = False
       , optInteractive = False
       , optNoAction = False
-      , optOverwrite = False
       , optPublisher = False
       , optRulesPaths =
          [ stockRulesPath
@@ -81,9 +79,6 @@ options =
    , Option ['n'] ["no-action"]
       (NoArg (\opts -> opts { optNoAction = True } )) 
       "Display what would be done, but do nothing"
-   , Option ['o'] ["overwrite"]
-      (NoArg (\opts -> opts { optOverwrite = True } )) 
-      "Overwrite existing file with new name"
    , Option ['p'] ["publisher"]
       (NoArg (\opts -> opts { optPublisher = True } )) 
       "Include book publisher if present. See below"
