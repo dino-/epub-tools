@@ -34,6 +34,7 @@ data Options = Options
    , optNoAction :: Bool
    , optPublisher :: Bool
    , optRulesPaths :: [FilePath]
+   , optTargetDir :: FilePath
    , optVerbose :: Maybe Int
    , optPubYear :: PubYear
    }
@@ -57,6 +58,7 @@ defaultOptions = do
          [ stockRulesPath
          , userRulesPath
          ]
+      , optTargetDir = "."
       , optVerbose = Nothing
       , optPubYear = Publication
       }
@@ -84,6 +86,11 @@ options =
       "Include book publisher if present. See below"
    , Option ['r'] ["rules"] (ReqArg prependRulesPath "FILE")
       "Specify a rules file for naming the books"
+   , Option ['t'] ["target-dir"]
+      ( ReqArg
+         (\p opts -> opts { optTargetDir = p } )
+         "DIR")
+      "Target directory for successfully renamed books. Default: ."
    , Option ['v'] ["verbose"]
       ( OptArg
          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")

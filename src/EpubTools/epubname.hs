@@ -11,6 +11,7 @@ import Control.Monad
 import Control.Monad.Error
 import System.Directory ( doesFileExist, renameFile )
 import System.Environment ( getArgs )
+import System.FilePath
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdin, stdout, stderr 
@@ -71,8 +72,10 @@ processBook opts formatters (oldPath:paths) _     priRes = do
             $ printf "ERROR: File %s: %s" oldPath msg
          ) return epkg
 
-      (fmtUsed, newPath) <-
+      (fmtUsed, shortPath) <-
          tryFormatting opts formatters (opMeta pkg) oldPath
+
+      let newPath = optTargetDir opts </> shortPath
 
       fileExists <- liftIO $ doesFileExist newPath
       when fileExists $ throwError $ 
