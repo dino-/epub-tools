@@ -2,10 +2,13 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
+{-# LANGUAGE ScopedTypeVariables #-}
+
 module EpubTools.EpubMeta.Edit
    ( edit )
    where
 
+import Control.Exception
 import Control.Monad
 import System.Cmd
 import System.Directory
@@ -24,10 +27,9 @@ import EpubTools.EpubMeta.Util
    if an IO exception is raised
 -}
 ioMaybe :: IO a -> IO (Maybe a)
-ioMaybe action =
-   (fmap Just $ action)
-   `catch`
-   (const $ return Nothing)
+ioMaybe action = do
+   result :: (Either SomeException a) <- try action
+   either (const . return $ Nothing) (return . Just) result
 
 
 {- Look through the user's environment looking for their preferred 
