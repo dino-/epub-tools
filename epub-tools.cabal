@@ -50,6 +50,7 @@ executable           epubname
                      EpubTools.EpubName.Format.Util
                      EpubTools.EpubName.Main
                      EpubTools.EpubName.Opts
+                     EpubTools.EpubName.Prompt
                      EpubTools.EpubName.Util
 
    ghc-options:      -Wall
