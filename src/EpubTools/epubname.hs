@@ -9,7 +9,7 @@ import Codec.Epub.Opf.Package
 import Codec.Epub.Opf.Parse
 import Control.Monad
 import Control.Monad.Error
-import System.Directory ( doesFileExist, renameFile )
+import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.FilePath
 import System.Exit
@@ -121,6 +121,13 @@ main = do
       when ((optHelp opts) || (null paths)) $ do
          liftIO $ putStrLn usageText
          throwError ExitSuccess
+
+      let targetDir = optTargetDir opts
+      targetDirExists <- liftIO $ doesDirectoryExist targetDir
+      unless targetDirExists $ do
+         _ <- liftIO $ printf
+            "ERROR: Target directory doesn't exist: %s\n" targetDir
+         throwError exitInitFailure
 
       -- Locate the rules file, load it and parse into a list of
       -- formatters
