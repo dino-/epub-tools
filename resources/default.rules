@@ -31,11 +31,11 @@ magFantasyMag
    name "(scrub 1)(pad 3 2)"
 
 magEclipse_word
-   titlePat "^(Eclipse)\s+([a-zA-Z]+)$"
+   titlePat "^(Eclipse) +([a-zA-Z]+)$"
    name "(1)(wordNum 2 2)"
 
 magEclipse_num
-   titlePat "^(Eclipse)\s+([0-9]+):.*"
+   titlePat "^(Eclipse) +([0-9]+):.*"
    name "(1)(pad 2 2)"
 
 magFsf
