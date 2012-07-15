@@ -29,14 +29,14 @@ data PubYear
 
 
 data Options = Options
-   { optHelp :: Bool
-   , optInteractive :: Bool
-   , optNoAction :: Bool
-   , optPublisher :: Bool
-   , optRulesPaths :: [FilePath]
-   , optTargetDir :: FilePath
-   , optVerbose :: Maybe Int
-   , optPubYear :: PubYear
+   { optHelp         :: Bool
+   , optInteractive  :: Bool
+   , optNoAction     :: Bool
+   , optPublisher    :: Bool
+   , optRulesPaths   :: [FilePath]
+   , optTargetDir    :: FilePath
+   , optVerbose      :: Maybe Int
+   , optPubYear      :: PubYear
    }
 
 
@@ -50,17 +50,17 @@ defaultOptions = do
    let userRulesPath = homeDir </> ".epubtools" </> defaultRulesFile
 
    return Options
-      { optHelp = False
-      , optInteractive = False
-      , optNoAction = False
-      , optPublisher = False
-      , optRulesPaths =
+      { optHelp            = False
+      , optInteractive     = False
+      , optNoAction        = False
+      , optPublisher       = False
+      , optRulesPaths      =
          [ stockRulesPath
          , userRulesPath
          ]
-      , optTargetDir = "."
-      , optVerbose = Nothing
-      , optPubYear = Publication
+      , optTargetDir       = "."
+      , optVerbose         = Nothing
+      , optPubYear         = Publication
       }
 
 
