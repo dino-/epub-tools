@@ -30,6 +30,7 @@ data PubYear
 
 data Options = Options
    { optHelp         :: Bool
+   , optHelpRules    :: Bool
    , optInteractive  :: Bool
    , optNoAction     :: Bool
    , optPublisher    :: Bool
@@ -51,6 +52,7 @@ defaultOptions = do
 
    return Options
       { optHelp            = False
+      , optHelpRules       = False
       , optInteractive     = False
       , optNoAction        = False
       , optPublisher       = False
@@ -75,6 +77,9 @@ options =
    , Option ['h'] ["help"] 
       (NoArg (\opts -> opts { optHelp = True } ))
       "This help text"
+   , Option [] ["help-rules"] 
+      (NoArg (\opts -> opts { optHelpRules = True } ))
+      "Help on the naming rules domain specific language"
    , Option ['i'] ["interactive"] 
       (NoArg (\opts -> opts { optInteractive = True } ))
       "Prompt user interactively"

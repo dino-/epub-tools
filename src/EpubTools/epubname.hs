@@ -23,6 +23,7 @@ import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
+import Paths_epub_tools
 
 
 {- Construct additional verbose output
@@ -116,6 +117,13 @@ main = do
    either exitWith exitWith =<< (runErrorT $ do
       -- Parse command-line arguments
       (opts, paths) <- (liftIO getArgs) >>= parseOpts
+
+      -- User asked for rules help, this is a special termination case
+      when (optHelpRules opts) $ do
+         liftIO $ do
+            rulesHelpPath <- getDataFileName "epubname-dsl-docs"
+            readFile rulesHelpPath >>= putStrLn
+         throwError ExitSuccess
 
       -- User asked for help, this is a special termination case
       when ((optHelp opts) || (null paths)) $ do

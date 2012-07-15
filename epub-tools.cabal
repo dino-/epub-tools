@@ -15,7 +15,8 @@ category:            Application, Console
 tested-with:         GHC >= 7.4.2
 
 data-dir:            resources
-data-files:          default.rules
+data-files:          default.rules,
+                     epubname-dsl-docs
 
 extra-source-files:  testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
