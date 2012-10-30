@@ -127,7 +127,7 @@ main = do
 
       -- User asked for help, this is a special termination case
       when ((optHelp opts) || (null paths)) $ do
-         liftIO $ putStrLn usageText
+         liftIO $ usageText >>= putStrLn
          throwError ExitSuccess
 
       let targetDir = optTargetDir opts

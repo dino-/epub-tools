@@ -41,11 +41,16 @@ data Options = Options
    }
 
 
+defaultRulesFile :: FilePath
+defaultRulesFile = "default.rules"
+
+stockRulesPath :: IO FilePath
+stockRulesPath = getDataFileName defaultRulesFile
+
+
 defaultOptions :: IO Options
 defaultOptions = do
-   let defaultRulesFile = "default.rules"
-
-   stockRulesPath <- getDataFileName defaultRulesFile
+   srp <- stockRulesPath
 
    homeDir <- getEnv "HOME"
    let userRulesPath = homeDir </> ".epubtools" </> defaultRulesFile
@@ -58,7 +63,7 @@ defaultOptions = do
       , optPublisher       = False
       , optRulesPaths      =
          [ userRulesPath
-         , stockRulesPath
+         , srp
          ]
       , optTargetDir       = "."
       , optVerbose         = Nothing
@@ -117,12 +122,17 @@ parseOpts argv = do
    case getOpt Permute options argv of
       (o,n,[]  ) -> return (foldl (flip id) dos o, n)
       (_,_,errs) -> do
-         liftIO $ putStrLn $ concat errs ++ usageText
+         liftIO $ do
+            ut <- usageText
+            putStrLn $ concat errs ++ ut
          throwError exitInitFailure
 
 
-usageText :: String
-usageText = (usageInfo header options) ++ "\n" ++ footer
+usageText :: IO String
+usageText = do
+   srp <- stockRulesPath
+   return $ (usageInfo header options) ++ "\n" ++ footer srp
+
    where
       header = init $ unlines
          [ "Usage: epubname [OPTIONS] FILES"
@@ -130,7 +140,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Options:"
          ]
-      footer = init $ unlines
+      footer srp = init $ unlines
          [ "Verbosity levels:"
          , "   1 - Include which formatter processed the file"
          , "   2 - Include the OPF Package and Metadata info"
@@ -159,9 +169,15 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
          , ""
-         , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming code for specific magazines. This means that support for future magazines will likely have to be hand-coded into future versions of this utility. Modifying this just isn't very non-programmer friendly."
+         , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming rules for specific magazines."
          , ""
-         , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "This software ships with a set of rules to properly name over 20 magazines and compilations that are commonly purchased by the developer. These default rules can be extended to add new publications, and used as an example. The stock rules file can be found here:"
+         , ""
+         , "   " ++ srp
+         , ""
+         , "Please see --help-rules for more information on the syntax of the rules DSL."
+         , ""
+         , "For more information on the EPUB format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""
          , "Version 2.0.0  Dino Morelli <dino@ui3.info>"
          ]
