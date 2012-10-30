@@ -44,16 +44,19 @@ data Options = Options
 defaultRulesFile :: FilePath
 defaultRulesFile = "default.rules"
 
+userRulesPath :: IO FilePath
+userRulesPath = do
+   homeDir <- getEnv"HOME"
+   return $ homeDir </> ".epubtools" </> defaultRulesFile
+
 stockRulesPath :: IO FilePath
 stockRulesPath = getDataFileName defaultRulesFile
 
 
 defaultOptions :: IO Options
 defaultOptions = do
+   urp <- userRulesPath
    srp <- stockRulesPath
-
-   homeDir <- getEnv "HOME"
-   let userRulesPath = homeDir </> ".epubtools" </> defaultRulesFile
 
    return Options
       { optHelp            = False
@@ -61,10 +64,7 @@ defaultOptions = do
       , optInteractive     = False
       , optNoAction        = False
       , optPublisher       = False
-      , optRulesPaths      =
-         [ userRulesPath
-         , srp
-         ]
+      , optRulesPaths      = [ urp, srp ]
       , optTargetDir       = "."
       , optVerbose         = Nothing
       , optPubYear         = Publication
@@ -130,8 +130,9 @@ parseOpts argv = do
 
 usageText :: IO String
 usageText = do
+   urp <- userRulesPath
    srp <- stockRulesPath
-   return $ (usageInfo header options) ++ "\n" ++ footer srp
+   return $ (usageInfo header options) ++ "\n" ++ footer urp srp
 
    where
       header = init $ unlines
@@ -140,7 +141,7 @@ usageText = do
          , ""
          , "Options:"
          ]
-      footer srp = init $ unlines
+      footer urp srp = init $ unlines
          [ "Verbosity levels:"
          , "   1 - Include which formatter processed the file"
          , "   2 - Include the OPF Package and Metadata info"
@@ -171,11 +172,16 @@ usageText = do
          , ""
          , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming rules for specific magazines."
          , ""
-         , "This software ships with a set of rules to properly name over 20 magazines and compilations that are commonly purchased by the developer. These default rules can be extended to add new publications, and used as an example. The stock rules file can be found here:"
+         , "This software ships with a set of rules to properly name over 20 magazines and compilations that are commonly purchased by the developer. These default rules can be extended to add new publications, and used as an example."
          , ""
+         , "epubname will search the following locations for a rules file, in this order:"
+         , ""
+         , "   " ++ urp
          , "   " ++ srp
          , ""
-         , "Please see --help-rules for more information on the syntax of the rules DSL."
+         , "Use the last one, in share, as a model for a custom file for your ~"
+         , ""
+         , "Please see --help-rules for more information on the syntax of the DSL in the rules file."
          , ""
          , "For more information on the EPUB format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""

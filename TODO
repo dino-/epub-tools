@@ -30,7 +30,7 @@ epubname
 
    - Documentation of the DSL, in share
 
-   - Be sure to document rules file search paths too
+   + Be sure to document rules file search paths too
 
    - Document commenting syntax
 
