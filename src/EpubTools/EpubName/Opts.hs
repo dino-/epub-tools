@@ -57,8 +57,8 @@ defaultOptions = do
       , optNoAction        = False
       , optPublisher       = False
       , optRulesPaths      =
-         [ stockRulesPath
-         , userRulesPath
+         [ userRulesPath
+         , stockRulesPath
          ]
       , optTargetDir       = "."
       , optVerbose         = Nothing

@@ -20,8 +20,6 @@ epubmeta
 -----
 epubname
 
-- BUG: default.rules file is searched for in installation dir *before* ~/.epubtools/  TOTALLY WRONG!
-
 - I'd like to see the author name formatting be more flexible so you can opt to not have it call scrubString as is mandatory now.
 
 - Extensive documentation in share, viewed when you do --help or maybe --help-?? some switch for more detailed info
