@@ -22,25 +22,11 @@ epubname
 
 - I'd like to see the author name formatting be more flexible so you can opt to not have it call scrubString as is mandatory now.
 
-- Update documentation
-
-   + Update the normal documentation
-
-   + Switch to access the DSL documentation, --help-rules
-
-   - Documentation of the DSL, in share
-
-   + Be sure to document rules file search paths too
-
-   - Document commenting syntax
-
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC
    module hierarchy:
       EpubName/
          Test/
             Compile
             Test
-
-- Docs can talk about custom rules here: $HOME/.epubname/default.rules or similar
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
