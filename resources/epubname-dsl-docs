@@ -11,7 +11,7 @@ The rules are checked, from first to last, for each file being renamed. The firs
 Rules have the following format:
 
    label
-      authorPat "..."
+      authorMatch "..."
       titlePat "..."
       name "..."
 
@@ -19,7 +19,7 @@ label is to identify what the rule is for to the user and also for verbose outpu
 
 The indented fields are rule commands and consist of:
 
-   authorPat - Optional. If present, it's a regexp pattern that must
+   authorMatch - Optional. If present, it's a regexp pattern that must
       match an author in the book's metadata. If it doesn't match, this
       rule is rejected. This may be a partial match, "bar" will match if
       authors looks like "foo bar baz"
