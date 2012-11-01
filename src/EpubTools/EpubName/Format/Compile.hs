@@ -26,13 +26,17 @@ pFormatter :: Parser (Maybe Formatter)
 pFormatter = do
    l <- many1Till (noneOf " ") eol
    a <- optionMaybe $ try $ pCommand "authorMatch"
+   s <- optionMaybe $ try $ pCommand "subjectMatch"
    t <- pCommand "titlePat"
    n <- pName
    newline <|> return ' '
-   let aReplF = maybe (return ()) authorMatches a
    return $ case head l of
       '!' -> Nothing
-      _   -> Just $ Formatter l aReplF (extractTitle t) n
+      _   -> Just $ Formatter l
+         [ maybe (return ()) authorMatches a
+         , maybe (return ()) subjectMatches s
+         ]
+         (extractTitle t) n
 
    
 pName :: Parser [ReplF]

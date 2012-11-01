@@ -96,6 +96,11 @@ magLocus
    titlePat "^(Locus), ([a-zA-Z]+) ([0-9]{4})$"
    name "(scrub 1)Magazine(3)-(monthNum 2)"
 
+anthology
+   subjectMatch "anthology"
+   titlePat "(.*)"
+   name "(scrub 1)(year)"
+
 ordinary_book
    titlePat "(.*)"
    name "(authors)(scrub 1)(year)"

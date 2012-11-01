@@ -77,6 +77,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testLightspeedDate
       , testLightspeedIssue
       , testMagWeirdTales
+      , testAnthology
       ]
 
 
@@ -1047,4 +1048,25 @@ testMagWeirdTales (opts, fs) = TestCase $
       expected =
          ( "magWeirdTales"
          , "WeirdTales350.epub"
+         )
+
+
+testAnthology :: (Options, [Formatter]) -> Test
+testAnthology (opts, fs) = TestCase $
+   assertNewName opts fs "anthology" meta expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [MetaTitle Nothing "Creepy Secrets"]
+         , metaCreators =
+            [ MetaCreator (Just "aut") (Just "Snively, Mortimer")
+               "Mortimer Snively"
+            , MetaCreator (Just "aut") (Just "Baxter, Joanne")
+               "Joanne Baxter"
+            ]
+         , metaDates = [MetaDate (Just "publication") "2010-11-01"]
+         , metaSubjects = ["fantasy and horror anthology"]
+         }
+      expected =
+         ( "anthology"
+         , "CreepySecrets_2010.epub"
          )

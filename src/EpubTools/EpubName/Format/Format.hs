@@ -10,6 +10,7 @@ module EpubTools.EpubName.Format.Format
    , year
    , Formatter (..)
    , tryFormatting
+   , subjectMatches
    , extractTitle
    )
    where
@@ -17,6 +18,7 @@ module EpubTools.EpubName.Format.Format
 import Codec.Epub.Opf.Package
 import Control.Monad.Error
 import Data.List ( isPrefixOf )
+import Data.Maybe ( isJust )
 import Text.Printf
 import Text.Regex
 
@@ -31,7 +33,7 @@ type ReplF = [String] -> EN String
 
 data Formatter = Formatter
    String         -- formatter label
-   (EN ())        -- author match pattern
+   [EN ()]        -- field pattern matchers
    (EN [String])  -- title pattern parser
    [ReplF]        -- name building actions
 
@@ -139,6 +141,16 @@ year _ = getPubYear
    rules file notation, in the rule blocks
 -}
 
+{- This is used by subjectMatch to construct a subject matcher for a
+   specific rule. Throws an error if no subject matches the pattern.
+-}
+subjectMatches :: String -> EN ()
+subjectMatches re = do
+   subjects <- asks $ metaSubjects . gMetadata
+   unless (any isJust $ map (matchRegex (mkRegex re)) subjects) $
+      throwError "Subject string not found"
+
+
 {- This is used by the titlePat command to construct a title pattern
    matcher for a specific rule
 -}
@@ -165,8 +177,8 @@ name matches replacers =
 
 -- Try a specific formatter
 tryFormatter :: Formatter -> EN (String, FilePath)
-tryFormatter (Formatter label authorMatch titlePat nameBuilders) = do
-   authorMatch
+tryFormatter (Formatter label matchers titlePat nameBuilders) = do
+   sequence_ matchers
    matches <- titlePat
    newName <- name matches nameBuilders
    return (label, sanitizeString newName)

@@ -12,6 +12,7 @@ Rules have the following format:
 
    label
       authorMatch "..."
+      subjectMatch "..."
       titlePat "..."
       name "..."
 
@@ -23,6 +24,11 @@ The indented fields are rule commands and consist of:
       match an author in the book's metadata. If it doesn't match, this
       rule is rejected. This may be a partial match, "bar" will match if
       authors looks like "foo bar baz"
+
+   subjectMatch - Optional. If present, it's a regexp pattern that must
+      match an subject in the book's metadata. If it doesn't match, this
+      rule is rejected. This may be a partial match, "bar" will match if
+      any subject looks like "foo bar baz"
 
    titlePat - a regular expression for picking apart the title string in
       the book's metadata. The pieces in capture groups ( ) are exposed 
