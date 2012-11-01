@@ -23,7 +23,7 @@ The indented fields are rule commands and consist of:
    authorMatch - Optional. If present, it's a regexp pattern that must
       match an author in the book's metadata. If it doesn't match, this
       rule is rejected. This may be a partial match, "bar" will match if
-      authors looks like "foo bar baz"
+      any author looks like "foo bar baz"
 
    subjectMatch - Optional. If present, it's a regexp pattern that must
       match an subject in the book's metadata. If it doesn't match, this
