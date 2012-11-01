@@ -96,6 +96,10 @@ magLocus
    titlePat "^(Locus), ([a-zA-Z]+) ([0-9]{4})$"
    name "(scrub 1)Magazine(3)-(monthNum 2)"
 
+compSfMegapack
+   titlePat "The ([a-zA-Z]+ Science Fiction Megapack)"
+   name "(scrub 1)"
+
 anthology
    subjectMatch "anthology"
    titlePat "(.*)"
