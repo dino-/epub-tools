@@ -30,3 +30,8 @@ epubname
             Test
 
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
+
+-----
+epubzip
+
+- Observed severe bug where nothing is done unless there is an existing file to overwrite!
