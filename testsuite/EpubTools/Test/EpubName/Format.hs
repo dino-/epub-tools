@@ -777,9 +777,10 @@ testSFBestOf (opts, fs) = TestCase $
             "Rich Horton"]
          , metaTitles = [MetaTitle Nothing 
             "Science Fiction: The Best of the Year, 2007 Edition"]
+         , metaSubjects = ["anthology"]
          }
       expected =
-         ( "compOfTheYear"
+         ( "anthology"
          , "ScienceFiction_TheBestOfTheYear2007Edition.epub"
          )
 
@@ -795,9 +796,10 @@ testBestSF (opts, fs) = TestCase $
             "Jonathan Strahan"]
          , metaTitles = [MetaTitle Nothing 
             "The Best Science Fiction and Fantasy of the Year: Volume 2"]
+         , metaSubjects = ["anthology"]
          }
       expected =
-         ( "compOfTheYear"
+         ( "anthology"
          , "TheBestScienceFictionAndFantasyOfTheYear_Volume2.epub"
          )
 
@@ -811,9 +813,10 @@ testYearsBest (opts, fs) = TestCase $
             "Rich Horton, Michael Swanwick, Karen Joy Fowler"]
          , metaTitles = [MetaTitle Nothing 
             "The Year's Best Science Fiction: 2008 Edition"]
+         , metaSubjects = ["anthology"]
          }
       expected =
-         ( "compYearsBest"
+         ( "anthology"
          , "TheYearsBestScienceFiction_2008Edition.epub"
          )
 
