@@ -58,13 +58,15 @@ main = do
       case en of
          Right zipPath -> do
             exists <- liftIO $ doesFileExist zipPath
-            if ((not . optOverwrite $ opts) && exists)
-               then do
+
+            case ((optOverwrite opts), exists) of
+               (False, True) -> do
                   _ <- liftIO $ printf
                      "File %s exists, use --overwrite to force\n"
                      zipPath
                   throwError $ ExitFailure 1
-               else liftIO $ removeFile zipPath
+               (True,  True) -> liftIO $ removeFile zipPath
+               (_   ,  _   ) -> return ()
 
             _ <- liftIO $ do
                archive <- mkEpubArchive "."

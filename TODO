@@ -37,5 +37,3 @@ epubname
 
 -----
 epubzip
-
-- Observed severe bug where nothing is done unless there is an existing file to overwrite!
