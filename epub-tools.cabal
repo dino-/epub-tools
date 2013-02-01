@@ -28,7 +28,7 @@ source-repository    head
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs
    build-depends:    base >= 3 && < 5, bytestring, directory,
-                     epub-metadata >= 2.3.1, filepath, mtl, process,
+                     epub-metadata >= 2.3.2, filepath, mtl, process,
                      zip-archive
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubMeta.Display
