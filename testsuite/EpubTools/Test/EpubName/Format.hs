@@ -76,6 +76,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMagUniverse
       , testMagClarkesworld
       , testLightspeedDate
+      , testLightspeedMagIssue
       , testLightspeedIssue
       , testMagWeirdTales
       , testAnthology
@@ -1035,8 +1036,8 @@ testLightspeedDate (opts, fs) = TestCase $
          )
 
 
-testLightspeedIssue :: (Options, [Formatter]) -> Test
-testLightspeedIssue (opts, fs) = TestCase $
+testLightspeedMagIssue :: (Options, [Formatter]) -> Test
+testLightspeedMagIssue (opts, fs) = TestCase $
    assertNewName opts fs
       "Lightspeed Magazine, issue number in title" meta expected
    where
@@ -1048,6 +1049,21 @@ testLightspeedIssue (opts, fs) = TestCase $
       expected =
          ( "magLightspeed_issue"
          , "Lightspeed010.epub"
+         )
+
+
+testLightspeedIssue :: (Options, [Formatter]) -> Test
+testLightspeedIssue (opts, fs) = TestCase $
+   assertNewName opts fs
+      "Lightspeed Magazine, issue number in title" meta expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [MetaTitle Nothing 
+            "Lightspeed Issue 33"]
+         }
+      expected =
+         ( "magLightspeed_issue"
+         , "Lightspeed033.epub"
          )
 
 

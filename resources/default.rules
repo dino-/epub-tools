@@ -65,7 +65,7 @@ magLightspeed_date
    name "(1)(3)-(monthNum 2)"
 
 magLightspeed_issue
-   titlePat "(Lightspeed) Magazine Issue (.*)"
+   titlePat "(Lightspeed).* Issue (.*)"
    name "(1)(pad 3 2)"
 
 magNemesis
