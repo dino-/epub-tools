@@ -55,8 +55,9 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testGudShort
       , testGudLong
       , testGudVeryLong
-      , testInterzoneShort
-      , testInterzoneLong
+      , testInterzoneOldShort
+      , testInterzoneOldLong
+      , testInterzone
       , testNemesisShort
       , testNemesisLong
       , testMagSomethingWicked
@@ -671,9 +672,9 @@ testGudVeryLong (opts, fs) = TestCase $
          )
 
 
-testInterzoneShort :: (Options, [Formatter]) -> Test
-testInterzoneShort (opts, fs) = TestCase $
-   assertNewName opts fs "Interzone Magazine, short" meta expected
+testInterzoneOldShort :: (Options, [Formatter]) -> Test
+testInterzoneOldShort (opts, fs) = TestCase $
+   assertNewName opts fs "Interzone Magazine, old style, short" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing 
@@ -682,14 +683,14 @@ testInterzoneShort (opts, fs) = TestCase $
             "Interzone SFF #212"]
          }
       expected =
-         ( "magInterzone"
+         ( "magInterzone_old"
          , "InterzoneSFF212.epub"
          )
 
 
-testInterzoneLong :: (Options, [Formatter]) -> Test
-testInterzoneLong (opts, fs) = TestCase $
-   assertNewName opts fs "Interzone Magazine, long" meta expected
+testInterzoneOldLong :: (Options, [Formatter]) -> Test
+testInterzoneOldLong (opts, fs) = TestCase $
+   assertNewName opts fs "Interzone Magazine, old style, long" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [MetaCreator Nothing Nothing 
@@ -698,8 +699,24 @@ testInterzoneLong (opts, fs) = TestCase $
             "Interzone Science Fiction and Fantasy Magazine #216"]
          }
       expected =
-         ( "magInterzone"
+         ( "magInterzone_old"
          , "InterzoneSFF216.epub"
+         )
+
+
+testInterzone :: (Options, [Formatter]) -> Test
+testInterzone (opts, fs) = TestCase $
+   assertNewName opts fs "Interzone Magazine, Smashwords style" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [MetaCreator Nothing Nothing 
+            "TTA Press"]
+         , metaTitles = [MetaTitle Nothing 
+            "Interzone 233 Mar - Apr 2011"]
+         }
+      expected =
+         ( "magInterzone"
+         , "InterzoneSFF233.epub"
          )
 
 

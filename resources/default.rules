@@ -52,8 +52,12 @@ magGud
    titlePat ".* Magazine Issue ([0-9]+) ::.*"
    name "GUDMagazine(pad 2 1)"
 
-magInterzone
+magInterzone_old
    titlePat "^(Interzone)[^0-9]*([0-9]+)$"
+   name "(1)SFF(pad 3 2)"
+
+magInterzone
+   titlePat "^(Interzone) ([0-9]+).*$"
    name "(1)SFF(pad 3 2)"
 
 magLightspeed_date
