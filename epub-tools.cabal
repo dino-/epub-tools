@@ -41,7 +41,7 @@ executable           epubmeta
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.1, 
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.1,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubName.Format.Author
