@@ -37,7 +37,7 @@ executable           epubmeta
                      EpubTools.EpubMeta.Import
                      EpubTools.EpubMeta.Opts
                      EpubTools.EpubMeta.Util
-   ghc-options:      -Wall
+   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
@@ -54,7 +54,7 @@ executable           epubname
                      EpubTools.EpubName.Prompt
                      EpubTools.EpubName.Util
 
-   ghc-options:      -Wall
+   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
@@ -62,7 +62,7 @@ test-suite           epubname-tests
    build-depends:    base, directory, epub-metadata >= 2.3.2, filepath,
                      HUnit, mtl, parsec, regex-compat
    hs-source-dirs:   src testsuite
-   ghc-options:      -Wall
+   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
