@@ -41,7 +41,7 @@ executable           epubmeta
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.1,
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.2,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubName.Format.Author
@@ -59,14 +59,14 @@ executable           epubname
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
    main-is:          EpubTools/test-epubname.hs
-   build-depends:    base, directory, epub-metadata >= 2.3.1, filepath,
+   build-depends:    base, directory, epub-metadata >= 2.3.2, filepath,
                      HUnit, mtl, parsec, regex-compat
    hs-source-dirs:   src testsuite
    ghc-options:      -Wall
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.1,
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.2,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubZip.Opts
