@@ -194,5 +194,5 @@ usageText = do
          , "For more information on the EPUB format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""
          , ""
-         , "Version 2.1.1  Dino Morelli <dino@ui3.info>"
+         , "Version 2.2  Dino Morelli <dino@ui3.info>"
          ]
