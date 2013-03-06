@@ -181,6 +181,8 @@ usageText = do
          , ""
          , "This software ships with a set of rules to properly name over 20 magazines and compilations that are commonly purchased by the developer. These default rules can be extended to add new publications, and used as an example."
          , ""
+         , "Another case is anthologies, which is to say: collections of works by multiple authors but not necessarily in periodical form. There is an anthology rule in the default rules that's set to look for any <dc:subject>anthology</dc:subject> tag in the metadata. In this case, the authors will be ignored and the title along with a publication year will be used (see above re: dc:date)"
+         , ""
          , "epubname will search the following locations for a rules file, in this order:"
          , ""
          , "   " ++ urp
