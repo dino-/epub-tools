@@ -38,16 +38,16 @@ getPubYear = do
          ]
 
 
-getDateWithAttr :: String -> [MetaDate] -> Maybe String
+getDateWithAttr :: String -> [Date] -> Maybe String
 getDateWithAttr attrVal mds = foldr mplus Nothing $ map getPublication' mds
    where
-      getPublication' (MetaDate (Just av) d)
+      getPublication' (Date (Just av) d)
          | av == attrVal = extractYear d
       getPublication' _  = Nothing
 
 
-getFirstDate :: [MetaDate] -> Maybe String
-getFirstDate ((MetaDate _ d) : _) = extractYear d
+getFirstDate :: [Date] -> Maybe String
+getFirstDate ((Date _ d) : _) = extractYear d
 getFirstDate _                    = Nothing
 
 

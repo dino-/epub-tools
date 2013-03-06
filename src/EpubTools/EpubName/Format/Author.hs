@@ -28,27 +28,27 @@ extractAuthors = do
       fmtAuthor cs = (formatMultiAuthors cs) ++ "-"
 
 
-separateCombined :: [MetaCreator] -> [MetaCreator]
+separateCombined :: [Creator] -> [Creator]
 separateCombined = concatMap separateOne
 
 
-separateOne :: MetaCreator -> [MetaCreator]
-separateOne c@(MetaCreator r _ di) =
+separateOne :: Creator -> [Creator]
+separateOne c@(Creator r _ di) =
    case (splitRegex (mkRegex " (&|and) ") di) of
       -- If there was only one, leave the file-as alone!
       [_] -> [c]
-      -- Otherwise, explode them into separate MetaCreatorS
-      ss  -> map (MetaCreator r Nothing) ss
+      -- Otherwise, explode them into separate CreatorS
+      ss  -> map (Creator r Nothing) ss
 
 
-formatSingleAuthor :: MetaCreator -> String
+formatSingleAuthor :: Creator -> String
 
-formatSingleAuthor (MetaCreator _ (Just fa) di) = 
+formatSingleAuthor (Creator _ (Just fa) di) = 
    if ((fa == di) && all (/= ',') fa)
-      then formatSingleAuthor $ MetaCreator Nothing Nothing di
+      then formatSingleAuthor $ Creator Nothing Nothing di
       else authorSingle [fa]
 
-formatSingleAuthor (MetaCreator _ _         di) = 
+formatSingleAuthor (Creator _ _         di) = 
    authorSingle . reverse . nameParts $ di
 
 
@@ -70,20 +70,20 @@ lastName' s = maybe "" head $ foldl mplus Nothing matches
          , matchRegex (mkRegex "(.*)") s
          ]
 
-lastName :: MetaCreator -> String
-lastName (MetaCreator _ (Just fa) _ ) = lastName' fa
-lastName (MetaCreator _ _         di) = lastName' di
+lastName :: Creator -> String
+lastName (Creator _ (Just fa) _ ) = lastName' fa
+lastName (Creator _ _         di) = lastName' di
 
 
-formatMultiAuthors :: [MetaCreator] -> String
+formatMultiAuthors :: [Creator] -> String
 formatMultiAuthors = (intercalate "_") . (map lastName)
 
 
-justAuthors :: Metadata -> [MetaCreator]
+justAuthors :: Metadata -> [Creator]
 justAuthors = (filter isAut) . metaCreators
    where
-      isAut (MetaCreator (Just "aut") _ _) = True
-      isAut (MetaCreator Nothing      _ _) = True
+      isAut (Creator (Just "aut") _ _) = True
+      isAut (Creator Nothing      _ _) = True
       isAut _                              = False
 
 
@@ -100,7 +100,7 @@ authorSingle _             = undefined
 -}
 authorMatches :: String -> EN ()
 authorMatches re = do
-   let authorMatches' (MetaCreator _ _ di) =
+   let authorMatches' (Creator _ _ di) =
          matchRegex (mkRegex re) di
 
    md <- asks gMetadata

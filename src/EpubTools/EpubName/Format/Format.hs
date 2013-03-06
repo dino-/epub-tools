@@ -158,7 +158,7 @@ extractTitle :: String -> EN [String]
 extractTitle re = do
    md <- asks gMetadata
 
-   (MetaTitle _ oldTitle) <- case metaTitles md of
+   (Title _ oldTitle) <- case metaTitles md of
       [] -> throwError "format failed, no title present"
       ts -> return . head $ ts
 
@@ -202,7 +202,7 @@ extractPublisher md True  = maybe "" ('_' :)
    (foldr mplus Nothing (map maybePub $ metaContributors md))
 
    where
-      maybePub (MetaCreator (Just "bkp") (Just fa) _ ) = Just fa
+      maybePub (Creator (Just "bkp") (Just fa) _ ) = Just fa
       maybePub _                                       = Nothing
 
 
