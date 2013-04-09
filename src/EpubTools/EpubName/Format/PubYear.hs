@@ -8,7 +8,7 @@ module EpubTools.EpubName.Format.PubYear
    )
    where
 
-import Codec.Epub.Opf.Package
+import Codec.Epub2.Opf.Package
 import Control.Monad
 import Text.Regex
 

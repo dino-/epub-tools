@@ -6,7 +6,7 @@ module EpubTools.EpubMeta.Export
    ( exportOpf )
    where
 
-import Codec.Epub.IO
+import Codec.Epub2.IO
 import System.FilePath
 
 import EpubTools.EpubMeta.Opts

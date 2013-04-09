@@ -4,9 +4,9 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-import Codec.Epub.Opf.Format.Package
-import Codec.Epub.Opf.Package
-import Codec.Epub.Opf.Parse
+import Codec.Epub2.Opf.Format.Package
+import Codec.Epub2.Opf.Package
+import Codec.Epub2.Opf.Parse
 import Control.Monad
 import Control.Monad.Error
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
@@ -69,7 +69,7 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          file path. Failures here will otherwise get lost in the output
          when multiple books are processed at once.
       -}
-      epkg <- runErrorT $ parseEpubOpf oldPath
+      epkg <- runErrorT $ parseEpub2Opf oldPath
       pkg <- either
          ( \msg -> throwError
             $ printf "ERROR: File %s: %s" oldPath msg

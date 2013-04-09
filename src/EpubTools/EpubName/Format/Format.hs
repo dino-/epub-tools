@@ -15,7 +15,7 @@ module EpubTools.EpubName.Format.Format
    )
    where
 
-import Codec.Epub.Opf.Package
+import Codec.Epub2.Opf.Package
 import Control.Monad.Error
 import Data.List ( isPrefixOf )
 import Data.Maybe ( isJust )

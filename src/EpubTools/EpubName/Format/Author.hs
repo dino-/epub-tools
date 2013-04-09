@@ -8,7 +8,7 @@ module EpubTools.EpubName.Format.Author
    )
    where
 
-import Codec.Epub.Opf.Package
+import Codec.Epub2.Opf.Package
 import Control.Monad
 import Data.List ( intercalate )
 import Data.Maybe ( isJust )

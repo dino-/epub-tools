@@ -2,10 +2,10 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-import Codec.Epub.Archive
-import Codec.Epub.IO
-import Codec.Epub.Opf.Package
-import Codec.Epub.Opf.Parse
+import Codec.Epub2.Archive
+import Codec.Epub2.IO
+import Codec.Epub2.Opf.Package
+import Codec.Epub2.Opf.Parse
 import Control.Monad
 import Control.Monad.Error
 import System.Directory

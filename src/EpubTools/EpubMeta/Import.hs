@@ -7,8 +7,8 @@ module EpubTools.EpubMeta.Import
    where
 
 import Codec.Archive.Zip ( Entry (..), addEntryToArchive, readEntry, toArchive )
-import Codec.Epub.Archive ( writeArchive )
-import Codec.Epub.IO ( opfContentsFromBS )
+import Codec.Epub2.Archive ( writeArchive )
+import Codec.Epub2.IO ( opfContentsFromBS )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.Maybe ( fromJust )

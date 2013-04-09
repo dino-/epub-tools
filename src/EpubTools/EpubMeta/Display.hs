@@ -5,8 +5,8 @@
 module EpubTools.EpubMeta.Display
    where
 
-import Codec.Epub.Opf.Format.Package
-import Codec.Epub.Opf.Parse
+import Codec.Epub2.Opf.Format.Package
+import Codec.Epub2.Opf.Parse
 
 import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
@@ -14,5 +14,5 @@ import EpubTools.EpubMeta.Util
 
 display :: Options -> FilePath -> EM ()
 display opts zipPath = do
-   meta <- parseEpubOpf zipPath
+   meta <- parseEpub2Opf zipPath
    liftIO $ putStr $ formatPackage (optVerbose opts) meta

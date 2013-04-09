@@ -7,7 +7,7 @@ module EpubTools.Test.EpubName.Format
    )
    where
 
-import Codec.Epub.Opf.Package
+import Codec.Epub2.Opf.Package
 import Control.Monad.Error
 import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
