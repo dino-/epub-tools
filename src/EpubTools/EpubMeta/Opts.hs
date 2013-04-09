@@ -92,7 +92,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
          [ "Usage: epubmeta [OPTIONS] EPUBFILE"
-         , "View or edit EPUB OPF package data"
+         , "View or edit EPUB2 OPF package data"
          , ""
          , "Options:"
          ]

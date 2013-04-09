@@ -48,7 +48,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
       header = init $ unlines
          [ "Usage: epubzip [OPTIONS] DESTDIR"
          , "       epubzip [OPTIONS] DESTDIR/EPUBFILE"
-         , "Construct an epub zip archive from files in the current directory"
+         , "Construct an EPUB2 zip archive from files in the current directory"
          , ""
          , "Options:"
          ]

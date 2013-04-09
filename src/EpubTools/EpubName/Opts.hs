@@ -137,7 +137,7 @@ usageText = do
    where
       header = init $ unlines
          [ "USAGE: epubname [OPTIONS] FILES"
-         , "Rename EPUB book files with clear names based on their metadata"
+         , "Rename EPUB2 book files with clear names based on their metadata"
          , ""
          , "OPTIONS:"
          , ""
@@ -193,7 +193,7 @@ usageText = do
          , "Please see --help-rules for more information on the syntax of the DSL in the rules file."
          , ""
          , ""
-         , "For more information on the EPUB format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "For more information on the EPUB2 format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""
          , ""
          , "Version 2.2  Dino Morelli <dino@ui3.info>"
