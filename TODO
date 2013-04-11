@@ -41,7 +41,3 @@ epubname
 epubzip
 
 - Add explicit imports for mkEpubArchive and writeArchive
-
-- Fix bug where mimetype isn't the first file
-
-- Redesign unit tests and write a test for the mimetype first bug
