@@ -18,12 +18,12 @@ import System.IO ( BufferMode ( NoBuffering )
                  )
 import Text.Printf
 
+import qualified EpubTools.EpubName.Doc.Dsl as Dsl
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
-import Paths_epub_tools
 
 
 {- Construct additional verbose output
@@ -120,9 +120,7 @@ main = do
 
       -- User asked for rules help, this is a special termination case
       when (optHelpRules opts) $ do
-         liftIO $ do
-            rulesHelpPath <- getDataFileName "epubname-dsl-docs"
-            readFile rulesHelpPath >>= putStrLn
+         liftIO $ putStrLn Dsl.docs
          throwError ExitSuccess
 
       -- User asked for help, this is a special termination case

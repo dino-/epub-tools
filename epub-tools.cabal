@@ -15,8 +15,7 @@ category:            Application, Console
 tested-with:         GHC >= 7.6.2
 
 data-dir:            resources
-data-files:          default.rules,
-                     epubname-dsl-docs
+data-files:          default.rules
 
 extra-source-files:  testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
@@ -44,7 +43,8 @@ executable           epubname
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 2.3.2,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
-   other-modules:    EpubTools.EpubName.Format.Author
+   other-modules:    EpubTools.EpubName.Doc.Dsl
+                     EpubTools.EpubName.Format.Author
                      EpubTools.EpubName.Format.Compile
                      EpubTools.EpubName.Format.Format
                      EpubTools.EpubName.Format.PubYear
