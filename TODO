@@ -39,5 +39,3 @@ epubname
 
 -----
 epubzip
-
-- Add explicit imports for mkEpubArchive and writeArchive

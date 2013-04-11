@@ -2,7 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-import Codec.Epub2.Archive
+import Codec.Epub2.Archive ( mkEpubArchive, writeArchive )
 import Codec.Epub2.IO
 import Codec.Epub2.Opf.Package
 import Codec.Epub2.Opf.Parse
