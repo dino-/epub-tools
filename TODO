@@ -24,8 +24,6 @@ epubmeta
 -----
 epubname
 
-- Bring resources/epubname-dsl-docs into the epubname binary. Need to better support standalone binaries that run without a cabal install to some specific location.
-
 - I'd like to see the author name formatting be more flexible so you can opt to not have it call scrubString as is mandatory now.
 
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC

@@ -14,9 +14,6 @@ description:         A suite of command-line utilities for creating and manipula
 category:            Application, Console
 tested-with:         GHC >= 7.6.2
 
-data-dir:            resources
-data-files:          default.rules
-
 extra-source-files:  testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
 
@@ -44,6 +41,7 @@ executable           epubname
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubName.Doc.Dsl
+                     EpubTools.EpubName.Doc.Rules
                      EpubTools.EpubName.Format.Author
                      EpubTools.EpubName.Format.Compile
                      EpubTools.EpubName.Format.Format

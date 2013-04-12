@@ -166,7 +166,7 @@ docs = unlines
    , "      \"DandridgeSuzanne-SpringtimeInTheVillage_2012\""
    , ""
    , ""
-   , "The last rule in default.rules, ordinary_book is very important, and looks like this:"
+   , "The last rule in the built-in rules, ordinary_book is very important, and looks like this:"
    , ""
    , "   ordinary_book"
    , "      titlePat \"(.*)\""

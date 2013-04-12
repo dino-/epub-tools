@@ -14,8 +14,8 @@ import EpubTools.EpubName.Format.Author
 import EpubTools.EpubName.Format.Format
 
 
-parseRules :: FilePath -> IO (Either ParseError [Formatter])
-parseRules = parseFromFile pFormatters
+parseRules :: SourceName -> String -> Either ParseError [Formatter]
+parseRules name = runParser pFormatters () name
 
 
 pFormatters :: Parser [Formatter]

@@ -18,7 +18,6 @@ import System.Environment
 import System.Exit
 import System.FilePath
 
-import Paths_epub_tools
 import EpubTools.EpubName.Util
 
 
@@ -29,7 +28,8 @@ data PubYear
 
 
 data Options = Options
-   { optHelp         :: Bool
+   { optDumpRules    :: Bool
+   , optHelp         :: Bool
    , optHelpRules    :: Bool
    , optInteractive  :: Bool
    , optNoAction     :: Bool
@@ -49,22 +49,19 @@ userRulesPath = do
    homeDir <- getEnv"HOME"
    return $ homeDir </> ".epubtools" </> defaultRulesFile
 
-stockRulesPath :: IO FilePath
-stockRulesPath = getDataFileName defaultRulesFile
-
 
 defaultOptions :: IO Options
 defaultOptions = do
    urp <- userRulesPath
-   srp <- stockRulesPath
 
    return Options
-      { optHelp            = False
+      { optDumpRules       = False
+      , optHelp            = False
       , optHelpRules       = False
       , optInteractive     = False
       , optNoAction        = False
       , optPublisher       = False
-      , optRulesPaths      = [ urp, srp ]
+      , optRulesPaths      = [ urp ]
       , optTargetDir       = "."
       , optVerbose         = Nothing
       , optPubYear         = Publication
@@ -79,6 +76,9 @@ options =
    , Option ['D'] ["no-date"]
       (NoArg (\opts -> opts { optPubYear = NoDate } )) 
       "Suppress inclusion of original publication year"
+   , Option [] ["dump-rules"] 
+      (NoArg (\opts -> opts { optDumpRules = True } ))
+      "Output built-in rules definitions, use to make your own"
    , Option ['h'] ["help"] 
       (NoArg (\opts -> opts { optHelp = True } ))
       "This help text"
@@ -129,11 +129,7 @@ parseOpts argv = do
 
 
 usageText :: IO String
-usageText = do
-   urp <- userRulesPath
-   srp <- stockRulesPath
-   return $ (usageInfo header options) ++ "\n" ++ footer urp srp
-
+usageText = return $ (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
          [ "USAGE: epubname [OPTIONS] FILES"
@@ -142,7 +138,7 @@ usageText = do
          , "OPTIONS:"
          , ""
          ]
-      footer urp srp = init $ unlines
+      footer = init $ unlines
          [ "VERBOSITY LEVELS:"
          , ""
          , "   1 - Output which formatter processed the file"
@@ -185,10 +181,11 @@ usageText = do
          , ""
          , "epubname will search the following locations for a rules file, in this order:"
          , ""
-         , "   " ++ urp
-         , "   " ++ srp
+         , "   Path specified in a --rules switch"
+         , "   $HOME/.epubtools/default.rules"
+         , "   Built-in rules, a comprehensive stock set of naming rules"
          , ""
-         , "Use the last one, in share, as a model for a custom file for your ~"
+         , "Use the built-in rules as a model for a custom file. See --dump-rules above"
          , ""
          , "Please see --help-rules for more information on the syntax of the DSL in the rules file."
          , ""

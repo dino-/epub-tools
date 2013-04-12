@@ -11,10 +11,11 @@ module EpubTools.EpubName.Main
    where
 
 import Control.Monad.Error
-import Data.List ( intercalate )
 import System.Directory ( doesFileExist )
 import System.Exit
+import Text.Printf
 
+import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
 import EpubTools.EpubName.Opts
@@ -31,16 +32,22 @@ instance Error ExitCode where
 
 initialize :: (MonadError ExitCode m, MonadIO m) =>
    Options -> m [Formatter]
-initialize opts = (locateRules opts) >>= loadFormatters
+initialize opts = (locateRules $ optRulesPaths opts)
+   >>= (loadFormatters $ optVerbose opts)
 
 
 locateRules :: (MonadError ExitCode m, MonadIO m) =>
-   Options -> m FilePath
-locateRules opts = do
-   let paths = optRulesPaths opts
+   [FilePath] -> m (String, String)
+locateRules paths = do
    mbResult <- liftIO $ foldl (liftM2 mplus) (return Nothing)
       $ map mbExists paths
-   maybe (errNoRules paths) return mbResult
+   maybe (return ("built-in", Rules.defaults))
+      loadRules mbResult
+
+   where
+      loadRules p = do
+         contents <- liftIO $ readFile p
+         return (p, contents)
 
 
 mbExists :: FilePath -> IO (Maybe FilePath)
@@ -51,23 +58,18 @@ mbExists p = do
       else return Nothing
 
 
-errNoRules :: (MonadError ExitCode m, MonadIO m) =>
-   [FilePath] -> m FilePath
-errNoRules paths = do
-   liftIO $ do
-      putStrLn "Unable to find rules file. Paths searched:"
-      let indentedPaths = map ((++) "   ") paths
-      putStrLn $ intercalate "\n" indentedPaths
-   throwError exitInitFailure
-
-
 loadFormatters :: (MonadError ExitCode m, MonadIO m) =>
-   FilePath -> m [Formatter]
-loadFormatters rulesPath = do
-   parseResult <- liftIO $ parseRules rulesPath
+   (Maybe Int) -> (String, String) -> m [Formatter]
+loadFormatters verbosity (name, contents) = case parseRules name contents of
+   Left err  -> do
+      _ <- liftIO $ printf "%s:\n%s" name (show err)
+      throwError exitInitFailure
+   Right fs  -> do
+      liftIO $ showRulesSource verbosity name
+      return fs
 
-   case parseResult of
-      Left err  -> do
-         liftIO $ print err
-         throwError exitInitFailure
-      Right fs  -> return fs
+
+showRulesSource :: (Monad m, PrintfType (t -> m ())) =>
+   Maybe Int -> t -> m ()
+showRulesSource (Just 1) name = printf "Rules loaded from: %s\n" name
+showRulesSource _        _    = return ()

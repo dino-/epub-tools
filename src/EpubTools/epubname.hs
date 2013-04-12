@@ -19,6 +19,7 @@ import System.IO ( BufferMode ( NoBuffering )
 import Text.Printf
 
 import qualified EpubTools.EpubName.Doc.Dsl as Dsl
+import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
@@ -121,6 +122,12 @@ main = do
       -- User asked for rules help, this is a special termination case
       when (optHelpRules opts) $ do
          liftIO $ putStrLn Dsl.docs
+         throwError ExitSuccess
+
+      -- User asked for a dump of the built-in rules,
+      -- this is a special termination case
+      when (optDumpRules opts) $ do
+         liftIO $ putStr Rules.defaults
          throwError ExitSuccess
 
       -- User asked for help, this is a special termination case
