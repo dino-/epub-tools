@@ -2,10 +2,7 @@
 -- License: BSD3 (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-import Codec.Epub2.Archive ( mkEpubArchive, writeArchive )
-import Codec.Epub2.IO
-import Codec.Epub2.Opf.Package
-import Codec.Epub2.Opf.Parse
+import Codec.Epub
 import Control.Monad
 import Control.Monad.Error
 import System.Directory
@@ -45,12 +42,11 @@ main = do
                dos <- liftIO EN.defaultOptions
                fs <- initialize dos
                runErrorT $ do
-                  package <- do
-                     (_, contents) <- opfContentsFromDir "."
-                     parseXmlToOpf contents
+                  metadata <- (snd `fmap` getPkgPathXmlFromDir ".")
+                     >>= getMetadata
 
                   (_, newPath) <- tryFormatting dos fs
-                     (opMeta package) "CURRENT DIRECTORY"
+                     metadata "CURRENT DIRECTORY"
 
                   return $ inputPath </> newPath
             else return . Right $ inputPath

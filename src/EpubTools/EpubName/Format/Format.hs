@@ -15,7 +15,7 @@ module EpubTools.EpubName.Format.Format
    )
    where
 
-import Codec.Epub2.Opf.Package
+import Codec.Epub.Data.Metadata
 import Control.Monad.Error
 import Data.List ( isPrefixOf )
 import Data.Maybe ( isJust )
@@ -158,7 +158,7 @@ extractTitle :: String -> EN [String]
 extractTitle re = do
    md <- asks gMetadata
 
-   (Title _ oldTitle) <- case metaTitles md of
+   (Title _ _ _ oldTitle) <- case metaTitles md of
       [] -> throwError "format failed, no title present"
       ts -> return . head $ ts
 
@@ -202,7 +202,7 @@ extractPublisher md True  = maybe "" ('_' :)
    (foldr mplus Nothing (map maybePub $ metaContributors md))
 
    where
-      maybePub (Creator (Just "bkp") (Just fa) _ ) = Just fa
+      maybePub (Creator (Just "bkp") (Just fa) _ _ ) = Just fa
       maybePub _                                       = Nothing
 
 

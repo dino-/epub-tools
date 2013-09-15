@@ -8,7 +8,7 @@ module EpubTools.EpubName.Format.Author
    )
    where
 
-import Codec.Epub2.Opf.Package
+import Codec.Epub.Data.Metadata
 import Control.Monad
 import Data.List ( intercalate )
 import Data.Maybe ( isJust )
@@ -33,22 +33,22 @@ separateCombined = concatMap separateOne
 
 
 separateOne :: Creator -> [Creator]
-separateOne c@(Creator r _ di) =
+separateOne c@(Creator r _ _ di) =
    case (splitRegex (mkRegex " (&|and) ") di) of
       -- If there was only one, leave the file-as alone!
       [_] -> [c]
       -- Otherwise, explode them into separate CreatorS
-      ss  -> map (Creator r Nothing) ss
+      ss  -> map (Creator r Nothing Nothing) ss
 
 
 formatSingleAuthor :: Creator -> String
 
-formatSingleAuthor (Creator _ (Just fa) di) = 
+formatSingleAuthor (Creator _ (Just fa) _ di) = 
    if ((fa == di) && all (/= ',') fa)
-      then formatSingleAuthor $ Creator Nothing Nothing di
+      then formatSingleAuthor $ Creator Nothing Nothing Nothing di
       else authorSingle [fa]
 
-formatSingleAuthor (Creator _ _         di) = 
+formatSingleAuthor (Creator _ _         _ di) = 
    authorSingle . reverse . nameParts $ di
 
 
@@ -71,8 +71,8 @@ lastName' s = maybe "" head $ foldl mplus Nothing matches
          ]
 
 lastName :: Creator -> String
-lastName (Creator _ (Just fa) _ ) = lastName' fa
-lastName (Creator _ _         di) = lastName' di
+lastName (Creator _ (Just fa) _ _ ) = lastName' fa
+lastName (Creator _ _         _ di) = lastName' di
 
 
 formatMultiAuthors :: [Creator] -> String
@@ -82,8 +82,8 @@ formatMultiAuthors = (intercalate "_") . (map lastName)
 justAuthors :: Metadata -> [Creator]
 justAuthors = (filter isAut) . metaCreators
    where
-      isAut (Creator (Just "aut") _ _) = True
-      isAut (Creator Nothing      _ _) = True
+      isAut (Creator (Just "aut") _ _ _) = True
+      isAut (Creator Nothing      _ _ _) = True
       isAut _                              = False
 
 
@@ -100,7 +100,7 @@ authorSingle _             = undefined
 -}
 authorMatches :: String -> EN ()
 authorMatches re = do
-   let authorMatches' (Creator _ _ di) =
+   let authorMatches' (Creator _ _ _ di) =
          matchRegex (mkRegex re) di
 
    md <- asks gMetadata

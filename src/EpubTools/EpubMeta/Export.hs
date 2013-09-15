@@ -6,7 +6,7 @@ module EpubTools.EpubMeta.Export
    ( exportOpf )
    where
 
-import Codec.Epub2.IO
+import Codec.Epub.IO
 import System.FilePath
 
 import EpubTools.EpubMeta.Opts
@@ -26,11 +26,11 @@ exportOpf opts = export' (optExport opts)
 export' :: Export -> FilePath -> EM ()
 
 export' Existing zipPath = do
-   (fullPath, contents) <- opfContentsFromZip zipPath
+   (fullPath, contents) <- getPkgPathXmlFromZip zipPath
    write (takeFileName fullPath) contents
 
 export' (ToPath path) zipPath = do
-   (_, contents) <- opfContentsFromZip zipPath
+   contents <- getPkgXmlFromZip zipPath
    write path contents
 
 export' NoExport _ = undefined

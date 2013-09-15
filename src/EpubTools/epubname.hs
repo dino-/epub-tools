@@ -4,9 +4,9 @@
 
 {-# LANGUAGE FlexibleContexts #-}
 
-import Codec.Epub2.Opf.Format.Package
-import Codec.Epub2.Opf.Package
-import Codec.Epub2.Opf.Parse
+import Codec.Epub
+import Codec.Epub.Data.Metadata
+import Codec.Epub.Data.Package
 import Control.Monad
 import Control.Monad.Error
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
@@ -29,22 +29,22 @@ import EpubTools.EpubName.Util
 
 {- Construct additional verbose output
 -}
-formatF :: (String, Package) -> String
-formatF (fmtUsed, _) = printf "\n   formatter: %s" fmtUsed
+formatF :: (String, Package, Metadata) -> String
+formatF (fmtUsed, _, _) = printf "\n   formatter: %s" fmtUsed
 
-formatFM :: (String, Package) -> String
-formatFM (fmtUsed, pkg) =
-   printf "\n   formatter: %s\n%s" fmtUsed
-      (formatPackage False pkg)
+formatFM :: (String, Package, Metadata) -> String
+formatFM (fmtUsed, pkg, md) =
+   printf "\n   formatter: %s\n%s\n%s" fmtUsed
+      (format pkg) (format md)
 
 
 {- Format and display output for a book that was processed
 -}
-displayResults :: (MonadError String m, MonadIO m) =>
-   Options -> FilePath -> FilePath -> String -> Package -> m ()
-displayResults opts oldPath newPath fmtUsed pkg =
+displayResults :: (MonadError String m, MonadIO m) => Options
+   -> FilePath -> FilePath -> String -> Package -> Metadata -> m ()
+displayResults opts oldPath newPath fmtUsed pkg md =
    liftIO $ printf "%s -> %s%s\n" oldPath newPath
-      (additional (optVerbose opts) (fmtUsed, pkg))
+      (additional (optVerbose opts) (fmtUsed, pkg, md))
    where
       additional Nothing  = const ""
       additional (Just 1) = formatF
@@ -70,14 +70,18 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          file path. Failures here will otherwise get lost in the output
          when multiple books are processed at once.
       -}
-      epkg <- runErrorT $ parseEpub2Opf oldPath
-      pkg <- either
+      epm <- runErrorT $ do
+         xml <- getPkgXmlFromZip oldPath
+         p <- getPackage xml
+         m <- getMetadata xml
+         return (p, m)
+      (pkg, md) <- either
          ( \msg -> throwError
             $ printf "ERROR: File %s: %s" oldPath msg
-         ) return epkg
+         ) return epm
 
       (fmtUsed, shortPath) <-
-         tryFormatting opts formatters (opMeta pkg) oldPath
+         tryFormatting opts formatters md oldPath
 
       let newPath = optTargetDir opts </> shortPath
 
@@ -85,7 +89,7 @@ processBook opts formatters (oldPath:paths) _     priRes = do
       when fileExists $ throwError $ 
          printf "File %s already exists. No change." newPath
 
-      displayResults opts oldPath newPath fmtUsed pkg
+      displayResults opts oldPath newPath fmtUsed pkg md
 
       promptResult <- liftIO $ case (optInteractive opts) of
          True  -> prompt

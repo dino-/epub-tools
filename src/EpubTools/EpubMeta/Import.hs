@@ -7,8 +7,7 @@ module EpubTools.EpubMeta.Import
    where
 
 import Codec.Archive.Zip ( Entry (..), addEntryToArchive, readEntry, toArchive )
-import Codec.Epub2.Archive ( writeArchive )
-import Codec.Epub2.IO ( opfContentsFromBS )
+import Codec.Epub.IO ( getPkgPathXmlFromBS, writeArchive )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.Maybe ( fromJust )
@@ -28,7 +27,7 @@ importOpf opts zipPath = do
 
    -- The path in the book where new file must go
    strictBytes <- liftIO $ BS.readFile zipPath
-   (pathToOldFile, _) <- opfContentsFromBS strictBytes
+   (pathToOldFile, _) <- getPkgPathXmlFromBS strictBytes
 
    -- Adjust the entry's path
    let newEntry = tempEntry { eRelativePath = pathToOldFile }

@@ -12,7 +12,7 @@ module EpubTools.EpubName.Format.Util
    )
    where
 
-import Codec.Epub2.Opf.Package
+import Codec.Epub.Data.Metadata
 import Control.Monad.Error
 import Control.Monad.Identity
 import Control.Monad.Reader
