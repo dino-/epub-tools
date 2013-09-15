@@ -22,8 +22,9 @@ import EpubTools.EpubName.Util
 
 
 data PubYear
-   = Publication  -- Default, use date event='publication' or 'original-publication'
-   | AnyDate      -- Use first date element found
+   = Publication  -- Default, look for, in this order: date
+                  --    event='original-publication' or
+                  --    event='publication' or date with no attributes
    | NoDate       -- Don't do publication date at all
 
 
@@ -70,10 +71,7 @@ defaultOptions = do
 
 options :: [OptDescr (Options -> Options)]
 options =
-   [ Option ['d'] ["any-date"]
-      (NoArg (\opts -> opts { optPubYear = AnyDate } )) 
-      "If no publication year found, use first date element of any kind"
-   , Option ['D'] ["no-date"]
+   [ Option ['D'] ["no-date"]
       (NoArg (\opts -> opts { optPubYear = NoDate } )) 
       "Suppress inclusion of original publication year"
    , Option [] ["dump-rules"] 
@@ -167,7 +165,7 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Only creator tags with either a role attribute of 'aut' or no role at all are considered authors. If a file-as attribute is present, this will be the preferred string. If not, the program tries to do some intelligent parsing of the name."
          , ""
-         , "The OPF spec suggests there may be a <dc:date opf:event='publication'>2011</dc:date> element representing original publication date. If this (or opf:event='original-publication') is present, it will be used by default for _year as in the above examples. The --any-date switch will use the first date tag found, regardless of attributes. The year can be parsed out of many date formats, it's very flexible."
+         , "This software will attempt to locate a publication date to use at the end of the filename. It will look first for a date with an event of 'original-publication', then it will look for event='publication' (this is according to the epub2 spec). Failing that, it will just use the first date with no event info (according to the epub3 spec). Suppress any use of publication date with the --no-date switch."
          , ""
          , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
          , ""

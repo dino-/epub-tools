@@ -24,17 +24,17 @@ getPubYear = do
    md <- asks gMetadata
 
    case yearHandling of
-      Publication -> getPubYear' md pubAttrs
-      AnyDate -> getPubYear' md $ pubAttrs ++ [getFirstDate]
-      NoDate -> return ""
+      Publication -> getPubYear' md dateGetters
+      NoDate      -> return ""
 
    where
       getPubYear' md = return . maybe "" ('_' :) . foldr mplus Nothing .
          map (\f -> f (metaDates md))
 
-      pubAttrs =
+      dateGetters =
          [ getDateWithAttr "original-publication"
          , getDateWithAttr "publication"
+         , getFirstDate
          ]
 
 

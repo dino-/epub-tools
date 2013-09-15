@@ -34,8 +34,9 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testBracketTitle
       , testNoTitle
       , testAllPunctuation
-      , testPubYear
-      , testPubYearAny
+      , testPubYearNoDatesPresent
+      , testPubYearEpub3
+      , testPubYearEpub2
       , testPubYearUnwanted
       , testMagAeon
       , testMagAEon
@@ -340,14 +341,32 @@ testAllPunctuation (opts, fs) = TestCase $
          )
 
 
-testPubYear :: (Options, [Formatter]) -> Test
-testPubYear (opts, fs) = TestCase $
-   assertNewName opts fs "book with a publication year" meta expected
+testPubYearNoDatesPresent :: (Options, [Formatter]) -> Test
+testPubYearNoDatesPresent (opts, fs) = TestCase $
+   assertNewName opts fs "book with no dates at all" meta expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [Date (Just "publication") "2003"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory.epub"
+         )
+
+
+testPubYearEpub3 :: (Options, [Formatter]) -> Test
+testPubYearEpub3 (opts, fs) = TestCase $
+   assertNewName opts fs "book with epub3 style (simple) date" meta expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates =
+            [ Date Nothing "2003"
+            , Date (Just "some date") "2002"
+            , Date Nothing "2001"
+            ]
          }
       expected =
          ( "ordinary_book"
@@ -355,21 +374,23 @@ testPubYear (opts, fs) = TestCase $
          )
 
 
-testPubYearAny :: (Options, [Formatter]) -> Test
-testPubYearAny (opts, fs) = TestCase $
-   assertNewName testOpts fs
-      "book with original-publication attr and --any-date"
-      meta expected
+testPubYearEpub2 :: (Options, [Formatter]) -> Test
+testPubYearEpub2 (opts, fs) = TestCase $
+   assertNewName opts fs "book with epub2 style dates" meta expected
    where
-      testOpts = opts { optPubYear = AnyDate }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [Date (Just "original-publication") "2003"]
+         , metaDates =
+            [ Date Nothing "2001"
+            , Date (Just "publication") "2003"
+            , Date (Just "some date") "2000"
+            , Date (Just "original-publication") "2002"
+            ]
          }
       expected =
          ( "ordinary_book"
-         , "JonesJim-ATimelessStory_2003.epub"
+         , "JonesJim-ATimelessStory_2002.epub"
          )
 
 
@@ -383,7 +404,12 @@ testPubYearUnwanted (opts, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [Date (Just "original-publication") "2003"]
+         , metaDates =
+            [ Date Nothing "2001"
+            , Date (Just "publication") "2003"
+            , Date (Just "some date") "2000"
+            , Date (Just "original-publication") "2002"
+            ]
          }
       expected =
          ( "ordinary_book"
