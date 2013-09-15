@@ -7,6 +7,7 @@
 import Codec.Epub
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
+import Control.Applicative
 import Control.Monad
 import Control.Monad.Error
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
@@ -72,9 +73,7 @@ processBook opts formatters (oldPath:paths) _     priRes = do
       -}
       epm <- runErrorT $ do
          xml <- getPkgXmlFromZip oldPath
-         p <- getPackage xml
-         m <- getMetadata xml
-         return (p, m)
+         (,) <$> getPackage xml <*> getMetadata xml
       (pkg, md) <- either
          ( \msg -> throwError
             $ printf "ERROR: File %s: %s" oldPath msg
