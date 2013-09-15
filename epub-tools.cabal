@@ -24,7 +24,7 @@ source-repository    head
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs
    build-depends:    base >= 3 && < 5, bytestring, directory,
-                     epub-metadata >= 3.0, filepath, mtl, process,
+                     epub-metadata >= 4.0, filepath, mtl, process,
                      zip-archive
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubMeta.Display
@@ -37,7 +37,7 @@ executable           epubmeta
 
 executable           epubname
    main-is:          EpubTools/epubname.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 3.0,
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 4.0,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubName.Doc.Dsl
@@ -57,14 +57,14 @@ executable           epubname
 test-suite           epubname-tests
    type:             exitcode-stdio-1.0
    main-is:          EpubTools/test-epubname.hs
-   build-depends:    base, directory, epub-metadata >= 3.0, filepath,
+   build-depends:    base, directory, epub-metadata >= 4.0, filepath,
                      HUnit, mtl, parsec, regex-compat
    hs-source-dirs:   src testsuite
    ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 executable           epubzip
    main-is:          EpubTools/epubzip.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 3.0,
+   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 4.0,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
    other-modules:    EpubTools.EpubZip.Opts
