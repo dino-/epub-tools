@@ -92,16 +92,19 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
          [ "Usage: epubmeta [OPTIONS] EPUBFILE"
-         , "View or edit EPUB2 OPF package data"
+         , "View or edit epub book metadata"
+         , ""
+         , "Note that 'edit' here means you get dumped into an editor with the XML document and are on your own."
          , ""
          , "Options:"
          ]
       footer = init $ unlines
-         [ "When -v or no options are given, epubmeta will display the OPF package data in a human-readable form."
+         [ "The -e feature will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi"
          , ""
-         , "The -e feature will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi"
+         , "For more information on the epub format:"
+         , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
          , ""
-         , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
          , ""
          , "Version 2.3  Dino Morelli <dino@ui3.info>"
          ]

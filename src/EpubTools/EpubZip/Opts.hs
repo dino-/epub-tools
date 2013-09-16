@@ -48,7 +48,7 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
       header = init $ unlines
          [ "Usage: epubzip [OPTIONS] DESTDIR"
          , "       epubzip [OPTIONS] DESTDIR/EPUBFILE"
-         , "Construct an EPUB2 zip archive from files in the current directory"
+         , "Construct an epub zip archive from files in the current directory"
          , ""
          , "Options:"
          ]
@@ -66,7 +66,10 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   $ cd TEMPDIR"
          , "   $ unzip EPUBFILE"
          , ""
-         , "For more information please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "For more information on the epub format:"
+         , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
+         , ""
          , ""
          , "Version 2.3  Dino Morelli <dino@ui3.info>"
          ]

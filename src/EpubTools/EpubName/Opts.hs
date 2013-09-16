@@ -131,7 +131,7 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
    where
       header = init $ unlines
          [ "USAGE: epubname [OPTIONS] FILES"
-         , "Rename EPUB2 book files with clear names based on their metadata"
+         , "Rename epub book files with clear names based on their metadata"
          , ""
          , "OPTIONS:"
          , ""
@@ -188,7 +188,9 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , "Please see --help-rules for more information on the syntax of the DSL in the rules file."
          , ""
          , ""
-         , "For more information on the EPUB2 format, please see the IDPF OPF specification found here: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "For more information on the epub format:"
+         , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
+         , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
          , ""
          , ""
          , "Version 2.3  Dino Morelli <dino@ui3.info>"
