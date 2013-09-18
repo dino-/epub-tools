@@ -9,6 +9,7 @@ module EpubTools.EpubName.Format.PubYear
    where
 
 import Codec.Epub.Data.Metadata
+import Codec.Epub.Data.Package
 import Control.Monad
 import Text.Regex
 
@@ -22,19 +23,23 @@ getPubYear :: EN String
 getPubYear = do
    yearHandling <- asks $ optPubYear . gOpts
    md <- asks gMetadata
+   version <- asks $ pkgVersion . gPackage
 
-   case yearHandling of
-      Publication -> getPubYear' md dateGetters
-      NoDate      -> return ""
+   case (version, yearHandling) of
+      ('3' : _ , Publication) -> getPubYear' md $ [getFirstDate]
+      ('3' : _ , AnyDate    ) -> getPubYear' md $ [getFirstDate]
+      ('2' : _ , Publication) -> getPubYear' md pubAttrs
+      ('2' : _ , AnyDate    ) -> getPubYear' md $
+         pubAttrs ++ [getFirstDate]
+      (_       , _          ) -> return ""
 
    where
       getPubYear' md = return . maybe "" ('_' :) . foldr mplus Nothing .
          map (\f -> f (metaDates md))
 
-      dateGetters =
+      pubAttrs =
          [ getDateWithAttr "original-publication"
          , getDateWithAttr "publication"
-         , getFirstDate
          ]
 
 
@@ -48,7 +53,7 @@ getDateWithAttr attrVal mds = foldr mplus Nothing $ map getPublication' mds
 
 getFirstDate :: [Date] -> Maybe String
 getFirstDate ((Date _ d) : _) = extractYear d
-getFirstDate _                    = Nothing
+getFirstDate _                = Nothing
 
 
 extractYear :: String -> Maybe String

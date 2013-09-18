@@ -13,6 +13,7 @@ module EpubTools.EpubName.Format.Util
    where
 
 import Codec.Epub.Data.Metadata
+import Codec.Epub.Data.Package
 import Control.Monad.Error
 import Control.Monad.Identity
 import Control.Monad.Reader
@@ -25,6 +26,7 @@ import EpubTools.EpubName.Opts
 
 data Globals = Globals
    { gOpts :: Options
+   , gPackage :: Package
    , gMetadata :: Metadata
    }
 

@@ -188,9 +188,9 @@ tryFormatter (Formatter label matchers titlePat nameBuilders) = do
    succeeds or none do
 -}
 tryFormatting :: (MonadIO m, MonadError String m) =>
-   Options -> [Formatter] -> Metadata -> FilePath -> m (String, FilePath)
-tryFormatting opts fs meta oldPath =
-   either throwError return $ runEN (Globals opts meta) $
+   Globals -> [Formatter] -> FilePath -> m (String, FilePath)
+tryFormatting gs fs oldPath =
+   either throwError return $ runEN gs $
       foldr mplus
          (throwError $ printf "%s [ERROR No formatter found]" oldPath) $
          map tryFormatter fs

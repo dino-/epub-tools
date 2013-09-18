@@ -22,9 +22,10 @@ import EpubTools.EpubName.Util
 
 
 data PubYear
-   = Publication  -- Default, look for, in this order: date
-                  --    event='original-publication' or
-                  --    event='publication' or date with no attributes
+   = Publication  -- Default
+      -- epub3: use first date of any kind
+      -- epub2: use date 'original-publication' or event='publication'
+   | AnyDate      -- Failing above, use any date found
    | NoDate       -- Don't do publication date at all
 
 
@@ -71,7 +72,10 @@ defaultOptions = do
 
 options :: [OptDescr (Options -> Options)]
 options =
-   [ Option ['D'] ["no-date"]
+   [ Option ['d'] ["any-date"]
+      (NoArg (\opts -> opts { optPubYear = AnyDate } )) 
+      "If no publication year found, use first date element of any kind"
+   , Option ['D'] ["no-date"]
       (NoArg (\opts -> opts { optPubYear = NoDate } )) 
       "Suppress inclusion of original publication year"
    , Option [] ["dump-rules"] 
@@ -165,15 +169,26 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "Only creator tags with either a role attribute of 'aut' or no role at all are considered authors. If a file-as attribute is present, this will be the preferred string. If not, the program tries to do some intelligent parsing of the name."
          , ""
-         , "This software will attempt to locate a publication date to use at the end of the filename. It will look first for a date with an event of 'original-publication', then it will look for event='publication' (this is according to the epub2 spec). Failing that, it will just use the first date with no event info (according to the epub3 spec). Suppress any use of publication date with the --no-date switch."
+         , "PUBLICATION DATE:"
          , ""
-         , "So, the publication date tags in the XML metadata could look like this:"
-         , "  epub2: <dc:date opf:event='original-publication'>2013</dc:date>"
-         , "  epub3: <dc:date>2013</dc:date>"
+         , "This software will attempt to locate a publication date to use at the end of the filename. This can be suppressed with the --no-date switch. How the date is found depends on the document epub version:"
          , ""
-         , "Publisher: I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
+         , "epub2: metadata/date elements like the examples below will be looked for in this order:"
+         , "  <dc:date opf:event='original-publication'>2013-09-17</dc:date>"
+         , "  <dc:date opf:event='publication'>2013-09-17T12:00:00Z</dc:date>"
          , ""
-         , "MORE COMPLICATED NAMING:"
+         , "The --any-date switch will force the use of the first date found in epub2 documents."
+         , ""
+         , "epub3: the single allowed (but optional) metadata/date element will be used and would look like this:"
+         , "    <dc:date>2013-09-17T12:00:00Z</dc:date>"
+         , ""
+         , "My understanding is it doesn't have to be a complete date string, this software will fish the year out of whatever it can find."
+         , ""
+         , "PUBLISHER:"
+         , ""
+         , "I wanted to provide a way to have multiple copies of the same book produced by different publishers and name them sort-of unambiguously. I came up with the idea of expecting a contributor tag with role attribute of 'bkp' (so far, this is fairly normal). And then use a file-as attribute on that tag to contain a small string to be used in the filename. The idea here is short and sweet for the file-as."
+         , ""
+         , "MORE COMPLICATED NAMING: MAGAZINES AND COLLECTIONS"
          , ""
          , "Magazines are kind of a sticky problem in that it's often desireable to have edition and/or date info in the filename. There's a lot of chaos out there with titling the epub editions of magazines. The solution in this software is to do some pattern matching on multiple fields in the magazine's metadata combined with custom naming rules for specific magazines."
          , ""

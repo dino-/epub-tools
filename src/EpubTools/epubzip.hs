@@ -15,6 +15,7 @@ import System.IO ( BufferMode ( NoBuffering )
 import Text.Printf
 
 import EpubTools.EpubName.Format.Format ( tryFormatting )
+import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
 import qualified EpubTools.EpubName.Opts as EN
 import EpubTools.EpubZip.Opts
@@ -42,11 +43,13 @@ main = do
                dos <- liftIO EN.defaultOptions
                fs <- initialize dos
                runErrorT $ do
-                  metadata <- (snd `fmap` getPkgPathXmlFromDir ".")
-                     >>= getMetadata
+                  xml <- snd `fmap` getPkgPathXmlFromDir "."
+                  pkg <- getPackage xml
+                  metadata <- getMetadata xml
 
-                  (_, newPath) <- tryFormatting dos fs
-                     metadata "CURRENT DIRECTORY"
+                  (_, newPath) <- tryFormatting
+                     (Globals dos pkg metadata) fs
+                     "CURRENT DIRECTORY"
 
                   return $ inputPath </> newPath
             else return . Right $ inputPath

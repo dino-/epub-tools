@@ -8,24 +8,31 @@ module EpubTools.Test.EpubName.Format
    where
 
 import Codec.Epub.Data.Metadata
+import Codec.Epub.Data.Package
 import Control.Monad.Error
 import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
 import EpubTools.EpubName.Format.Format
+import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Opts
+
+
+pkg2, pkg3 :: Package
+pkg2 = Package "2.01" ""
+pkg3 = Package "3.0" ""
 
 
 formatTests :: Options -> [Formatter] -> Test
 formatTests opts fs = TestLabel "Format" $ TestList $
-   map (\f -> f (opts, fs))
+   map (\f -> f ((Globals opts pkg2 emptyMetadata), fs))
       [ testAuthorMinimal
       , testAuthorOneName
       , testAuthorRole
       , testAuthorFileas
       , testAuthorFull
-      , testAuthorSeveral
-      , testSeveralAuthors
+      , testMultiAutCreators
+      , testMultiAutOneString
       , testNoAuthor
       , testCreatorsNoAuthor
       , testCreatorsNoAuthorPubDate
@@ -36,8 +43,11 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testAllPunctuation
       , testPubYearNoDatesPresent
       , testPubYearEpub3
+      , testPubYearEpub3Unwanted
       , testPubYearEpub2
-      , testPubYearUnwanted
+      , testPubYearEpub2Any
+      , testPubYearEpub2Orig
+      , testPubYearEpub2Unwanted
       , testMagAeon
       , testMagAEon
       , testMagApexLong
@@ -84,17 +94,17 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       ]
 
 
-assertNewName :: Options -> [Formatter] -> String -> Metadata
+assertNewName :: Globals -> [Formatter] -> String
    -> (String, String) -> Assertion
-assertNewName opts fs desc meta expected = do
-   result <- runErrorT $ tryFormatting opts fs meta ""
+assertNewName globals fs desc expected = do
+   result <- runErrorT $ tryFormatting globals fs ""
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 
 
-testAuthorMinimal :: (Options, [Formatter]) -> Test
-testAuthorMinimal (opts, fs) = TestCase $
-   assertNewName opts fs "minimal author" meta expected
+testAuthorMinimal :: (Globals, [Formatter]) -> Test
+testAuthorMinimal (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "minimal author" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing
@@ -107,9 +117,10 @@ testAuthorMinimal (opts, fs) = TestCase $
          )
 
 
-testAuthorOneName :: (Options, [Formatter]) -> Test
-testAuthorOneName (opts, fs) = TestCase $
-   assertNewName opts fs "author is a single word" meta expected
+testAuthorOneName :: (Globals, [Formatter]) -> Test
+testAuthorOneName (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "author is a single word" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing
@@ -122,9 +133,9 @@ testAuthorOneName (opts, fs) = TestCase $
          )
 
 
-testAuthorRole :: (Options, [Formatter]) -> Test
-testAuthorRole (opts, fs) = TestCase $
-   assertNewName opts fs "author with role" meta expected
+testAuthorRole :: (Globals, [Formatter]) -> Test
+testAuthorRole (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "author with role" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
@@ -137,9 +148,9 @@ testAuthorRole (opts, fs) = TestCase $
          )
 
 
-testAuthorFileas :: (Options, [Formatter]) -> Test
-testAuthorFileas (opts, fs) = TestCase $
-   assertNewName opts fs "author with file-as" meta expected
+testAuthorFileas :: (Globals, [Formatter]) -> Test
+testAuthorFileas (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "author with file-as" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing
@@ -154,9 +165,9 @@ testAuthorFileas (opts, fs) = TestCase $
          )
 
 
-testAuthorFull :: (Options, [Formatter]) -> Test
-testAuthorFull (opts, fs) = TestCase $
-   assertNewName opts fs "author fully filled out" meta expected
+testAuthorFull :: (Globals, [Formatter]) -> Test
+testAuthorFull (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "author fully filled out" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -171,9 +182,9 @@ testAuthorFull (opts, fs) = TestCase $
          )
 
 
-testAuthorSeveral :: (Options, [Formatter]) -> Test
-testAuthorSeveral (opts, fs) = TestCase $
-   assertNewName opts fs "several authors" meta expected
+testMultiAutCreators :: (Globals, [Formatter]) -> Test
+testMultiAutCreators (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "several authors" expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -193,9 +204,24 @@ testAuthorSeveral (opts, fs) = TestCase $
          )
 
 
-testNoAuthor :: (Options, [Formatter]) -> Test
-testNoAuthor (opts, fs) = TestCase $
-   assertNewName opts fs "no creator(s) at all" meta expected
+testMultiAutOneString :: (Globals, [Formatter]) -> Test
+testMultiAutOneString (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "more than one author separated by & and/or and" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing
+            "Yvonne Q. Anderson & Eva Tunglewacker and Jefferson Milner"]
+         , metaTitles = [Title Nothing Nothing Nothing "Big Trouble"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "Anderson_Tunglewacker_Milner-BigTrouble.epub"
+         )
+
+
+testNoAuthor :: (Globals, [Formatter]) -> Test
+testNoAuthor (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "no creator(s) at all" expected
    where
       meta = emptyMetadata
          { metaCreators = []
@@ -208,9 +234,10 @@ testNoAuthor (opts, fs) = TestCase $
          )
 
 
-testCreatorsNoAuthor :: (Options, [Formatter]) -> Test
-testCreatorsNoAuthor (opts, fs) = TestCase $
-   assertNewName opts fs "creators, but no author(s) at all" meta expected
+testCreatorsNoAuthor :: (Globals, [Formatter]) -> Test
+testCreatorsNoAuthor (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "creators, but no author(s) at all" expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -228,10 +255,10 @@ testCreatorsNoAuthor (opts, fs) = TestCase $
          )
 
 
-testCreatorsNoAuthorPubDate :: (Options, [Formatter]) -> Test
-testCreatorsNoAuthorPubDate (opts, fs) = TestCase $
-   assertNewName opts fs "creators, but no author(s) at all, with pub date" 
-      meta expected
+testCreatorsNoAuthorPubDate :: (Globals, [Formatter]) -> Test
+testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "creators, but no author(s) at all, with pub date" expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -251,24 +278,9 @@ testCreatorsNoAuthorPubDate (opts, fs) = TestCase $
          )
 
 
-testSeveralAuthors :: (Options, [Formatter]) -> Test
-testSeveralAuthors (opts, fs) = TestCase $
-   assertNewName opts fs "more than one author separated by & and/or and" meta expected
-   where
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing
-            "Yvonne Q. Anderson & Eva Tunglewacker and Jefferson Milner"]
-         , metaTitles = [Title Nothing Nothing Nothing "Big Trouble"]
-         }
-      expected =
-         ( "ordinary_book"
-         , "Anderson_Tunglewacker_Milner-BigTrouble.epub"
-         )
-
-
-testCapsTitle :: (Options, [Formatter]) -> Test
-testCapsTitle (opts, fs) = TestCase $
-   assertNewName opts fs "title all caps" meta expected
+testCapsTitle :: (Globals, [Formatter]) -> Test
+testCapsTitle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "title all caps" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Greg Bear"]
@@ -280,9 +292,10 @@ testCapsTitle (opts, fs) = TestCase $
          )
 
 
-testColon :: (Options, [Formatter]) -> Test
-testColon (opts, fs) = TestCase $
-   assertNewName opts fs "colon becomes underscore" meta expected
+testColon :: (Globals, [Formatter]) -> Test
+testColon (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "colon becomes underscore" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing
@@ -296,9 +309,10 @@ testColon (opts, fs) = TestCase $
          )
 
 
-testBracketTitle :: (Options, [Formatter]) -> Test
-testBracketTitle (opts, fs) = TestCase $
-   assertNewName opts fs "title with brackets" meta expected
+testBracketTitle :: (Globals, [Formatter]) -> Test
+testBracketTitle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "title with brackets" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Mercedes Lackey"]
@@ -311,9 +325,9 @@ testBracketTitle (opts, fs) = TestCase $
          )
 
 
-testNoTitle :: (Options, [Formatter]) -> Test
-testNoTitle (opts, fs) = TestCase $
-   assertNewName opts fs "missing title" meta expected
+testNoTitle :: (Globals, [Formatter]) -> Test
+testNoTitle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "missing title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -325,9 +339,9 @@ testNoTitle (opts, fs) = TestCase $
          )
 
 
-testAllPunctuation :: (Options, [Formatter]) -> Test
-testAllPunctuation (opts, fs) = TestCase $
-   assertNewName opts fs "big test of all punctuation" meta expected
+testAllPunctuation :: (Globals, [Formatter]) -> Test
+testAllPunctuation (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "big test of all punctuation" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -341,9 +355,10 @@ testAllPunctuation (opts, fs) = TestCase $
          )
 
 
-testPubYearNoDatesPresent :: (Options, [Formatter]) -> Test
-testPubYearNoDatesPresent (opts, fs) = TestCase $
-   assertNewName opts fs "book with no dates at all" meta expected
+testPubYearNoDatesPresent :: (Globals, [Formatter]) -> Test
+testPubYearNoDatesPresent (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta} fs
+      "book with no dates at all" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
@@ -355,18 +370,15 @@ testPubYearNoDatesPresent (opts, fs) = TestCase $
          )
 
 
-testPubYearEpub3 :: (Options, [Formatter]) -> Test
-testPubYearEpub3 (opts, fs) = TestCase $
-   assertNewName opts fs "book with epub3 style (simple) date" meta expected
+testPubYearEpub3 :: (Globals, [Formatter]) -> Test
+testPubYearEpub3 (gs, fs) = TestCase $
+   assertNewName gs { gPackage = pkg3, gMetadata = meta} fs
+      "book with epub3 style (simple) date" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates =
-            [ Date Nothing "2003"
-            , Date (Just "some date") "2002"
-            , Date Nothing "2001"
-            ]
+         , metaDates = [ Date Nothing "2003" ]
          }
       expected =
          ( "ordinary_book"
@@ -374,9 +386,65 @@ testPubYearEpub3 (opts, fs) = TestCase $
          )
 
 
-testPubYearEpub2 :: (Options, [Formatter]) -> Test
-testPubYearEpub2 (opts, fs) = TestCase $
-   assertNewName opts fs "book with epub2 style dates" meta expected
+testPubYearEpub3Unwanted :: (Globals, [Formatter]) -> Test
+testPubYearEpub3Unwanted (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gPackage = pkg3,
+      gMetadata = meta } fs
+      "epub3 book with a publication year but we don't want"
+      expected
+   where
+      testOpts = (gOpts gs) { optPubYear = NoDate }
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates =
+            [ Date Nothing "2001"
+            , Date (Just "some date") "2000"
+            ]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory.epub"
+         )
+
+
+testPubYearEpub2 :: (Globals, [Formatter]) -> Test
+testPubYearEpub2 (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta} fs
+      "book with epub2 style (simple) date" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = [ Date Nothing "2003" ]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory.epub"
+         )
+
+
+testPubYearEpub2Any :: (Globals, [Formatter]) -> Test
+testPubYearEpub2Any (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta} fs
+      "book with epub2 style (simple) date, any switch" expected
+   where
+      testOpts = (gOpts gs) { optPubYear = AnyDate }
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = [ Date Nothing "2003" ]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearEpub2Orig :: (Globals, [Formatter]) -> Test
+testPubYearEpub2Orig (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with epub2 style dates, orig attr" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
@@ -394,13 +462,13 @@ testPubYearEpub2 (opts, fs) = TestCase $
          )
 
 
-testPubYearUnwanted :: (Options, [Formatter]) -> Test
-testPubYearUnwanted (opts, fs) = TestCase $
-   assertNewName testOpts fs
-      "book with a publication year but we don't want"
-      meta expected
+testPubYearEpub2Unwanted :: (Globals, [Formatter]) -> Test
+testPubYearEpub2Unwanted (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
+      "epub2 book with a publication year but we don't want"
+      expected
    where
-      testOpts = opts { optPubYear = NoDate }
+      testOpts = (gOpts gs) { optPubYear = NoDate }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
@@ -417,9 +485,9 @@ testPubYearUnwanted (opts, fs) = TestCase $
          )
 
 
-testMagAeon :: (Options, [Formatter]) -> Test
-testMagAeon (opts, fs) = TestCase $
-   assertNewName opts fs "Aeon magazine" meta expected
+testMagAeon :: (Globals, [Formatter]) -> Test
+testMagAeon (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Aeon magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Aeon Authors"]
@@ -431,9 +499,9 @@ testMagAeon (opts, fs) = TestCase $
          )
 
 
-testMagAEon :: (Options, [Formatter]) -> Test
-testMagAEon (opts, fs) = TestCase $
-   assertNewName opts fs "AEon magazine" meta expected
+testMagAEon :: (Globals, [Formatter]) -> Test
+testMagAEon (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "AEon magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "AEon Authors"]
@@ -445,9 +513,10 @@ testMagAEon (opts, fs) = TestCase $
          )
 
 
-testMagApexLong :: (Options, [Formatter]) -> Test
-testMagApexLong (opts, fs) = TestCase $
-   assertNewName opts fs "Apex Magazine, older, long title" meta expected
+testMagApexLong :: (Globals, [Formatter]) -> Test
+testMagApexLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Apex Magazine, older, long title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
@@ -461,9 +530,10 @@ testMagApexLong (opts, fs) = TestCase $
          )
 
 
-testMagApexShort :: (Options, [Formatter]) -> Test
-testMagApexShort (opts, fs) = TestCase $
-   assertNewName opts fs "Apex Magazine, newer, short title" meta expected
+testMagApexShort :: (Globals, [Formatter]) -> Test
+testMagApexShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Apex Magazine, newer, short title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
@@ -477,10 +547,10 @@ testMagApexShort (opts, fs) = TestCase $
          )
 
 
-testChallengingDestinyShort :: (Options, [Formatter]) -> Test
-testChallengingDestinyShort (opts, fs) = TestCase $
-   assertNewName opts fs
-      "Challenging Destiny Magazine, short title" meta expected
+testChallengingDestinyShort :: (Globals, [Formatter]) -> Test
+testChallengingDestinyShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Challenging Destiny Magazine, short title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -494,10 +564,10 @@ testChallengingDestinyShort (opts, fs) = TestCase $
          )
 
 
-testChallengingDestinyLong :: (Options, [Formatter]) -> Test
-testChallengingDestinyLong (opts, fs) = TestCase $
-   assertNewName opts fs
-      "Challenging Destiny Magazine, long title" meta expected
+testChallengingDestinyLong :: (Globals, [Formatter]) -> Test
+testChallengingDestinyLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Challenging Destiny Magazine, long title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -511,9 +581,9 @@ testChallengingDestinyLong (opts, fs) = TestCase $
          )
 
 
-testAnalog :: (Options, [Formatter]) -> Test
-testAnalog (opts, fs) = TestCase $
-   assertNewName opts fs "Analog" meta expected
+testAnalog :: (Globals, [Formatter]) -> Test
+testAnalog (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Analog" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -527,9 +597,9 @@ testAnalog (opts, fs) = TestCase $
          )
 
 
-testAsimovs :: (Options, [Formatter]) -> Test
-testAsimovs (opts, fs) = TestCase $
-   assertNewName opts fs "Asimovs" meta expected
+testAsimovs :: (Globals, [Formatter]) -> Test
+testAsimovs (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Asimovs" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -542,9 +612,9 @@ testAsimovs (opts, fs) = TestCase $
          , "AsimovsSF2003-08.epub"
          )
 
-testFantasyMagazine :: (Options, [Formatter]) -> Test
-testFantasyMagazine (opts, fs) = TestCase $
-   assertNewName opts fs "Fantasy Magazine" meta expected
+testFantasyMagazine :: (Globals, [Formatter]) -> Test
+testFantasyMagazine (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Fantasy Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -565,9 +635,10 @@ testFantasyMagazine (opts, fs) = TestCase $
          )
 
 
-testFsfShort :: (Options, [Formatter]) -> Test
-testFsfShort (opts, fs) = TestCase $
-   assertNewName opts fs "FSF Magazine, short" meta expected
+testFsfShort :: (Globals, [Formatter]) -> Test
+testFsfShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, short" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -580,9 +651,10 @@ testFsfShort (opts, fs) = TestCase $
          )
 
 
-testFsfShortComma :: (Options, [Formatter]) -> Test
-testFsfShortComma (opts, fs) = TestCase $
-   assertNewName opts fs "FSF Magazine, short, comma" meta expected
+testFsfShortComma :: (Globals, [Formatter]) -> Test
+testFsfShortComma (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, short, comma" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -595,9 +667,10 @@ testFsfShortComma (opts, fs) = TestCase $
          )
 
 
-testFsfLong :: (Options, [Formatter]) -> Test
-testFsfLong (opts, fs) = TestCase $
-   assertNewName opts fs "FSF Magazine, long" meta expected
+testFsfLong :: (Globals, [Formatter]) -> Test
+testFsfLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, long" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -611,9 +684,10 @@ testFsfLong (opts, fs) = TestCase $
          )
 
 
-testFsfAmpersand :: (Options, [Formatter]) -> Test
-testFsfAmpersand (opts, fs) = TestCase $
-   assertNewName opts fs "FSF Magazine, ampersand" meta expected
+testFsfAmpersand :: (Globals, [Formatter]) -> Test
+testFsfAmpersand (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, ampersand" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -626,9 +700,10 @@ testFsfAmpersand (opts, fs) = TestCase $
          )
 
 
-testFsfAmpersandSpaces :: (Options, [Formatter]) -> Test
-testFsfAmpersandSpaces (opts, fs) = TestCase $
-   assertNewName opts fs "FSF Magazine, ampersand, spaces" meta expected
+testFsfAmpersandSpaces :: (Globals, [Formatter]) -> Test
+testFsfAmpersandSpaces (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, ampersand, spaces" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -641,9 +716,10 @@ testFsfAmpersandSpaces (opts, fs) = TestCase $
          )
 
 
-testMagFutureOrbits :: (Options, [Formatter]) -> Test
-testMagFutureOrbits (opts, fs) = TestCase $
-   assertNewName opts fs "testMagFutureOrbits" meta expected
+testMagFutureOrbits :: (Globals, [Formatter]) -> Test
+testMagFutureOrbits (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "testMagFutureOrbits" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -657,9 +733,10 @@ testMagFutureOrbits (opts, fs) = TestCase $
          )
 
 
-testGudShort :: (Options, [Formatter]) -> Test
-testGudShort (opts, fs) = TestCase $
-   assertNewName opts fs "Gud Magazine, short" meta expected
+testGudShort :: (Globals, [Formatter]) -> Test
+testGudShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Gud Magazine, short" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -673,9 +750,10 @@ testGudShort (opts, fs) = TestCase $
          )
 
 
-testGudLong :: (Options, [Formatter]) -> Test
-testGudLong (opts, fs) = TestCase $
-   assertNewName opts fs "Gud Magazine, long" meta expected
+testGudLong :: (Globals, [Formatter]) -> Test
+testGudLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Gud Magazine, long" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -689,9 +767,10 @@ testGudLong (opts, fs) = TestCase $
          )
 
 
-testGudVeryLong :: (Options, [Formatter]) -> Test
-testGudVeryLong (opts, fs) = TestCase $
-   assertNewName opts fs "Gud Magazine, very long" meta expected
+testGudVeryLong :: (Globals, [Formatter]) -> Test
+testGudVeryLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Gud Magazine, very long" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -705,9 +784,10 @@ testGudVeryLong (opts, fs) = TestCase $
          )
 
 
-testInterzoneOldShort :: (Options, [Formatter]) -> Test
-testInterzoneOldShort (opts, fs) = TestCase $
-   assertNewName opts fs "Interzone Magazine, old style, short" meta expected
+testInterzoneOldShort :: (Globals, [Formatter]) -> Test
+testInterzoneOldShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Interzone Magazine, old style, short" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -721,9 +801,10 @@ testInterzoneOldShort (opts, fs) = TestCase $
          )
 
 
-testInterzoneOldLong :: (Options, [Formatter]) -> Test
-testInterzoneOldLong (opts, fs) = TestCase $
-   assertNewName opts fs "Interzone Magazine, old style, long" meta expected
+testInterzoneOldLong :: (Globals, [Formatter]) -> Test
+testInterzoneOldLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Interzone Magazine, old style, long" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -737,9 +818,10 @@ testInterzoneOldLong (opts, fs) = TestCase $
          )
 
 
-testInterzone :: (Options, [Formatter]) -> Test
-testInterzone (opts, fs) = TestCase $
-   assertNewName opts fs "Interzone Magazine, Smashwords style" meta expected
+testInterzone :: (Globals, [Formatter]) -> Test
+testInterzone (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Interzone Magazine, Smashwords style" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -753,9 +835,10 @@ testInterzone (opts, fs) = TestCase $
          )
 
 
-testNemesisShort :: (Options, [Formatter]) -> Test
-testNemesisShort (opts, fs) = TestCase $
-   assertNewName opts fs "Nemesis Magazine, short" meta expected
+testNemesisShort :: (Globals, [Formatter]) -> Test
+testNemesisShort (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Nemesis Magazine, short" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -769,9 +852,10 @@ testNemesisShort (opts, fs) = TestCase $
          )
 
 
-testNemesisLong :: (Options, [Formatter]) -> Test
-testNemesisLong (opts, fs) = TestCase $
-   assertNewName opts fs "Nemesis Magazine, long" meta expected
+testNemesisLong :: (Globals, [Formatter]) -> Test
+testNemesisLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Nemesis Magazine, long" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -785,9 +869,10 @@ testNemesisLong (opts, fs) = TestCase $
          )
 
 
-testMagSomethingWicked :: (Options, [Formatter]) -> Test
-testMagSomethingWicked (opts, fs) = TestCase $
-   assertNewName opts fs "Something Wicked Magazine" meta expected
+testMagSomethingWicked :: (Globals, [Formatter]) -> Test
+testMagSomethingWicked (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Something Wicked Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing
@@ -801,9 +886,10 @@ testMagSomethingWicked (opts, fs) = TestCase $
          )
 
 
-testMagSomethingWickedMonth :: (Options, [Formatter]) -> Test
-testMagSomethingWickedMonth (opts, fs) = TestCase $
-   assertNewName opts fs "Something Wicked Magazine, month in title" meta expected
+testMagSomethingWickedMonth :: (Globals, [Formatter]) -> Test
+testMagSomethingWickedMonth (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Something Wicked Magazine, month in title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -819,9 +905,10 @@ testMagSomethingWickedMonth (opts, fs) = TestCase $
          )
 
 
-testSFBestOf :: (Options, [Formatter]) -> Test
-testSFBestOf (opts, fs) = TestCase $
-   assertNewName opts fs "Science Fiction: The Best of the Year" meta expected
+testSFBestOf :: (Globals, [Formatter]) -> Test
+testSFBestOf (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Science Fiction: The Best of the Year" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -836,10 +923,10 @@ testSFBestOf (opts, fs) = TestCase $
          )
 
 
-testBestSF :: (Options, [Formatter]) -> Test
-testBestSF (opts, fs) = TestCase $
-   assertNewName opts fs "The Best Science Fiction and Fantasy of the Year"
-      meta expected
+testBestSF :: (Globals, [Formatter]) -> Test
+testBestSF (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "The Best Science Fiction and Fantasy of the Year" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -856,9 +943,10 @@ testBestSF (opts, fs) = TestCase $
          )
 
 
-testYearsBest :: (Options, [Formatter]) -> Test
-testYearsBest (opts, fs) = TestCase $
-   assertNewName opts fs "The Year's Best SF" meta expected
+testYearsBest :: (Globals, [Formatter]) -> Test
+testYearsBest (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "The Year's Best SF" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing Nothing
@@ -873,9 +961,10 @@ testYearsBest (opts, fs) = TestCase $
          )
 
 
-testMagBlackStatic :: (Options, [Formatter]) -> Test
-testMagBlackStatic (opts, fs) = TestCase $
-   assertNewName opts fs "Black Static Magazine" meta expected
+testMagBlackStatic :: (Globals, [Formatter]) -> Test
+testMagBlackStatic (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Black Static Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
@@ -889,9 +978,10 @@ testMagBlackStatic (opts, fs) = TestCase $
          )
 
 
-testRageMachineMag :: (Options, [Formatter]) -> Test
-testRageMachineMag (opts, fs) = TestCase $
-   assertNewName opts fs "Rage Machine Magazine" meta expected
+testRageMachineMag :: (Globals, [Formatter]) -> Test
+testRageMachineMag (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Rage Machine Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "edt") Nothing 
@@ -905,9 +995,10 @@ testRageMachineMag (opts, fs) = TestCase $
          )
 
 
-testEclipseMagWord :: (Options, [Formatter]) -> Test
-testEclipseMagWord (opts, fs) = TestCase $
-   assertNewName opts fs "Eclipse Magazine" meta expected
+testEclipseMagWord :: (Globals, [Formatter]) -> Test
+testEclipseMagWord (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Eclipse Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -923,9 +1014,10 @@ testEclipseMagWord (opts, fs) = TestCase $
          )
 
 
-testEclipseMagNum :: (Options, [Formatter]) -> Test
-testEclipseMagNum (opts, fs) = TestCase $
-   assertNewName opts fs "Eclipse Magazine" meta expected
+testEclipseMagNum :: (Globals, [Formatter]) -> Test
+testEclipseMagNum (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Eclipse Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -941,9 +1033,10 @@ testEclipseMagNum (opts, fs) = TestCase $
          )
 
 
-testBcs :: (Options, [Formatter]) -> Test
-testBcs (opts, fs) = TestCase $
-   assertNewName opts fs "Beneath Ceaseless Skies Magazine" meta expected
+testBcs :: (Globals, [Formatter]) -> Test
+testBcs (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Beneath Ceaseless Skies Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = 
@@ -965,13 +1058,13 @@ testBcs (opts, fs) = TestCase $
          )
 
 
-testBkpFileAs :: (Options, [Formatter]) -> Test
-testBkpFileAs (opts, fs) = TestCase $
-   assertNewName testOpts fs
+testBkpFileAs :: (Globals, [Formatter]) -> Test
+testBkpFileAs (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and present in file-as"
-      meta expected
+      expected
    where
-      testOpts = opts { optPublisher = True }
+      testOpts = (gOpts gs) { optPublisher = True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -985,13 +1078,13 @@ testBkpFileAs (opts, fs) = TestCase $
          )
 
 
-testBkpText :: (Options, [Formatter]) -> Test
-testBkpText (opts, fs) = TestCase $
-   assertNewName testOpts fs
+testBkpText :: (Globals, [Formatter]) -> Test
+testBkpText (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and present in text"
-      meta expected
+      expected
    where
-      testOpts = opts { optPublisher = True }
+      testOpts = (gOpts gs) { optPublisher = True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -1005,13 +1098,13 @@ testBkpText (opts, fs) = TestCase $
          )
 
 
-testBkpMissing :: (Options, [Formatter]) -> Test
-testBkpMissing (opts, fs) = TestCase $
-   assertNewName testOpts fs
+testBkpMissing :: (Globals, [Formatter]) -> Test
+testBkpMissing (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and not present"
-      meta expected
+      expected
    where
-      testOpts = opts { optPublisher = True }
+      testOpts = (gOpts gs) { optPublisher = True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -1023,13 +1116,12 @@ testBkpMissing (opts, fs) = TestCase $
          )
 
 
-testMagUniverse :: (Options, [Formatter]) -> Test
-testMagUniverse (opts, fs) = TestCase $
-   assertNewName testOpts fs
-      "Jim Baen's Universe Magazine"
-      meta expected
+testMagUniverse :: (Globals, [Formatter]) -> Test
+testMagUniverse (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
+      "Jim Baen's Universe Magazine" expected
    where
-      testOpts = opts { optPublisher = True }
+      testOpts = (gOpts gs) { optPublisher = True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Jim Baen's Universe"]
@@ -1042,9 +1134,10 @@ testMagUniverse (opts, fs) = TestCase $
          )
 
 
-testMagClarkesworld :: (Options, [Formatter]) -> Test
-testMagClarkesworld (opts, fs) = TestCase $
-   assertNewName opts fs "Clarkesworld Magazine" meta expected
+testMagClarkesworld :: (Globals, [Formatter]) -> Test
+testMagClarkesworld (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Clarkesworld Magazine" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut")
@@ -1059,9 +1152,10 @@ testMagClarkesworld (opts, fs) = TestCase $
          )
 
 
-testLightspeedDate :: (Options, [Formatter]) -> Test
-testLightspeedDate (opts, fs) = TestCase $
-   assertNewName opts fs "Lightspeed Magazine, date in title" meta expected
+testLightspeedDate :: (Globals, [Formatter]) -> Test
+testLightspeedDate (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Lightspeed Magazine, date in title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing Nothing
@@ -1075,10 +1169,10 @@ testLightspeedDate (opts, fs) = TestCase $
          )
 
 
-testLightspeedMagIssue :: (Options, [Formatter]) -> Test
-testLightspeedMagIssue (opts, fs) = TestCase $
-   assertNewName opts fs
-      "Lightspeed Magazine, issue number in title" meta expected
+testLightspeedMagIssue :: (Globals, [Formatter]) -> Test
+testLightspeedMagIssue (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Lightspeed Magazine, issue number in title" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") (Just "Magazine, Lightspeed & Clark, Maggie & Valentine, Genevieve & Baxter, Stephen & Okorafor, Nnedi & Wilison, Daniel H. & Reed, Robert & Sedia, Ekaterina") Nothing "Lightspeed Magazine"]
@@ -1091,10 +1185,10 @@ testLightspeedMagIssue (opts, fs) = TestCase $
          )
 
 
-testLightspeedIssue :: (Options, [Formatter]) -> Test
-testLightspeedIssue (opts, fs) = TestCase $
-   assertNewName opts fs
-      "Lightspeed Magazine, issue number in title" meta expected
+testLightspeedIssue :: (Globals, [Formatter]) -> Test
+testLightspeedIssue (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Lightspeed Magazine, issue number in title" expected
    where
       meta = emptyMetadata
          { metaTitles = [Title Nothing Nothing Nothing
@@ -1106,9 +1200,10 @@ testLightspeedIssue (opts, fs) = TestCase $
          )
 
 
-testMagWeirdTales :: (Options, [Formatter]) -> Test
-testMagWeirdTales (opts, fs) = TestCase $
-   assertNewName opts fs "Weird Tales magazine" meta expected
+testMagWeirdTales :: (Globals, [Formatter]) -> Test
+testMagWeirdTales (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Weird Tales magazine" expected
    where
       meta = emptyMetadata
          { metaCreators =
@@ -1126,9 +1221,9 @@ testMagWeirdTales (opts, fs) = TestCase $
          )
 
 
-testAnthology :: (Options, [Formatter]) -> Test
-testAnthology (opts, fs) = TestCase $
-   assertNewName opts fs "anthology" meta expected
+testAnthology :: (Globals, [Formatter]) -> Test
+testAnthology (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "anthology" expected
    where
       meta = emptyMetadata
          { metaTitles = [Title Nothing Nothing Nothing "Creepy Secrets"]

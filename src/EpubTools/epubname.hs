@@ -22,6 +22,7 @@ import Text.Printf
 import qualified EpubTools.EpubName.Doc.Dsl as Dsl
 import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
+import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
 import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
@@ -80,7 +81,7 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          ) return epm
 
       (fmtUsed, shortPath) <-
-         tryFormatting opts formatters md oldPath
+         tryFormatting (Globals opts pkg md) formatters oldPath
 
       let newPath = optTargetDir opts </> shortPath
 
