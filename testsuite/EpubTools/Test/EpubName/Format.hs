@@ -90,6 +90,9 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testLightspeedMagIssue
       , testLightspeedIssue
       , testMagWeirdTales
+      , testMagGalaxysEdge
+      , testMagPlasmaFreq
+      , testMagPlasmaFreqMonth
       , testAnthology
       ]
 
@@ -1218,6 +1221,51 @@ testMagWeirdTales (gs, fs) = TestCase $
       expected =
          ( "magWeirdTales"
          , "WeirdTales350.epub"
+         )
+
+
+testMagGalaxysEdge :: (Globals, [Formatter]) -> Test
+testMagGalaxysEdge (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Galaxy's Edge magazine" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Galaxy's Edge Magazine: Issue 1 March 2013"]
+         }
+      expected =
+         ( "magGenericWithIssue"
+         , "GalaxysEdgeMagazine01.epub"
+         )
+
+
+testMagPlasmaFreq :: (Globals, [Formatter]) -> Test
+testMagPlasmaFreq (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Plasma Frequency magazine" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Plasma Frequency Magazine Issue 1"]
+         }
+      expected =
+         ( "magGenericWithIssue"
+         , "PlasmaFrequencyMagazine01.epub"
+         )
+
+
+testMagPlasmaFreqMonth :: (Globals, [Formatter]) -> Test
+testMagPlasmaFreqMonth (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Plasma Frequency magazine, incl month/year in title" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Plasma Frequency Magazine: Issue 8 October/November 2013"]
+         }
+      expected =
+         ( "magGenericWithIssue"
+         , "PlasmaFrequencyMagazine08.epub"
          )
 
 
