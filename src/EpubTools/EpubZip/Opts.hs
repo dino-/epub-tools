@@ -71,5 +71,5 @@ usageText = (usageInfo header options) ++ "\n" ++ footer
          , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
          , ""
          , ""
-         , "Version 2.3  Dino Morelli <dino@ui3.info>"
+         , "Version 2.4  Dino Morelli <dino@ui3.info>"
          ]
