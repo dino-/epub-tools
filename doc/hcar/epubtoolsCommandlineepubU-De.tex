@@ -1,5 +1,5 @@
 % epubtoolsCommandlineepubU-De.tex
-\begin{hcarentry}[updated]{epub-tools (Command-line epub Utilities)}
+\begin{hcarentry}{epub-tools (Command-line epub Utilities)}
 \label{epubtools}
 \report{Dino Morelli}%11/12
 \status{stable, actively developed}
@@ -9,17 +9,13 @@ A suite of command-line utilities for creating and manipulating epub book files.
 
 epubmeta is a command-line utility for examining and editing epub book metadata. With it you can export, import and edit the raw OPF Package XML document for a given book. Or simply dump the metadata to stdout for viewing in a friendly format.
 
-epubname is a command-line utility for renaming epub ebook files based on their OPF Package metadata. It tries to use author names and title info to construct a sensible name. epubname has recently undergone extensive redesign:
-
-\begin{itemize}
-\item Major change of the formatting rules system. Renaming machinery is now described in a domain-specific language, NOT in statically compiled code. Users are able to extend the functionality with custom naming rules in conf files.
-
-\item Added interactive mode to ask about each file rename as they happen, this is like darcs now!
-
-\item Added ability to specify target directory for books to be moved to as part of renaming.
-\end{itemize}
+epubname is a command-line utility for renaming epub ebook files based on the metadata. It tries to use author names and title info to construct a sensible name.
 
 epubzip is a handy utility for zipping up the files that comprise an epub into an .epub zip file. Using the same technology as epubname, it can try to make a meaningful filename for the book.
+
+This project is built on the latest epub-metadata library and so supports epub3 for the first time.
+
+See also epub-metadata.
 
 epub-tools is available from Hackage and the Darcs repository below.
 
