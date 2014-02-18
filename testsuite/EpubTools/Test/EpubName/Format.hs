@@ -36,6 +36,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testNoAuthor
       , testCreatorsNoAuthor
       , testCreatorsNoAuthorPubDate
+      , testCreatorLastFirst
       , testCapsTitle
       , testColon
       , testBracketTitle
@@ -278,6 +279,25 @@ testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
       expected =
          ( "ordinary_book"
          , "SomeCollectionOfFineStoriesVolume1_2008.epub"
+         )
+
+
+testCreatorLastFirst :: (Globals, [Formatter]) -> Test
+testCreatorLastFirst (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "creator text (not file-as) is last-name-first" expected
+   where
+      meta = emptyMetadata
+         { metaCreators =
+            [ Creator Nothing Nothing
+               Nothing "Spindlewest, Graham"
+            ]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "A Midnight's Horror Story"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "SpindlewestGraham-AMidnightsHorrorStory.epub"
          )
 
 

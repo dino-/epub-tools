@@ -56,7 +56,8 @@ nameParts :: String -> [String]
 nameParts s = maybe [] id $ foldl mplus Nothing matches
    where
       matches =
-         [ matchRegex (mkRegex "(.*) ([^ ]+)$") s
+         [ reverse `fmap` matchRegex (mkRegex "(.*), +([^ ]+)$") s
+         , matchRegex (mkRegex "(.*) +([^ ]+)$") s
          , matchRegex (mkRegex "(.*)") s
          ]
 
