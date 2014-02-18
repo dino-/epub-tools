@@ -84,7 +84,7 @@ justAuthors = (filter isAut) . metaCreators
    where
       isAut (Creator (Just "aut") _ _ _) = True
       isAut (Creator Nothing      _ _ _) = True
-      isAut _                              = False
+      isAut _                            = False
 
 
 {- A common simple formatter for many book authors
