@@ -55,20 +55,20 @@ formatSingleAuthor (Creator _ _         _ di) =
 nameParts :: String -> [String]
 nameParts s = maybe [] id $ foldl mplus Nothing matches
    where
-      matches =
-         [ reverse `fmap` matchRegex (mkRegex "(.*), +([^ ]+)$") s
-         , matchRegex (mkRegex "(.*) +([^ ]+)$") s
-         , matchRegex (mkRegex "(.*)") s
+      matches = map ($ s)
+         [ matchRegex (mkRegex "(.*), +([^ ]+)$") >=> return . reverse
+         , matchRegex (mkRegex "(.*) +([^ ]+)$")
+         , matchRegex (mkRegex "(.*)")
          ]
 
 
 lastName' :: String -> String
 lastName' s = maybe "" head $ foldl mplus Nothing matches
    where
-      matches =
-         [ matchRegex (mkRegex "(.*),.*") s
-         , matchRegex (mkRegex ".* (.*)") s
-         , matchRegex (mkRegex "(.*)") s
+      matches = map ($ s)
+         [ matchRegex (mkRegex "(.*),.*")
+         , matchRegex (mkRegex ".* (.*)")
+         , matchRegex (mkRegex "(.*)")
          ]
 
 lastName :: Creator -> String
