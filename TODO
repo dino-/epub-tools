@@ -3,6 +3,8 @@ general
 
 - Some notes in README about installing epubcheck if possible
 
+- Add more (all?) of the darcs-tracked files to cabal so they're part of the sdist
+
 - Would like to way to be able to insert a publishing year tag into the OPF data like these:
    <dc:date opf:event="publication">2011</dc:date>
    <dc:date opf:event="original-publication">2011</dc:date>
@@ -23,6 +25,10 @@ epubmeta
 
 -----
 epubname
+
+- Bug running on Windows in cmd.exe, no HOME environment variable
+
+- Add info in the usage about submitting metadata to me using epubmeta when there are problems.
 
 - Rethink that Publisher business, maybe get rid of it.
 
