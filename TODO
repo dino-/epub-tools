@@ -26,8 +26,6 @@ epubmeta
 -----
 epubname
 
-- Bug running on Windows in cmd.exe, no HOME environment variable
-
 - Add info in the usage about submitting metadata to me using epubmeta when there are problems.
 
 - Rethink that Publisher business, maybe get rid of it.

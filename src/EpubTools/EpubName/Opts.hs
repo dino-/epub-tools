@@ -45,10 +45,17 @@ data Options = Options
 defaultRulesFile :: FilePath
 defaultRulesFile = "default.rules"
 
-userRulesPath :: IO FilePath
-userRulesPath = do
-   homeDir <- getEnv"HOME"
-   return $ homeDir </> ".epubtools" </> defaultRulesFile
+
+userRulesPath :: IO (Maybe FilePath)
+userRulesPath = foldl (liftM2 mplus) (return Nothing) $ map mkdir
+   [ ("HOME", ".epubtools")      -- UNIX-like
+   , ("APPDATA", "epubtools")    -- Windows
+   ]
+
+   where
+      mkdir (var, subdir) = do
+         homeDir <- lookupEnv var
+         return $ (</> subdir </> defaultRulesFile) `fmap` homeDir
 
 
 defaultOptions :: IO Options
@@ -62,7 +69,7 @@ defaultOptions = do
       , optInteractive     = False
       , optNoAction        = False
       , optPublisher       = False
-      , optRulesPaths      = [ urp ]
+      , optRulesPaths      = maybeToList urp
       , optTargetDir       = "."
       , optVerbose         = Nothing
       , optPubYear         = Publication
@@ -198,7 +205,8 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , "epubname will search the following locations for a rules file, in this order:"
          , ""
          , "   Path specified in a --rules switch"
-         , "   $HOME/.epubtools/default.rules"
+         , "   $HOME/.epubtools/default.rules  -- or:"
+         , "   %APPDATA%\\epubtools\\default.rules  -- in Windows"
          , "   Built-in rules, a comprehensive stock set of naming rules"
          , ""
          , "Use the built-in rules as a model for a custom file. See --dump-rules above"
