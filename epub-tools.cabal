@@ -14,8 +14,17 @@ description:         A suite of command-line utilities for creating and manipula
 category:            Application, Console
 tested-with:         GHC >= 7.6.2
 
-extra-source-files:  testsuite/EpubTools/*.hs
+extra-source-files:  changelog.md
+                     doc/dev/notes
+                     doc/hcar/epubtoolsCommandlineepubU-De.tex
+                     doc/INSTALL
+                     README.md
+                     testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
+                     TODO
+                     util/all-books.hs
+                     util/prefs/boring
+                     util/win-dist.sh
 
 source-repository    head
    type:             darcs
