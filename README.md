@@ -89,9 +89,9 @@ epub-tools can be installed in several ways:
 - Build and install with cabal-install:
   `$ cabal update ; cabal install epub-tools`
 - Download the cabalized source package [from Hackage](http://hackage.haskell.org/cgi-bin/hackage-scripts/package/epub-tools)
-- Download the cabalized source tarball [from here](http://ui3.info/d/proj/epub-tools/epub-tools-2.3.tar.gz)
+- Download the cabalized source tarball [from here](http://ui3.info/d/proj/epub-tools/epub-tools-2.4.tar.gz)
 - epub-tools is available for Arch Linux [from the AUR](https://aur.archlinux.org/packages/epub-tools/)
-- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.3-win.zip)
+- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.4-win.zip)
 
 
 ## Contact
