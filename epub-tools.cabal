@@ -60,7 +60,6 @@ executable           epubname
                      EpubTools.EpubName.Opts
                      EpubTools.EpubName.Prompt
                      EpubTools.EpubName.Util
-
    ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 test-suite           epubname-tests
