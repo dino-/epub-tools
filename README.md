@@ -69,29 +69,25 @@ epubzip is a handy utility for zipping up the files that comprise an epub into a
 
 ## Getting source
 
-Get the source with darcs:
-
->     $ darcs get http://ui3.info/darcs/epub-tools
-
-Or [browse the source](http://ui3.info/darcs/epub-tools)
-
-And then building the usual way:
-
->     $ cabal configure --enable-tests
->     $ cabal build
->     $ cabal test
-
-
-## Installing
-
-epub-tools can be installed in several ways:
-
-- Build and install with cabal-install:
-  `$ cabal update ; cabal install epub-tools`
 - Download the cabalized source package [from Hackage](http://hackage.haskell.org/package/epub-tools)
 - Download the cabalized source tarball [from here](http://ui3.info/d/proj/epub-tools/epub-tools-2.4.tar.gz)
 - epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
 - Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.4-win.zip)
+- Get the source with darcs: `$ darcs get http://ui3.info/darcs/epub-tools`
+- If you're just looking, [browse the source](http://ui3.info/darcs/epub-tools)
+
+And once you have it, building the usual way:
+
+>     $ cabal configure --enable-tests
+>     $ cabal build
+>     $ cabal test
+>     $ cabal install
+
+
+## Installing
+
+- Build and install with cabal-install:
+  `$ cabal update ; cabal install epub-tools`
 
 
 ## Contact
