@@ -3,7 +3,7 @@
 
 ## Synopsis
 
-Command line utilities for working with epub files
+Command line utilities for working with epub files (Haskell)
 
 
 ## Description
