@@ -1,6 +1,6 @@
 name:                epub-tools
 cabal-version:       >= 1.8
-version:             2.4
+version:             2.5
 build-type:          Simple
 license:             BSD3
 license-file:        LICENSE
