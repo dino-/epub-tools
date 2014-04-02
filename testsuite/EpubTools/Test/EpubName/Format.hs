@@ -93,6 +93,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMagGalaxysEdge
       , testMagPlasmaFreq
       , testMagPlasmaFreqMonth
+      , testMagPunchinello1800s
       , testAnthology
       ]
 
@@ -1285,6 +1286,21 @@ testMagPlasmaFreqMonth (gs, fs) = TestCase $
       expected =
          ( "magGenericWithIssue"
          , "PlasmaFrequencyMagazine08.epub"
+         )
+
+
+testMagPunchinello1800s :: (Globals, [Formatter]) -> Test
+testMagPunchinello1800s (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Punchinello magazine from the 1800s" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Punchinello, Volume 1, No. 06, May 7, 1870"]
+         }
+      expected =
+         ( "magPunchinello1800s"
+         , "Punchinello_Vol01No06_1870-05-07.epub"
          )
 
 
