@@ -1299,7 +1299,7 @@ testMagPunchinello1800s (gs, fs) = TestCase $
             "Punchinello, Volume 1, No. 06, May 7, 1870"]
          }
       expected =
-         ( "magPunchinello1800s"
+         ( "magPunchinello_1800s"
          , "Punchinello_Vol01No06_1870-05-07.epub"
          )
 
