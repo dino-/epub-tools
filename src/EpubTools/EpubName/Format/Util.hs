@@ -63,6 +63,7 @@ aggressiveFilters =
    , repl "[./]"              " "
    , repl ":"                 "_"
    , repl "[\\[\\\n]"         "_ "
+   , repl "-"                 "- "  -- Funny char for [ ]
    , filter (/= '"')
    -- Decided that I like the article included in titles
    --, repl "^The "             ""

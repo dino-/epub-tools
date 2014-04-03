@@ -42,6 +42,8 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testBracketTitle
       , testNoTitle
       , testMultilineTitle
+      , testTitleHyphen
+      , testTitleHyphenDates
       , testAllPunctuation
       , testPubYearNoDatesPresent
       , testPubYearEpub3
@@ -402,6 +404,46 @@ testMultilineTitle (gs, fs) = TestCase $
          )
 
 
+testTitleHyphen :: (Globals, [Formatter]) -> Test
+testTitleHyphen (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "title with hyphen" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator
+            Nothing
+            (Just "Spinoza, Benedictus de")
+            Nothing
+            "Benedictus de Spinoza"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Theologico-Political Treatise"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "SpinozaBenedictusDe-Theologico-PoliticalTreatise.epub"
+         )
+
+
+testTitleHyphenDates :: (Globals, [Formatter]) -> Test
+testTitleHyphenDates (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "title with hyphen separating dates" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator
+            Nothing
+            (Just "Anonymous")
+            Nothing
+            "Anonymous"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Queen Victoria\nStory of Her Life and Reign, 1819-1901"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "Anonymous-QueenVictoria_StoryOfHerLifeAndReign1819-1901.epub"
+         )
+
+
 testAllPunctuation :: (Globals, [Formatter]) -> Test
 testAllPunctuation (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs "big test of all punctuation" expected
@@ -414,7 +456,7 @@ testAllPunctuation (gs, fs) = TestCase $
          }
       expected =
          ( "ordinary_book"
-         , "MorelliDino-TheCrazy_Sand-boxOfSmedleysDiscontentLoathingFearAndMalnourishmentMaybeNot_Part2.epub"
+         , "MorelliDino-TheCrazy_Sand-BoxOfSmedleysDiscontentLoathingFearAndMalnourishmentMaybeNot_Part2.epub"
          )
 
 
