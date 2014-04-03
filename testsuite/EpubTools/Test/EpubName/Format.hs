@@ -29,6 +29,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testAuthorOneName
       , testAuthorRole
       , testAuthorFileas
+      , testAuthorFileasParens
       , testAuthorFull
       , testMultiAutCreators
       , testMultiAutOneString
@@ -167,6 +168,24 @@ testAuthorFileas (gs, fs) = TestCase $
       expected =
          ( "ordinary_book"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorFileasParens :: (Globals, [Formatter]) -> Test
+testAuthorFileasParens (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "author with file-as and pesky parenthesized full names" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing
+            (Just "Fletcher, J. S. (Joseph Smith)")
+            Nothing
+            "J. S. Fletcher"]
+         , metaTitles = [Title Nothing Nothing Nothing "The Middle of Things"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "FletcherJS-TheMiddleOfThings.epub"
          )
 
 
