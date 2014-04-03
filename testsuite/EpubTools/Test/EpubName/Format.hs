@@ -395,7 +395,7 @@ testAllPunctuation (gs, fs) = TestCase $
          }
       expected =
          ( "ordinary_book"
-         , "MorelliDino-TheCrazy_SandBoxOfSmedleysDiscontentLoathingFearAndMalnourishmentMaybeNot_Part2.epub"
+         , "MorelliDino-TheCrazy_Sand-boxOfSmedleysDiscontentLoathingFearAndMalnourishmentMaybeNot_Part2.epub"
          )
 
 

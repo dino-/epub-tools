@@ -60,7 +60,7 @@ aggressiveFilters :: [(String -> String)]
 aggressiveFilters =
    [ repl "[',\\?();#’\\*!]"  ""
    , repl "]"                 ""
-   , repl "[-./]"             " "
+   , repl "[./]"              " "
    , repl ":"                 "_"
    , repl "[\\[\\\n]"         "_ "
    , filter (/= '"')
