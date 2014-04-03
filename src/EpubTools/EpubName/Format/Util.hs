@@ -66,7 +66,7 @@ aggressiveFilters =
    , repl "\\*"           ""
    , repl "!"             ""
    , repl "[-/]"          " "
-   , repl "\\["           "_ "
+   , repl "[\\[\\\n]"     "_ "
    -- Decided that I like the article included in titles
    --, repl "^The "         ""
    , repl "&"             " And "

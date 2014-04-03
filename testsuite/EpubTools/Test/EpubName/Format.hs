@@ -40,6 +40,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testColon
       , testBracketTitle
       , testNoTitle
+      , testMultilineTitle
       , testAllPunctuation
       , testPubYearNoDatesPresent
       , testPubYearEpub3
@@ -359,6 +360,26 @@ testNoTitle (gs, fs) = TestCase $
       expected =
          ( "NO FORMATTER"
          , " [ERROR No formatter found]"
+         )
+
+
+testMultilineTitle :: (Globals, [Formatter]) -> Test
+testMultilineTitle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "multiline title" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator
+            Nothing
+            (Just "Castleman, Virginia Carter")
+            Nothing
+            "Virginia Carter Castleman"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Pocahontas.\nA Poem"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "CastlemanVirginiaCarter-Pocahontas_APoem.epub"
          )
 
 

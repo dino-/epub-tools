@@ -161,7 +161,7 @@ extractTitle re = do
       [] -> throwError "format failed, no title present"
       ts -> return . head $ ts
 
-   case matchRegex (mkRegex re) oldTitle of
+   case matchRegex (mkRegexWithOpts re False True) oldTitle of
       Just matches -> return matches
       Nothing      -> throwError $ printf "extract title failed: %s" re
 
