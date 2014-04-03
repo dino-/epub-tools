@@ -58,18 +58,15 @@ camelCase s = concat $ map capFirst $ words s
 -}
 aggressiveFilters :: [(String -> String)]
 aggressiveFilters =
-   [ repl "[',\\?();#’]"  ""
-   , repl "\\."           " "
-   , repl ":"             "_"
+   [ repl "[',\\?();#’\\*!]"  ""
+   , repl "]"                 ""
+   , repl "[-./]"             " "
+   , repl ":"                 "_"
+   , repl "[\\[\\\n]"         "_ "
    , filter (/= '"')
-   , repl "]"             ""
-   , repl "\\*"           ""
-   , repl "!"             ""
-   , repl "[-/]"          " "
-   , repl "[\\[\\\n]"     "_ "
    -- Decided that I like the article included in titles
-   --, repl "^The "         ""
-   , repl "&"             " And "
+   --, repl "^The "             ""
+   , repl "&"                 " And "
    , camelCase
    ]
 
