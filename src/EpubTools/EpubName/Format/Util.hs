@@ -68,6 +68,7 @@ aggressiveFilters =
    -- Decided that I like the article included in titles
    --, repl "^The "             ""
    , repl "&"                 " And "
+   , filter (/= '\x00e2')     -- This character: Â or c3a2
    , camelCase
    ]
 
