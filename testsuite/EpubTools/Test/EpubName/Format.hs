@@ -34,14 +34,14 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMultiAutCreators
       , testMultiAutOneString
       , testNoAuthor
+      , testColon
       , testCreatorsNoAuthor
       , testCreatorsNoAuthorPubDate
       , testCreatorLastFirst
-      , testCapsTitle
-      , testColon
-      , testBracketTitle
-      , testNoTitle
-      , testMultilineTitle
+      , testTitleCaps
+      , testTitleBracket
+      , testTitleNone
+      , testTitleMultiline
       , testTitleHyphen
       , testTitleHyphenDates
       , testAllPunctuation
@@ -281,6 +281,23 @@ testCreatorsNoAuthor (gs, fs) = TestCase $
          )
 
 
+testColon :: (Globals, [Formatter]) -> Test
+testColon (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "colon becomes underscore" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing
+            "Ed Howdershelt"]
+         , metaTitles = [Title Nothing Nothing Nothing 
+            "Book 1: 3rd World Products, Inc."]
+         }
+      expected =
+         ( "ordinary_book"
+         , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
+         )
+
+
 testCreatorsNoAuthorPubDate :: (Globals, [Formatter]) -> Test
 testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
@@ -323,8 +340,8 @@ testCreatorLastFirst (gs, fs) = TestCase $
          )
 
 
-testCapsTitle :: (Globals, [Formatter]) -> Test
-testCapsTitle (gs, fs) = TestCase $
+testTitleCaps :: (Globals, [Formatter]) -> Test
+testTitleCaps (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs "title all caps" expected
    where
       meta = emptyMetadata
@@ -337,25 +354,8 @@ testCapsTitle (gs, fs) = TestCase $
          )
 
 
-testColon :: (Globals, [Formatter]) -> Test
-testColon (gs, fs) = TestCase $
-   assertNewName gs { gMetadata = meta } fs
-      "colon becomes underscore" expected
-   where
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing
-            "Ed Howdershelt"]
-         , metaTitles = [Title Nothing Nothing Nothing 
-            "Book 1: 3rd World Products, Inc."]
-         }
-      expected =
-         ( "ordinary_book"
-         , "HowdersheltEd-Book1_3rdWorldProductsInc.epub"
-         )
-
-
-testBracketTitle :: (Globals, [Formatter]) -> Test
-testBracketTitle (gs, fs) = TestCase $
+testTitleBracket :: (Globals, [Formatter]) -> Test
+testTitleBracket (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
       "title with brackets" expected
    where
@@ -370,8 +370,8 @@ testBracketTitle (gs, fs) = TestCase $
          )
 
 
-testNoTitle :: (Globals, [Formatter]) -> Test
-testNoTitle (gs, fs) = TestCase $
+testTitleNone :: (Globals, [Formatter]) -> Test
+testTitleNone (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs "missing title" expected
    where
       meta = emptyMetadata
@@ -384,8 +384,8 @@ testNoTitle (gs, fs) = TestCase $
          )
 
 
-testMultilineTitle :: (Globals, [Formatter]) -> Test
-testMultilineTitle (gs, fs) = TestCase $
+testTitleMultiline :: (Globals, [Formatter]) -> Test
+testTitleMultiline (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
       "multiline title" expected
    where
