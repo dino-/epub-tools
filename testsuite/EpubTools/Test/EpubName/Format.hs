@@ -71,9 +71,10 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testGudShort
       , testGudLong
       , testGudVeryLong
-      , testInterzoneOldShort
-      , testInterzoneOldLong
       , testInterzone
+      , testInterzoneCaps
+      , testInterzoneOldLong
+      , testInterzoneOldShort
       , testNemesisShort
       , testNemesisLong
       , testMagSomethingWicked
@@ -99,6 +100,8 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMagPlasmaFreq
       , testMagPlasmaFreqMonth
       , testMagPunchinello1800s
+      , testMagGenericVolNo3
+      , testMagSubjWithIssue
       , testAnthology
       ]
 
@@ -909,20 +912,37 @@ testGudVeryLong (gs, fs) = TestCase $
          )
 
 
-testInterzoneOldShort :: (Globals, [Formatter]) -> Test
-testInterzoneOldShort (gs, fs) = TestCase $
+testInterzone :: (Globals, [Formatter]) -> Test
+testInterzone (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
-      "Interzone Magazine, old style, short" expected
+      "Interzone Magazine, Smashwords style" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
-            Nothing "TTA Press Authors"]
+            Nothing "TTA Press"]
          , metaTitles = [Title Nothing Nothing Nothing 
-            "Interzone SFF #212"]
+            "Interzone 233 Mar - Apr 2011"]
          }
       expected =
-         ( "magInterzone_old"
-         , "InterzoneSFF212.epub"
+         ( "magInterzone"
+         , "InterzoneSFF233.epub"
+         )
+
+
+testInterzoneCaps :: (Globals, [Formatter]) -> Test
+testInterzoneCaps (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Interzone Magazine, started in 2014" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing (Just "Interzone 249")
+            Nothing "TTA Press"]
+         , metaTitles = [Title Nothing Nothing Nothing 
+            "INTERZONE #249 SCIENCE FICTION & FANTASY MAGAZINE (NOVâ\x80\x93DEC 2013)"]
+         }
+      expected =
+         ( "magInterzone"
+         , "InterzoneSFF249.epub"
          )
 
 
@@ -938,25 +958,25 @@ testInterzoneOldLong (gs, fs) = TestCase $
             "Interzone Science Fiction and Fantasy Magazine #216"]
          }
       expected =
-         ( "magInterzone_old"
+         ( "magInterzone"
          , "InterzoneSFF216.epub"
          )
 
 
-testInterzone :: (Globals, [Formatter]) -> Test
-testInterzone (gs, fs) = TestCase $
+testInterzoneOldShort :: (Globals, [Formatter]) -> Test
+testInterzoneOldShort (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
-      "Interzone Magazine, Smashwords style" expected
+      "Interzone Magazine, old style, short" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing 
-            Nothing "TTA Press"]
+            Nothing "TTA Press Authors"]
          , metaTitles = [Title Nothing Nothing Nothing 
-            "Interzone 233 Mar - Apr 2011"]
+            "Interzone SFF #212"]
          }
       expected =
          ( "magInterzone"
-         , "InterzoneSFF233.epub"
+         , "InterzoneSFF212.epub"
          )
 
 
@@ -1254,8 +1274,8 @@ testMagUniverse (gs, fs) = TestCase $
             "Jim Baen's Universe-Vol 4 Num 6"]
          }
       expected =
-         ( "magUniverse"
-         , "JimBaensUniverseVol04Num06.epub"
+         ( "magGenericVolNo2"
+         , "JimBaensUniverse-Vol04No06.epub"
          )
 
 
@@ -1401,8 +1421,49 @@ testMagPunchinello1800s (gs, fs) = TestCase $
             "Punchinello, Volume 1, No. 06, May 7, 1870"]
          }
       expected =
-         ( "magPunchinello_1800s"
-         , "Punchinello_Vol01No06_1870-05-07.epub"
+         ( "magGenericVolNo2"
+         , "PunchinelloVol01No06.epub"
+         )
+
+
+testMagGenericVolNo3 :: (Globals, [Formatter]) -> Test
+testMagGenericVolNo3 (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "generic magazine with volume and 3-digit number" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Blackwood's Edinburgh Magazine Volume 53, No. 327, January, 1843"]
+         }
+      expected =
+         ( "magGenericVolNo3"
+         , "BlackwoodsEdinburghMagazineVol53No327.epub"
+         )
+
+
+testMagSubjWithIssue :: (Globals, [Formatter]) -> Test
+testMagSubjWithIssue (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "with magazine subject and issue" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing "The Dark Issue 1"]
+         , metaCreators =
+            [ Creator (Just "aut") (Just "Okorafor, Nnedi & Swirsky, Rachel & Slatter, Angela & Hannett, Lisa L.") Nothing
+               "Nnedi Okorafor"
+            , Creator (Just "aut") Nothing Nothing
+               "Rachel Swirsky"
+            ]
+         , metaDates = [Date (Just "publication") "2013-10-01"]
+         , metaSubjects =
+            [ "magazine"
+            , "horror"
+            , "dark fantasy"
+            ]
+         }
+      expected =
+         ( "magGenericSubjWithIssue"
+         , "TheDarkMagazine01.epub"
          )
 
 
