@@ -1,3 +1,17 @@
+2.5 (2014-04-04)
+
+   * Additions and modifications to the stock rules to both support
+     more books and also use more generic rules than before
+
+   * Added code to set proper case for Roman numerals in titles
+
+   * Added code to handle file-as names with parenthesized name info
+
+   * Simplified and consolidated special-character filtering code
+
+   * Added support for multiline fields in the Metadata
+
+
 2.4 (2014-03-19)
 
    * Fixed problem in Windows cmd shell with missing UNIX HOME
