@@ -49,6 +49,9 @@ repl re rpl str = subRegex (mkRegex re) str rpl
 camelCase :: String -> String
 camelCase s = concat $ map capFirst $ words s
    where
+      capFirst s'@('I':'I':_) = map toUpper s'
+      capFirst s'@('I':'V':_) = map toUpper s'
+      capFirst s'@('I':'X':_) = map toUpper s'
       capFirst (first:rest) = (toUpper first) : (map toLower rest)
       capFirst _ = undefined
 

@@ -44,6 +44,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testTitleMultiline
       , testTitleHyphen
       , testTitleHyphenDates
+      , testTitleRomanNum
       , testAllPunctuation
       , testPubYearNoDatesPresent
       , testPubYearEpub3
@@ -441,6 +442,25 @@ testTitleHyphenDates (gs, fs) = TestCase $
       expected =
          ( "ordinary_book"
          , "Anonymous-QueenVictoria_StoryOfHerLifeAndReign1819-1901.epub"
+         )
+
+testTitleRomanNum :: (Globals, [Formatter]) -> Test
+testTitleRomanNum (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "title with Roman numerals" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator
+            Nothing
+            (Just "Hauptmann, Gerhart")
+            Nothing
+            "Gerhart Hauptmann"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "The Dramatic Works of Gerhart Hauptmann\nVolume III"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "HauptmannGerhart-TheDramaticWorksOfGerhartHauptmann_VolumeIII.epub"
          )
 
 
