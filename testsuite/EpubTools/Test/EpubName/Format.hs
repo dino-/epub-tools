@@ -102,6 +102,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMagPunchinello1800s
       , testMagGenericVolNo3
       , testMagSubjWithIssue
+      , testWomensInstituteLib
       , testAnthology
       ]
 
@@ -1464,6 +1465,25 @@ testMagSubjWithIssue (gs, fs) = TestCase $
       expected =
          ( "magGenericSubjWithIssue"
          , "TheDarkMagazine01.epub"
+         )
+
+
+testWomensInstituteLib :: (Globals, [Formatter]) -> Test
+testWomensInstituteLib (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
+      "Women's Institute Library" expected
+   where
+      testOpts = (gOpts gs) { optPublisher = True }
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing
+            (Just "Woman's Institute of Domestic Arts and Sciences")
+            Nothing "Woman's Institute of Domestic Arts and Sciences"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Woman's Institute Library of Cookery\nVolume 1: Essentials of Cookery; Cereals; Bread; Hot Breads"]
+         }
+      expected =
+         ( "nonficWomensInstituteLibrary"
+         , "WomansInstituteLibraryOfCookery_Volume1_EssentialsOfCookeryCerealsBreadHotBreads.epub"
          )
 
 
