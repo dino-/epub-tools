@@ -1,7 +1,17 @@
 -----
 general
 
-- Some notes in README about installing epubcheck if possible
+- README.md changes:
+   - installing epubcheck if possible
+   - less-obscure example book naming sessions
+   - demonstration of interactive mode
+   - encourage users to contact the developer (see below in epubname as well)
+
+- Windows binary docs:
+   - make INSTALL more nicely worded
+   - add information or maybe a batch file for assisting with globs and cmd
+
+- Use Paths_epub_tools version instead of hard-coded version in the Opts modules. Test this on Windows.
 
 - Would like to way to be able to insert a publishing year tag into the OPF data like these:
    <dc:date opf:event="publication">2011</dc:date>
@@ -23,6 +33,8 @@ epubmeta
 
 -----
 epubname
+
+- in usage, encourage users to contact the developer
 
 - Add info in the usage about submitting metadata to me using epubmeta when there are problems.
 
