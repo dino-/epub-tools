@@ -12,6 +12,8 @@ module EpubTools.EpubName.Opts
 
 import Control.Monad.Error
 import Data.Maybe
+import Data.Version ( showVersion )
+import Paths_epub_tools ( version )
 import System.Console.GetOpt
 import System.Environment
 import System.Exit
@@ -219,5 +221,5 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
          , ""
          , ""
-         , "Version 2.6  Dino Morelli <dino@ui3.info>"
+         , "Version " ++ (showVersion version) ++ "  Dino Morelli <dino@ui3.info>"
          ]
