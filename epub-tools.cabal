@@ -28,7 +28,7 @@ extra-source-files:  changelog.md
 
 source-repository    head
    type:             darcs
-   location:         http://ui3.info/darcs/epub-tools/
+   location:         http://hub.darcs.net/dino/epub-tools
 
 executable           epubmeta
    main-is:          EpubTools/epubmeta.hs

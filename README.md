@@ -73,8 +73,8 @@ epubzip is a handy utility for zipping up the files that comprise an epub into a
 - Download the cabalized source tarball [from here](http://ui3.info/d/proj/epub-tools/epub-tools-2.5.tar.gz)
 - epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
 - Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.5-win.zip)
-- Get the source with darcs: `$ darcs get http://ui3.info/darcs/epub-tools`
-- If you're just looking, [browse the source](http://ui3.info/darcs/epub-tools)
+- Get the source with darcs: `$ darcs get http://hub.darcs.net/dino/epub-tools`
+- If you're just looking, [browse the source](http://hub.darcs.net/dino/epub-tools)
 
 And once you have it, building the usual way:
 
