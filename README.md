@@ -16,37 +16,37 @@ epubmeta is a command-line utility for examining and editing epub book metadata.
 
 Here's an example of epubmeta output:
 
->     $ epubmeta Kelly_Kessel_Lethem-NinetyPercentOfEverything.epub
->
->     package
->        version: 2.0
->        unique-identifier: calibre_id
->     identifier
->        id: calibre_id
->        scheme: calibre
->        text: b1026732-69a5-4a05-a8d9-a1701685f6fa
->     identifier
->        scheme: ISBN
->        text: 1-590620-00-3
->     title: Ninety Percent of Everything
->     language: en-us
->     contributor
->        text: calibre (0.5.1) [http://calibre.kovidgoyal.net]
->        file-as: calibre
->        role: bkp
->     creator
->        text: James Patrick Kelly
->        file-as: Kelly, James Patrick
->        role: aut
->     creator
->        text: John Kessel
->        role: aut
->     creator
->        text: Jonathan Lethem
->        role: aut
->     date: 2001-03-25T00:00:00
->     publisher: www.Fictionwise.com
->     subject: Science Fiction/Fantasy
+      $ epubmeta Kelly_Kessel_Lethem-NinetyPercentOfEverything.epub
+
+      package
+         version: 2.0
+         unique-identifier: calibre_id
+      identifier
+         id: calibre_id
+         scheme: calibre
+         text: b1026732-69a5-4a05-a8d9-a1701685f6fa
+      identifier
+         scheme: ISBN
+         text: 1-590620-00-3
+      title: Ninety Percent of Everything
+      language: en-us
+      contributor
+         text: calibre (0.5.1) [http://calibre.kovidgoyal.net]
+         file-as: calibre
+         role: bkp
+      creator
+         text: James Patrick Kelly
+         file-as: Kelly, James Patrick
+         role: aut
+      creator
+         text: John Kessel
+         role: aut
+      creator
+         text: Jonathan Lethem
+         role: aut
+      date: 2001-03-25T00:00:00
+      publisher: www.Fictionwise.com
+      subject: Science Fiction/Fantasy
 
 ### epubname
 
@@ -54,13 +54,13 @@ epubname is a command-line utility for renaming epub ebook files based on their 
 
 Using it looks like this:
 
->     $ epubname poorly-named-book.epub
->
->     poorly-named-book.epub -> WattsPeter-Blindsight_2006.epub
->
->     $ epubname another-poorly-named-book.epub
->
->     another-poorly-named-book.epub -> Kelly_Kessel_Lethem-NinetyPercentOfEverything.epub
+      $ epubname poorly-named-book.epub
+
+      poorly-named-book.epub -> WattsPeter-Blindsight_2006.epub
+
+      $ epubname another-poorly-named-book.epub
+
+      another-poorly-named-book.epub -> Kelly_Kessel_Lethem-NinetyPercentOfEverything.epub
 
 ### epubzip
 
@@ -78,10 +78,10 @@ epubzip is a handy utility for zipping up the files that comprise an epub into a
 
 And once you have it, building the usual way:
 
->     $ cabal configure --enable-tests
->     $ cabal build
->     $ cabal test
->     $ cabal install
+      $ cabal configure --enable-tests
+      $ cabal build
+      $ cabal test
+      $ cabal install
 
 
 ## Installing
