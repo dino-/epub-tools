@@ -3,7 +3,7 @@
 
 import Codec.Epub
 import Control.Monad
-import Control.Monad.Error
+import Control.Monad.Except
 import System.Directory
 import System.Environment
 import System.Exit
@@ -25,7 +25,7 @@ main = do
    -- No buffering, it messes with the order of output
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
 
-   either exitWith exitWith =<< (runErrorT $ do
+   either exitWith exitWith =<< (runExceptT $ do
       -- Parse command-line arguments
       (opts, paths) <- liftIO $ getArgs >>= parseOpts
 
@@ -41,7 +41,7 @@ main = do
             then do
                dos <- liftIO EN.defaultOptions
                fs <- initialize dos
-               runErrorT $ do
+               runExceptT $ do
                   xml <- snd `fmap` getPkgPathXmlFromDir "."
                   pkg <- getPackage xml
                   metadata <- getMetadata xml

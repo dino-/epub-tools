@@ -15,9 +15,9 @@ module EpubTools.EpubName.Format.Format
    where
 
 import Codec.Epub.Data.Metadata
-import Control.Monad.Error
+import Control.Monad.Except
 import Data.List ( isPrefixOf )
-import Data.Maybe ( isJust )
+import Data.Maybe ( isJust, listToMaybe )
 import Text.Printf
 import Text.Regex
 
@@ -51,23 +51,23 @@ ordinaryBookFormatter = Formatter
 -}
 
 
-{- Wrapper functions to perform some basic operations in the Error
+{- Wrapper functions to perform some basic operations in the Except
    String monad
 -}
 
--- general purpose read in the Error String monad
+-- general purpose read in the Except String monad
 readE :: (MonadError String m, Read a) => String -> String -> m a
 readE msg s = case reads s of
    [(x, "")] -> return x
    _         -> throwError msg
 
 
--- read an Int in the Error String monad
+-- read an Int in the Except String monad
 readIntE :: MonadError String m => String -> m Int
 readIntE = readE "Not a number"
 
 
--- get list element at a specific index in the Error String monad
+-- get list element at a specific index in the Except String monad
 elemE :: MonadError String m => [a] -> Int -> m a
 elemE l i
    | i < length l = return $ l !! i
@@ -147,7 +147,7 @@ subjectMatches :: String -> EN ()
 subjectMatches re = do
    subjects <- asks $ metaSubjects . gMetadata
    unless (any isJust $ map (matchRegex (mkRegex re)) subjects) $
-      throwError "Subject string not found"
+      throwError ""
 
 
 {- This is used by the titlePat command to construct a title pattern
@@ -157,13 +157,11 @@ extractTitle :: String -> EN [String]
 extractTitle re = do
    md <- asks gMetadata
 
-   (Title _ _ _ oldTitle) <- case metaTitles md of
-      [] -> throwError "format failed, no title present"
-      ts -> return . head $ ts
+   let titleMatch =
+         (matchRegex $ mkRegexWithOpts re False True) =<<
+         titleText `fmap` (listToMaybe $ metaTitles md)
 
-   case matchRegex (mkRegexWithOpts re False True) oldTitle of
-      Just matches -> return matches
-      Nothing      -> throwError $ printf "extract title failed: %s" re
+   maybe (throwError "") return titleMatch
 
 
 {- This is used by the name command to execute a series of the DSL

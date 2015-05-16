@@ -9,7 +9,7 @@ module EpubTools.EpubName.Main
    )
    where
 
-import Control.Monad.Error
+import Control.Monad.Except
 import System.Directory ( doesFileExist )
 import System.Exit
 import Text.Printf
@@ -19,14 +19,6 @@ import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
 import EpubTools.EpubName.Opts
 import EpubTools.EpubName.Util
-
-
-instance Error ExitCode where
-    -- noMsg  :: a
-    noMsg  = strMsg ""
-
-    -- strMsg :: String -> a
-    strMsg = const exitInitFailure
 
 
 initialize :: (MonadError ExitCode m, MonadIO m) =>

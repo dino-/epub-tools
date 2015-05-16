@@ -4,7 +4,7 @@
 module Main
    where
 
-import Control.Monad.Error
+import Control.Monad.Except
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), runTestTT )
 
@@ -19,7 +19,7 @@ main :: IO ()
 main = do
    dos <- defaultOptions
    let testOpts = dos { optRulesPaths = ["resources/default.rules"] }
-   ir <- runErrorT $ initialize testOpts
+   ir <- runExceptT $ initialize testOpts
    either (exitWith) (runTests testOpts) ir
    
 

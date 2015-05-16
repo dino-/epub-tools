@@ -8,7 +8,7 @@ import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
 import Control.Applicative
 import Control.Monad
-import Control.Monad.Error
+import Control.Monad.Except
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.FilePath
@@ -64,14 +64,14 @@ processBook _    _          _               False priRes =
    return priRes
 
 processBook opts formatters (oldPath:paths) _     priRes = do
-   result <- runErrorT $ do
+   result <- runExceptT $ do
       {- Parse the book's metadata
          The reason for the nested runErrorT block is, if there is
          failure during parsing, we need to mark the result up with the
          file path. Failures here will otherwise get lost in the output
          when multiple books are processed at once.
       -}
-      epm <- runErrorT $ do
+      epm <- runExceptT $ do
          xml <- getPkgXmlFromZip oldPath
          (,) <$> getPackage xml <*> getMetadata xml
       (pkg, md) <- either
@@ -118,7 +118,7 @@ main = do
    -- No buffering, it messes with the order of output
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr, stdin ]
 
-   either exitWith exitWith =<< (runErrorT $ do
+   either exitWith exitWith =<< (runExceptT $ do
       -- Parse command-line arguments
       (opts, paths) <- (liftIO getArgs) >>= parseOpts
 

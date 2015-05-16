@@ -8,10 +8,10 @@ module EpubTools.EpubMeta.Util
    )
    where
 
-import Control.Monad.Error
+import Control.Monad.Except
 
 
-type EM a = (ErrorT String IO) a
+type EM a = (ExceptT String IO) a
 
 runEM :: EM a -> IO (Either String a)
-runEM = runErrorT
+runEM = runExceptT

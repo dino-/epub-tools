@@ -8,7 +8,7 @@ module EpubTools.Test.EpubName.Format
 
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
-import Control.Monad.Error
+import Control.Monad.Except
 import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
@@ -110,7 +110,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
 assertNewName :: Globals -> [Formatter] -> String
    -> (String, String) -> Assertion
 assertNewName globals fs desc expected = do
-   result <- runErrorT $ tryFormatting globals fs ""
+   result <- runExceptT $ tryFormatting globals fs ""
    let actual = either (\em -> ("NO FORMATTER", em)) id result
    assertEqual desc expected actual
 

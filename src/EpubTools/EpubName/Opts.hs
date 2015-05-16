@@ -10,7 +10,7 @@ module EpubTools.EpubName.Opts
    )
    where
 
-import Control.Monad.Error
+import Control.Monad.Except
 import Data.Maybe
 import Data.Version ( showVersion )
 import Paths_epub_tools ( version )

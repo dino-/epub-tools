@@ -105,8 +105,7 @@ authorMatches re = do
          matchRegex (mkRegex re) di
 
    md <- asks gMetadata
-   unless (any isJust $ map authorMatches' $ justAuthors md) $
-      throwError "Specific author string not found"
+   unless (any isJust $ map authorMatches' $ justAuthors md) $ throwError ""
 
 
 {- Author names with a postfix like II, III, Jr. or Sr.

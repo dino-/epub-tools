@@ -13,7 +13,7 @@ module EpubTools.EpubName.Format.Util
 
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
-import Control.Monad.Error
+import Control.Monad.Except
 import Control.Monad.Identity
 import Control.Monad.Reader
 import Data.Char
@@ -29,10 +29,10 @@ data Globals = Globals
    , gMetadata :: Metadata
    }
 
-type EN a = ReaderT Globals (ErrorT String Identity) a
+type EN a = ReaderT Globals (ExceptT String Identity) a
 
 runEN :: Globals -> EN a -> Either String a
-runEN env ev = runIdentity (runErrorT (runReaderT ev env))
+runEN env ev = runIdentity (runExceptT (runReaderT ev env))
 
 
 {- Convenience function to make a regex replacer for a given pattern 
