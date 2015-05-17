@@ -4,21 +4,18 @@ This project may benefit from the use of some other tools out here
 such as epubcheck, zip and unzip
 
 - Tools unzipping can try to fall back on unzip upon failure
-
 - epubmeta needs write capability
-
 - epub creation, think about this
-
 - always release Windows binaries
-
 - OSX too?
 
 
 ## 2015-05-17 redesigning tryFormatting and the EN monad
 
 Running into a problem where we don't necessarily want all failures of any kind to be expressed as `MonadError String` any longer. There are at least two types of failure along the way here:
-   1. a match failure of a regexp, which we don't want details on
-   2. a failure to parse or execute a naming DSL instruction, we do want this reported
+
+1. a match failure of a regexp, which we don't want details on
+2. a failure to parse or execute a naming DSL instruction, we do want this reported
 
 `EpubTools.EpubName.Format.Format.tryFormatting` looks like this:
 
