@@ -71,7 +71,7 @@ readIntE = readE "Not a number"
 elemE :: MonadError String m => [a] -> Int -> m a
 elemE l i
    | i < length l = return $ l !! i
-   | otherwise    = throwError $ "Bad array index: " ++ show i
+   | otherwise    = throwError $ "Bad array index: " ++ show (i + 1)
 
 
 {- Instructions in the book naming DSL. These instructions are used from
