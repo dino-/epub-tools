@@ -25,6 +25,7 @@
 - When a backup is made during `-e[SUF]`, make a note of it on stdout
 - Maybe more options for modifying metadata from the command-line
 - Ability to dump the actual Haskell Metadata structure out. Could be used to make unit tests for epubname.
+- New deprecation: `EpubTools.EpubMeta.Edit` `System.Cmd` is deprecated, use `System.Process` instead
 
 
 ## epubname
@@ -36,7 +37,7 @@
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
 - Not testing improper name instruction function arguments (such as: an index that doesn't exist in a match with `idx`)
    - This is tricky as we're using the stock set of rules that are deployed for the real app for all testing. Need to redesign `testsuite/EpubTools/test-epubname.main` to be able to load a different set of rules.
-   - Fun fact: I can't figure out today how `resources/default.rules` is getting loaded at all or where it is!
+- Build warning: `EpubTools.epubname.hs` import of `Control.Applicative` is redundant
 
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC. module hierarchy:
 
