@@ -18,7 +18,7 @@ import EpubTools.Test.EpubName.PubYear
 main :: IO ()
 main = do
    dos <- defaultOptions
-   let testOpts = dos { optRulesPaths = ["resources/default.rules"] }
+   let testOpts = dos  -- Can use this to adjust the options with dos { ... }
    ir <- runExceptT $ initialize testOpts
    either (exitWith) (runTests testOpts) ir
    
