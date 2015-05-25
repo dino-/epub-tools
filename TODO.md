@@ -1,6 +1,5 @@
 ## general
 
-- Update cabal homepage field to point to darcshub
 - Update cabal tested-with
 - README.md changes:
    - installing epubcheck if possible
