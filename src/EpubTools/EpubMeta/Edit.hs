@@ -9,11 +9,11 @@ module EpubTools.EpubMeta.Edit
 
 import Control.Exception
 import Control.Monad
-import System.Cmd
 import System.Directory
 import System.FilePath
 import System.Environment
 import System.Exit
+import System.Process ( system )
 import Text.Printf
 
 import EpubTools.EpubMeta.Export

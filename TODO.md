@@ -25,7 +25,6 @@
 - When a backup is made during `-e[SUF]`, make a note of it on stdout
 - Maybe more options for modifying metadata from the command-line
 - Ability to dump the actual Haskell Metadata structure out. Could be used to make unit tests for epubname.
-- New deprecation: `EpubTools.EpubMeta.Edit` `System.Cmd` is deprecated, use `System.Process` instead
 
 
 ## epubname
