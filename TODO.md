@@ -36,7 +36,7 @@
 - Can possibly parallelize book renaming, each book is an atomic operation. Look into it.
 - Not testing improper name instruction function arguments (such as: an index that doesn't exist in a match with `idx`)
    - This is tricky as we're using the stock set of rules that are deployed for the real app for all testing. Need to redesign `testsuite/EpubTools/test-epubname.main` to be able to load a different set of rules.
-- Build warning: `EpubTools.epubname.hs` import of `Control.Applicative` is redundant
+- Why is the verbosity Opts value a Maybe Int? Couldn't it just have been an Int (0, 1 or 2) where 0 is the old Nothing? Or even better, explicit values like: `data Verbosity = Minimum | ShowFormatter | Maximum`  Think about it more
 
 - Try to make tests of formatters into a conf file thing as well. This is kind of important. Not part of HUnit or QC. module hierarchy:
 

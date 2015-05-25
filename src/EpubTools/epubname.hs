@@ -6,7 +6,6 @@
 import Codec.Epub
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
-import Control.Applicative
 import Control.Monad
 import Control.Monad.Except
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
