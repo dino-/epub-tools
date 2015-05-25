@@ -1,6 +1,5 @@
 ## general
 
-- Update cabal tested-with
 - README.md changes:
    - installing epubcheck if possible
    - less-obscure example book naming sessions
