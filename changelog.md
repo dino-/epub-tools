@@ -1,3 +1,18 @@
+2.6 (2015-05-25)
+
+   * Fixed an error in bad DSL command index reporting
+   * Replaced deprecated Control.Monad.Error with
+     Control.Monad.Except
+   * Replaced deprecated System.Cmd with System.Process
+   * Removed useless import of Control.Applicative
+   * Updated cabal homepage, tested-with and source-repository
+   * Removed unused path to rules file in unit tests
+   * Reformatted TODO and development notes into Markdown documents
+   * Updated boringfile with cabal sandbox filespecs
+   * Switched over to using Data.Version instead of hard-coded
+     version string
+
+
 2.5 (2014-04-04)
 
    * Additions and modifications to the stock rules to both support
