@@ -15,7 +15,7 @@ category:            Application, Console
 tested-with:         GHC >= 7.10.1
 
 extra-source-files:  changelog.md
-                     doc/dev/notes
+                     doc/dev/notes.md
                      doc/hcar/epubtoolsCommandlineepubU-De.tex
                      doc/INSTALL
                      README.md
