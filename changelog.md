@@ -2,13 +2,9 @@
 
    * Additions and modifications to the stock rules to both support
      more books and also use more generic rules than before
-
    * Added code to set proper case for Roman numerals in titles
-
    * Added code to handle file-as names with parenthesized name info
-
    * Simplified and consolidated special-character filtering code
-
    * Added support for multiline fields in the Metadata
 
 
@@ -16,19 +12,14 @@
 
    * Fixed problem in Windows cmd shell with missing UNIX HOME
      env variable
-
    * Now gracefully handling last-name-first creators. For books
      with no file-as and the Creator text arranged last-name-first
      with a comma, do the right thing.
-
    * Added a new rule for generically-titled magazines with an issue
-
    * Incorporated project website info into README.md and
      changelog.md files. This information is now in source control
      where it belongs.
-
    * Added missing files to .cabal for sdist
-
    * Changed copyright date range to 2014
 
 
