@@ -21,7 +21,7 @@ extra-source-files:  changelog.md
                      README.md
                      testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
-                     TODO
+                     TODO.md
                      util/all-books.hs
                      util/prefs/boring
                      util/win-dist.sh
