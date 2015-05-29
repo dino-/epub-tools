@@ -1,3 +1,8 @@
+2.7 (2015-05-29)
+
+  * Added back Control.Applicative import for GHC 7.8 compatibility
+
+
 2.6 (2015-05-25)
 
    * Fixed an error in bad DSL command index reporting
