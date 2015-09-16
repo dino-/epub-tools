@@ -72,7 +72,7 @@ defaults = unlines
    , "   name \"(1)(3)-(monthNum 2)\""
    , ""
    , "magLightspeed_issue"
-   , "   titlePat \"(Lightspeed).* Issue (.*)\""
+   , "   titlePat \"(Lightspeed).* Issue ([^ ]+)(.*)\""
    , "   name \"(1)(pad 3 2)\""
    , ""
    , "magNemesis"

@@ -95,6 +95,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testLightspeedDate
       , testLightspeedMagIssue
       , testLightspeedIssue
+      , testLightspeedMagIssueDate
       , testMagWeirdTales
       , testMagGalaxysEdge
       , testMagPlasmaFreq
@@ -1343,6 +1344,21 @@ testLightspeedIssue (gs, fs) = TestCase $
       expected =
          ( "magLightspeed_issue"
          , "Lightspeed033.epub"
+         )
+
+
+testLightspeedMagIssueDate :: (Globals, [Formatter]) -> Test
+testLightspeedMagIssueDate (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Lightspeed Magazine, both issue and date in title" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Lightspeed Magazine, Issue 62 (July 2015)"]
+         }
+      expected =
+         ( "magLightspeed_issue"
+         , "Lightspeed062.epub"
          )
 
 
