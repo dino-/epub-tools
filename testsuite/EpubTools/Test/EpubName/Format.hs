@@ -104,6 +104,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testMagGenericVolNo3
       , testMagSubjWithIssue
       , testWomensInstituteLib
+      , testAnthologyDate
       , testAnthology
       ]
 
@@ -1500,6 +1501,28 @@ testWomensInstituteLib (gs, fs) = TestCase $
       expected =
          ( "nonficWomensInstituteLibrary"
          , "WomansInstituteLibraryOfCookery_Volume1_EssentialsOfCookeryCerealsBreadHotBreads.epub"
+         )
+
+
+testAnthologyDate :: (Globals, [Formatter]) -> Test
+testAnthologyDate (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "anthology with date in title" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing "Flash Fiction Online - June 2015"]
+         , metaCreators =
+            [ Creator (Just "art") (Just "Bijelac, Dario") Nothing
+               "Dario Bijelac"
+            , Creator (Just "aut") (Just "Pearlman, Laura") Nothing
+               "Laura Pearlman"
+            ]
+         , metaDates = [ Date Nothing "2015-05-30T18:47:28.000000+00:00" ]
+         , metaSubjects = ["anthology"]
+         }
+      expected =
+         ( "anthology_date"
+         , "FlashFictionOnline2015-06.epub"
          )
 
 
