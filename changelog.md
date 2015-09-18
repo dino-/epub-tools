@@ -1,6 +1,11 @@
+2.8 (2015-09-18)
+
+   * Fixed some magazine and anthology naming rules
+
+
 2.7 (2015-05-29)
 
-  * Added back Control.Applicative import for GHC 7.8 compatibility
+   * Added back Control.Applicative import for GHC 7.8 compatibility
 
 
 2.6 (2015-05-25)
