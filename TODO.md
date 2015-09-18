@@ -1,6 +1,5 @@
 ## general
 
-- Fix cabal extra-source-files and other-modules (including test suites!)
 - README.md changes:
    - installing epubcheck if possible
    - less-obscure example book naming sessions
