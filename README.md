@@ -67,26 +67,32 @@ Using it looks like this:
 epubzip is a handy utility for zipping up the files that comprise an epub into an .epub zip file. Using the same technology as epubname, it can try to make a meaningful filename for the book.
 
 
-## Getting source
+## Getting this software
+
+Binaries
+
+- epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
+- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.8-win.zip)
+
+
+Building and installing from source with cabal-install:
+
+      $ cabal update ; cabal install epub-tools
+
+
+Getting source for development
 
 - Download the cabalized source package [from Hackage](http://hackage.haskell.org/package/epub-tools)
-- epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
-- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.7-win.zip)
-- Get the source with darcs: `$ darcs get http://hub.darcs.net/dino/epub-tools`
+- Get the source with darcs: `$ darcs clone http://hub.darcs.net/dino/epub-tools`
 - If you're just looking, [browse the source](http://hub.darcs.net/dino/epub-tools)
 
-And once you have it, building the usual way:
+
+Once you have source, building the usual way:
 
       $ cabal configure --enable-tests
       $ cabal build
       $ cabal test
       $ cabal install
-
-
-## Installing
-
-Build and install with cabal-install:
-  `$ cabal update ; cabal install epub-tools`
 
 
 ## Contact
