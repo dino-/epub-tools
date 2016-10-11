@@ -1,7 +1,7 @@
 # This file contains a list of extended regular expressions, one per
 # line. A file path matching any of these expressions will be filtered
 # out during `darcs add', or when the `--look-for-adds' flag is passed
-# to `darcs whatsnew' and `record'.  The entries in ~/.darcs/boring (if
+# to `darcs whatsnew' and `record'. The entries in ~/.darcs/boring (if
 # it exists) supplement those in this file.
 # 
 # Blank lines, and lines beginning with an octothorpe (#) are ignored.
@@ -45,11 +45,8 @@
 # cabal intermediates
 \.installed-pkg-config
 \.setup-config
-# cabal sandbox
-^\.cabal-sandbox(/|$)
-cabal\.sandbox\.config
 # standard cabal build dir, might not be boring for everybody
-^dist(/|$)
+# ^dist(/|$)
 # autotools
 (^|/)autom4te\.cache($|/)
 (^|/)config\.(log|status)$
@@ -121,3 +118,7 @@ cabal\.sandbox\.config
 (^|/)\.lock-wscript$
 # mac os finder
 (^|/)\.DS_Store$
+# emacs saved sessions (desktops)
+(^|.*/)\.emacs\.desktop(\.lock)?$
+
+(^|/).stack-work($|/)

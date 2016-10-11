@@ -68,6 +68,17 @@ test-suite           epubname-tests
    build-depends:    base, directory, epub-metadata >= 4.0, filepath,
                      HUnit, mtl, parsec, regex-compat
    hs-source-dirs:   src testsuite
+   other-modules:    EpubTools.EpubName.Doc.Rules
+                     EpubTools.EpubName.Format.Author
+                     EpubTools.EpubName.Format.Compile
+                     EpubTools.EpubName.Format.Format
+                     EpubTools.EpubName.Format.PubYear
+                     EpubTools.EpubName.Format.Util
+                     EpubTools.EpubName.Main
+                     EpubTools.EpubName.Opts
+                     EpubTools.EpubName.Util
+                     EpubTools.Test.EpubName.Format
+                     EpubTools.Test.EpubName.PubYear
    ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
 
 executable           epubzip
@@ -75,5 +86,14 @@ executable           epubzip
    build-depends:    base >= 3 && < 5, directory, epub-metadata >= 4.0,
                      filepath, mtl, parsec, regex-compat
    hs-source-dirs:   src
-   other-modules:    EpubTools.EpubZip.Opts
+   other-modules:    EpubTools.EpubName.Doc.Rules
+                     EpubTools.EpubName.Format.Author
+                     EpubTools.EpubName.Format.Compile
+                     EpubTools.EpubName.Format.Format
+                     EpubTools.EpubName.Format.PubYear
+                     EpubTools.EpubName.Format.Util
+                     EpubTools.EpubName.Main
+                     EpubTools.EpubName.Opts
+                     EpubTools.EpubName.Util
+                     EpubTools.EpubZip.Opts
    ghc-options:      -Wall
