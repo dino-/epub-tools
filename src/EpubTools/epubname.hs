@@ -45,7 +45,7 @@ formatFM (fmtUsed, pkg, md) =
 
 {- Format and display output for a book that was processed
 -}
-displayResults :: (MonadError String m, MonadIO m) => Options
+displayResults :: MonadIO m => Options
    -> FilePath -> FilePath -> String -> Package -> Metadata -> m ()
 displayResults opts oldPath newPath fmtUsed pkg md =
    liftIO $ printf "%s -> %s%s\n" oldPath newPath
