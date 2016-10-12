@@ -72,7 +72,7 @@ epubzip is a handy utility for zipping up the files that comprise an epub into a
 Binaries
 
 - epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
-- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.8-win.zip)
+- Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.9-win.zip)
 
 
 Building and installing from source with cabal-install:
@@ -84,15 +84,15 @@ Getting source for development
 
 - Download the cabalized source package [from Hackage](http://hackage.haskell.org/package/epub-tools)
 - Get the source with darcs: `$ darcs clone http://hub.darcs.net/dino/epub-tools`
+- Get the source with stack: `$ stack unpack epub-tools`
 - If you're just looking, [browse the source](http://hub.darcs.net/dino/epub-tools)
 
 
 Once you have source, building the usual way:
 
-      $ cabal configure --enable-tests
-      $ cabal build
-      $ cabal test
-      $ cabal install
+      $ stack build
+      $ stack test
+      $ stack haddock
 
 
 ## Contact
