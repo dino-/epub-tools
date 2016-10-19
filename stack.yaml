@@ -1,7 +1,4 @@
-resolver: lts-7.3
+resolver: nightly-2016-10-18
+
 packages:
 - .
-- location: ../epub-metadata
-  extra-dep: True
-extra-deps:
-- epub-metadata-4.4
