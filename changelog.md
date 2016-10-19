@@ -1,3 +1,12 @@
+2.9 (2016-10-19)
+
+   * Switched build to stack
+   * Added hsinstall installation script and updated windows dist script
+   * Various cabal file updates
+   * Moved copyright date up to 2016
+   * Updated README with better instructions for getting this software
+
+
 2.8 (2015-09-18)
 
    * Fixed some magazine and anthology naming rules
