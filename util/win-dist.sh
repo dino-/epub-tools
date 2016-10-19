@@ -2,14 +2,14 @@
 
 version=$(awk '/^[Vv]ersion/ { print $2 }' epub-tools.cabal)
 
-buildDir="dist/build"
+buildDir="dist"
 
-binaries="$buildDir/epubmeta/epubmeta.exe $buildDir/epubname/epubname.exe $buildDir/epubzip/epubzip.exe"
+./util/install.hs -p $buildDir -t bundle
 
-strip $binaries
-
-zipFile="dist/epub-tools-$version-win.zip"
+zipFile="epub-tools-$version-win.zip"
 
 rm $zipFile
 
-zip -j $zipFile doc/INSTALL $binaries
+cd $buildDir
+
+zip -r ../$zipFile *
