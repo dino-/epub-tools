@@ -18,10 +18,12 @@ extra-source-files:  changelog.md
                      doc/hcar/epubtoolsCommandlineepubU-De.tex
                      doc/INSTALL
                      README.md
+                     stack.yaml
                      testsuite/EpubTools/*.hs
                      testsuite/EpubTools/Test/EpubName/*.hs
                      TODO.md
                      util/all-books.hs
+                     util/install.hs
                      util/prefs/boring
                      util/win-dist.sh
 
