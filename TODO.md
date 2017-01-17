@@ -27,6 +27,7 @@
 
 ## epubname
 
+- Switch from using awful String everywhere to nice, Unicode Text. This may alleviate some of the special typographic character problems I have from time to time.
 - in usage, encourage users to contact the developer
 - Add info in the usage about submitting metadata to me using epubmeta when there are problems.
 - Rethink that Publisher business, maybe get rid of it.
