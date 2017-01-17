@@ -31,6 +31,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testAuthorFileas
       , testAuthorFileasParens
       , testAuthorFull
+      , testAuthorMiddle
       , testMultiAutCreators
       , testMultiAutOneString
       , testNoAuthor
@@ -212,6 +213,23 @@ testAuthorFull (gs, fs) = TestCase $
       expected =
          ( "ordinary_book"
          , "MelvilleHerman-MobyDick.epub"
+         )
+
+
+testAuthorMiddle :: (Globals, [Formatter]) -> Test
+testAuthorMiddle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "author with middle-name" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator (Just "aut")
+            (Just "Wallace, David Foster")
+            Nothing
+            "David Foster Wallace"]
+         , metaTitles = [Title Nothing Nothing Nothing "Infinite Jest"]
+         }
+      expected =
+         ( "ordinary_book"
+         , "WallaceDavidFoster-InfiniteJest.epub"
          )
 
 
