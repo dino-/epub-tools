@@ -1,3 +1,12 @@
+2.10 (2017-12-24)
+
+   * Changed the Stackage resolver from a nightly to an lts
+   * Now using a less-fragile `Printf*` type signature
+   * Removed an unused GHC options compile directive
+   * Added a missing module to all other-modules stanzas
+   * Added a unit test for authors with a middle-name
+
+
 2.9 (2016-10-19)
 
    * Switched build to stack
