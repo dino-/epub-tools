@@ -2,7 +2,6 @@
 -- Author: Dino Morelli <dino@ui3.info>
 
 {-# LANGUAGE FlexibleContexts #-}
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 
 module EpubTools.EpubName.Main
    ( initialize
