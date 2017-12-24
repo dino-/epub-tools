@@ -24,7 +24,6 @@ extra-source-files:  changelog.md
                      TODO.md
                      util/all-books.hs
                      util/install.hs
-                     util/prefs/boring
                      util/win-dist.sh
 
 source-repository    head
