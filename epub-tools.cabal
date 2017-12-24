@@ -13,7 +13,8 @@ description:         A suite of command-line utilities for creating and manipula
 category:            Application, Console
 tested-with:         GHC >= 8.0.1
 
-extra-source-files:  changelog.md
+extra-source-files:  .gitignore
+                     changelog.md
                      doc/dev/notes.md
                      doc/hcar/epubtoolsCommandlineepubU-De.tex
                      doc/INSTALL
