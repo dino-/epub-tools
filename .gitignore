@@ -1,0 +1,5 @@
+# Vim swap files
+*.sw?
+
+# stack build artifacts
+.stack-work/
