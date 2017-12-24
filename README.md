@@ -75,17 +75,12 @@ Binaries
 - Download [binaries for Windows](http://ui3.info/d/proj/epub-tools/epub-tools-2.9-win.zip)
 
 
-Building and installing from source with cabal-install:
-
-      $ cabal update ; cabal install epub-tools
-
-
 Getting source for development
 
 - Download the cabalized source package [from Hackage](http://hackage.haskell.org/package/epub-tools)
-- Get the source with darcs: `$ darcs clone http://hub.darcs.net/dino/epub-tools`
+- Get the source with git: `$ git clone https://github.com/dino-/epub-tools.git`
 - Get the source with stack: `$ stack unpack epub-tools`
-- If you're just looking, [browse the source](http://hub.darcs.net/dino/epub-tools)
+- If you're just looking, [browse the source](https://github.com/dino-/epub-tools)
 
 
 Once you have source, building the usual way:
