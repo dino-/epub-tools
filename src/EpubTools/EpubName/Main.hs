@@ -59,7 +59,7 @@ loadFormatters verbosity (name, contents) = case parseRules name contents of
       return fs
 
 
-showRulesSource :: (Monad m, PrintfType (t -> m ())) =>
-   Maybe Int -> t -> m ()
+showRulesSource :: (Monad m, PrintfType (m ()), PrintfArg t, Num a, Eq a) =>
+   Maybe a -> t -> m ()
 showRulesSource (Just 1) name = printf "Rules loaded from: %s\n" name
 showRulesSource _        _    = return ()
