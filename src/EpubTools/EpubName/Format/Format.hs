@@ -253,15 +253,21 @@ monthStrToNumbers "Aug/Sep"            = return "08_09"
 monthStrToNumbers s
    | isPrefixOf s "September"          = return "09"
 monthStrToNumbers "September-October"  = return "09_10"
+monthStrToNumbers "September/October"  = return "09_10"
+monthStrToNumbers "Sep-Oct"            = return "09_10"
+monthStrToNumbers "Sep/Oct"            = return "09_10"
 monthStrToNumbers s
    | isPrefixOf s "October"            = return "10"
 monthStrToNumbers "October-November"   = return "10_11"
 monthStrToNumbers "October/November"   = return "10_11"
 monthStrToNumbers "Oct-Nov"            = return "10_11"
 monthStrToNumbers "Oct/Nov"            = return "10_11"
-monthStrToNumbers "November-December"  = return "11_12"
 monthStrToNumbers s
    | isPrefixOf s "November"           = return "11"
+monthStrToNumbers "November-December"  = return "11_12"
+monthStrToNumbers "November/December"  = return "11_12"
+monthStrToNumbers "Nov-Dec"  = return "11_12"
+monthStrToNumbers "Nov/Dec"  = return "11_12"
 monthStrToNumbers s
    | isPrefixOf s "December"           = return "12"
 monthStrToNumbers s                    =

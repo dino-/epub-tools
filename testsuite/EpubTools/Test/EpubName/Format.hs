@@ -56,11 +56,13 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testPubYearEpub2Unwanted
       , testMagAeon
       , testMagAEon
+      , testMagApexPound
+      , testMagApexIssue
       , testMagApexLong
-      , testMagApexShort
       , testChallengingDestinyShort
       , testChallengingDestinyLong
-      , testAnalog
+      , testAnalogSingle
+      , testAnalogDouble
       , testAsimovs
       , testFantasyMagazine
       , testFsfShort
@@ -68,6 +70,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testFsfLong
       , testFsfAmpersand
       , testFsfAmpersandSpaces
+      , testFsfVeryLong
       , testMagFutureOrbits
       , testGudShort
       , testGudLong
@@ -107,6 +110,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testWomensInstituteLib
       , testAnthologyDate
       , testAnthology
+      , testMagLunaStation
       ]
 
 
@@ -662,27 +666,27 @@ testMagAEon (gs, fs) = TestCase $
          )
 
 
-testMagApexLong :: (Globals, [Formatter]) -> Test
-testMagApexLong (gs, fs) = TestCase $
+testMagApexPound :: (Globals, [Formatter]) -> Test
+testMagApexPound (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
-      "Apex Magazine, older, long title" expected
+      "Apex Magazine, pound sign and issue number" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Apex Authors"]
          , metaTitles = [Title Nothing Nothing Nothing
-            "Apex Science Fiction and Horror Digest #9"]
+            "Apex Magazine #16"]
          }
       expected =
          ( "magApex"
-         , "ApexMagazine009.epub"
+         , "ApexMagazine016.epub"
          )
 
 
-testMagApexShort :: (Globals, [Formatter]) -> Test
-testMagApexShort (gs, fs) = TestCase $
+testMagApexIssue :: (Globals, [Formatter]) -> Test
+testMagApexIssue (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
-      "Apex Magazine, newer, short title" expected
+      "Apex Magazine, Issue number" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
@@ -693,6 +697,23 @@ testMagApexShort (gs, fs) = TestCase $
       expected =
          ( "magApex"
          , "ApexMagazine017.epub"
+         )
+
+
+testMagApexLong :: (Globals, [Formatter]) -> Test
+testMagApexLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "Apex Magazine, title with month year" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator (Just "aut") Nothing
+            Nothing "Apex Authors"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Apex Magazine: Issue 101, October 2017"]
+         }
+      expected =
+         ( "magApex"
+         , "ApexMagazine101.epub"
          )
 
 
@@ -730,9 +751,25 @@ testChallengingDestinyLong (gs, fs) = TestCase $
          )
 
 
-testAnalog :: (Globals, [Formatter]) -> Test
-testAnalog (gs, fs) = TestCase $
-   assertNewName gs { gMetadata = meta } fs "Analog" expected
+testAnalogSingle :: (Globals, [Formatter]) -> Test
+testAnalogSingle (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Analog, single month" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing
+            Nothing "Dell Magazine Authors"]
+         , metaTitles = [Title Nothing Nothing Nothing
+            "Analog SFF, November 2010"]
+         }
+      expected =
+         ( "magAnalog"
+         , "AnalogSF2010-11.epub"
+         )
+
+
+testAnalogDouble :: (Globals, [Formatter]) -> Test
+testAnalogDouble (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Analog, double month" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing
@@ -862,6 +899,22 @@ testFsfAmpersandSpaces (gs, fs) = TestCase $
       expected =
          ( "magFsf"
          , "FantasyScienceFiction2003-12.epub"
+         )
+
+
+testFsfVeryLong :: (Globals, [Formatter]) -> Test
+testFsfVeryLong (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "FSF Magazine, very long name" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing
+            Nothing "Spilogale Inc."]
+         , metaTitles = [Title Nothing Nothing Nothing "Fantasy & Science Fiction, November/December 2017"]
+         }
+      expected =
+         ( "magFsf"
+         , "FantasyScienceFiction2017-11_12.epub"
          )
 
 
@@ -1562,4 +1615,18 @@ testAnthology (gs, fs) = TestCase $
       expected =
          ( "anthology"
          , "CreepySecrets_2010.epub"
+         )
+
+
+testMagLunaStation :: (Globals, [Formatter]) -> Test
+testMagLunaStation (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs "Luna Station Quarterly magazine" expected
+   where
+      meta = emptyMetadata
+         { metaTitles = [Title Nothing Nothing Nothing
+            "Luna Station Quarterly - Issue 028"]
+         }
+      expected =
+         ( "magLunaStationQuarterly"
+         , "LunaStationQuarterly028.epub"
          )
