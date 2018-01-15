@@ -1,3 +1,6 @@
+-- License: ISC (see LICENSE)
+-- Author: Dino Morelli <dino@ui3.info>
+
 module EpubTools.EpubName.Prompt
    ( PromptResult (..)
    , prompt

@@ -2,9 +2,9 @@ name:                epub-tools
 cabal-version:       >= 1.10
 version:             2.11
 build-type:          Simple
-license:             BSD3
+license:             ISC
 license-file:        LICENSE
-copyright:           2008-2016 Dino Morelli
+copyright:           2008-2018 Dino Morelli
 author:              Dino Morelli 
 maintainer:          Dino Morelli <dino@ui3.info>
 homepage:            https://github.com/dino-/epub-tools.git
