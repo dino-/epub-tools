@@ -1,3 +1,10 @@
+2.11 (2018-01-16)
+
+   * Switched license from BSD3 to ISC
+   * Fixes and additions to some epubname rules
+   * Fixed a couple of cabal file issues
+
+
 2.10 (2017-12-24)
 
    * Changed the Stackage resolver from a nightly to an lts
