@@ -8,7 +8,7 @@ category:     Application, Console
 homepage:     https://github.com/dino-/epub-tools.git
 author:       Dino Morelli 
 maintainer:   Dino Morelli <dino@ui3.info>
-copyright:    2008-2018 Dino Morelli
+copyright:    2008 Dino Morelli
 license:      ISC
 license-file: LICENSE
 build-type:   Simple
