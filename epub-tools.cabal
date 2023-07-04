@@ -1,108 +1,144 @@
-name:                epub-tools
-cabal-version:       >= 1.10
-version:             3.0
-build-type:          Simple
-license:             ISC
-license-file:        LICENSE
-copyright:           2008-2018 Dino Morelli
-author:              Dino Morelli 
-maintainer:          Dino Morelli <dino@ui3.info>
-homepage:            https://github.com/dino-/epub-tools.git
-synopsis:            Command line utilities for working with epub files
-description:         A suite of command-line utilities for creating and manipulating epub book files. Included are: epubmeta, epubname, epubzip
-category:            Application, Console
-tested-with:         GHC >= 8.0.1
+cabal-version: 2.2
 
-extra-source-files:  .gitignore
-                     changelog.md
-                     doc/dev/notes.md
-                     doc/hcar/epubtoolsCommandlineepubU-De.tex
-                     doc/INSTALL
-                     README.md
-                     stack.yaml
-                     testsuite/EpubTools/*.hs
-                     testsuite/EpubTools/Test/EpubName/*.hs
-                     TODO.md
-                     util/all-books.hs
-                     util/install.hs
-                     util/win-dist.sh
+name:         epub-tools
+version:      3.0
+synopsis:     Command line utilities for working with epub files
+description:  A suite of command-line utilities for creating and manipulating epub book files. Included are: epubmeta, epubname, epubzip
+category:     Application, Console
+homepage:     https://github.com/dino-/epub-tools.git
+author:       Dino Morelli 
+maintainer:   Dino Morelli <dino@ui3.info>
+copyright:    2008-2018 Dino Morelli
+license:      ISC
+license-file: LICENSE
+build-type:   Simple
+tested-with:  GHC >= 9.2.6
+extra-source-files:
+  .gitignore
+  changelog.md
+  doc/dev/notes.md
+  doc/hcar/epubtoolsCommandlineepubU-De.tex
+  doc/INSTALL
+  README.md
+  stack.yaml
+  testsuite/EpubTools/*.hs
+  testsuite/EpubTools/Test/EpubName/*.hs
+  TODO.md
+  util/all-books.hs
+  util/install.hs
+  util/win-dist.sh
 
-source-repository    head
-   type:             git
-   location:         https://github.com/dino-/epub-tools.git
+source-repository head
+   type: git
+   location: https://github.com/dino-/epub-tools.git
 
-executable           epubmeta
-   main-is:          EpubTools/epubmeta.hs
-   build-depends:    base >= 3 && < 5, bytestring, directory,
-                     epub-metadata >= 4.0, filepath, mtl, process,
-                     zip-archive
-   hs-source-dirs:   src
-   other-modules:    EpubTools.EpubMeta.Display
-                     EpubTools.EpubMeta.Edit
-                     EpubTools.EpubMeta.Export
-                     EpubTools.EpubMeta.Import
-                     EpubTools.EpubMeta.Opts
-                     EpubTools.EpubMeta.Util
-                     Paths_epub_tools
-   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
-   default-language: Haskell2010
+common lang
+  default-language: Haskell2010
+  build-depends:
+      directory
+    , epub-metadata >= 5.0
+    , filepath
+    , mtl
+  ghc-options:
+    -fwarn-tabs
+    -Wall
+    -Wcompat
+    -Wincomplete-record-updates
+    -Wincomplete-uni-patterns
+    -Wredundant-constraints
 
-executable           epubname
-   main-is:          EpubTools/epubname.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 4.0,
-                     filepath, mtl, parsec, regex-compat
-   hs-source-dirs:   src
-   other-modules:    EpubTools.EpubName.Doc.Dsl
-                     EpubTools.EpubName.Doc.Rules
-                     EpubTools.EpubName.Format.Author
-                     EpubTools.EpubName.Format.Compile
-                     EpubTools.EpubName.Format.Format
-                     EpubTools.EpubName.Format.PubYear
-                     EpubTools.EpubName.Format.Util
-                     EpubTools.EpubName.Main
-                     EpubTools.EpubName.Opts
-                     EpubTools.EpubName.Prompt
-                     EpubTools.EpubName.Util
-                     Paths_epub_tools
-   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
-   default-language: Haskell2010
+common rts
+  ghc-options:
+    -rtsopts
+    -with-rtsopts=-K32m
 
-test-suite           epubname-tests
-   type:             exitcode-stdio-1.0
-   main-is:          EpubTools/test-epubname.hs
-   build-depends:    base, directory, epub-metadata >= 4.0, filepath,
-                     HUnit, mtl, parsec, regex-compat
-   hs-source-dirs:   src testsuite
-   other-modules:    EpubTools.EpubName.Doc.Rules
-                     EpubTools.EpubName.Format.Author
-                     EpubTools.EpubName.Format.Compile
-                     EpubTools.EpubName.Format.Format
-                     EpubTools.EpubName.Format.PubYear
-                     EpubTools.EpubName.Format.Util
-                     EpubTools.EpubName.Main
-                     EpubTools.EpubName.Opts
-                     EpubTools.EpubName.Util
-                     EpubTools.Test.EpubName.Format
-                     EpubTools.Test.EpubName.PubYear
-                     Paths_epub_tools
-   ghc-options:      -Wall -rtsopts -with-rtsopts=-K32m
-   default-language: Haskell2010
+executable epubmeta
+  import: lang
+  import: rts
+  main-is: EpubTools/epubmeta.hs
+  build-depends:
+      base >= 3 && < 5
+    , bytestring
+    , process
+    , zip-archive
+  hs-source-dirs: src
+  other-modules:
+    EpubTools.EpubMeta.Display
+    EpubTools.EpubMeta.Edit
+    EpubTools.EpubMeta.Export
+    EpubTools.EpubMeta.Import
+    EpubTools.EpubMeta.Opts
+    EpubTools.EpubMeta.Util
+    Paths_epub_tools
 
-executable           epubzip
-   main-is:          EpubTools/epubzip.hs
-   build-depends:    base >= 3 && < 5, directory, epub-metadata >= 4.0,
-                     filepath, mtl, parsec, regex-compat
-   hs-source-dirs:   src
-   other-modules:    EpubTools.EpubName.Doc.Rules
-                     EpubTools.EpubName.Format.Author
-                     EpubTools.EpubName.Format.Compile
-                     EpubTools.EpubName.Format.Format
-                     EpubTools.EpubName.Format.PubYear
-                     EpubTools.EpubName.Format.Util
-                     EpubTools.EpubName.Main
-                     EpubTools.EpubName.Opts
-                     EpubTools.EpubName.Util
-                     EpubTools.EpubZip.Opts
-                     Paths_epub_tools
-   ghc-options:      -Wall
-   default-language: Haskell2010
+executable epubname
+  import: lang
+  import: rts
+  main-is: EpubTools/epubname.hs
+  build-depends:
+      base >= 3 && < 5
+    , containers
+    , parsec
+    , regex-compat
+  hs-source-dirs: src
+  other-modules:
+    EpubTools.EpubName.Doc.Dsl
+    EpubTools.EpubName.Doc.Rules
+    EpubTools.EpubName.Format.Author
+    EpubTools.EpubName.Format.Compile
+    EpubTools.EpubName.Format.Format
+    EpubTools.EpubName.Format.PubYear
+    EpubTools.EpubName.Format.Util
+    EpubTools.EpubName.Main
+    EpubTools.EpubName.Opts
+    EpubTools.EpubName.Prompt
+    EpubTools.EpubName.Util
+    Paths_epub_tools
+
+test-suite epubname-tests
+  import: lang
+  import: rts
+  type: exitcode-stdio-1.0
+  main-is: EpubTools/test-epubname.hs
+  build-depends:
+      base >= 3 && < 5
+    , containers
+    , HUnit
+    , parsec
+    , regex-compat
+  hs-source-dirs: src testsuite
+  other-modules:
+    EpubTools.EpubName.Doc.Rules
+    EpubTools.EpubName.Format.Author
+    EpubTools.EpubName.Format.Compile
+    EpubTools.EpubName.Format.Format
+    EpubTools.EpubName.Format.PubYear
+    EpubTools.EpubName.Format.Util
+    EpubTools.EpubName.Main
+    EpubTools.EpubName.Opts
+    EpubTools.EpubName.Util
+    EpubTools.Test.EpubName.Format
+    EpubTools.Test.EpubName.PubYear
+    Paths_epub_tools
+
+executable epubzip
+  import: lang
+  main-is: EpubTools/epubzip.hs
+  build-depends:
+      base >= 3 && < 5
+    , containers
+    , parsec
+    , regex-compat
+  hs-source-dirs: src
+  other-modules:
+    EpubTools.EpubName.Doc.Rules
+    EpubTools.EpubName.Format.Author
+    EpubTools.EpubName.Format.Compile
+    EpubTools.EpubName.Format.Format
+    EpubTools.EpubName.Format.PubYear
+    EpubTools.EpubName.Format.Util
+    EpubTools.EpubName.Main
+    EpubTools.EpubName.Opts
+    EpubTools.EpubName.Util
+    EpubTools.EpubZip.Opts
+    Paths_epub_tools
