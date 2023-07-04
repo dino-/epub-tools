@@ -21,8 +21,6 @@ extra-source-files:
   doc/INSTALL
   README.md
   stack.yaml
-  testsuite/EpubTools/*.hs
-  testsuite/EpubTools/Test/EpubName/*.hs
   TODO.md
   util/all-books.hs
   util/install.hs
@@ -55,13 +53,13 @@ common rts
 executable epubmeta
   import: lang
   import: rts
-  main-is: EpubTools/epubmeta.hs
+  hs-source-dirs: src/app
+  main-is: epubmeta.hs
   build-depends:
       base >= 3 && < 5
     , bytestring
     , process
     , zip-archive
-  hs-source-dirs: src
   other-modules:
     EpubTools.EpubMeta.Display
     EpubTools.EpubMeta.Edit
@@ -74,13 +72,13 @@ executable epubmeta
 executable epubname
   import: lang
   import: rts
-  main-is: EpubTools/epubname.hs
+  hs-source-dirs: src/app
+  main-is: epubname.hs
   build-depends:
       base >= 3 && < 5
     , containers
     , parsec
     , regex-compat
-  hs-source-dirs: src
   other-modules:
     EpubTools.EpubName.Doc.Dsl
     EpubTools.EpubName.Doc.Rules
@@ -99,14 +97,14 @@ test-suite epubname-tests
   import: lang
   import: rts
   type: exitcode-stdio-1.0
-  main-is: EpubTools/test-epubname.hs
+  hs-source-dirs: src/app src/tests
+  main-is: test-epubname.hs
   build-depends:
       base >= 3 && < 5
     , containers
     , HUnit
     , parsec
     , regex-compat
-  hs-source-dirs: src testsuite
   other-modules:
     EpubTools.EpubName.Doc.Rules
     EpubTools.EpubName.Format.Author
@@ -123,13 +121,13 @@ test-suite epubname-tests
 
 executable epubzip
   import: lang
-  main-is: EpubTools/epubzip.hs
+  hs-source-dirs: src/app
+  main-is: epubzip.hs
   build-depends:
       base >= 3 && < 5
     , containers
     , parsec
     , regex-compat
-  hs-source-dirs: src
   other-modules:
     EpubTools.EpubName.Doc.Rules
     EpubTools.EpubName.Format.Author
