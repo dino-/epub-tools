@@ -23,10 +23,9 @@ import EpubTools.EpubName.Util
 
 
 data PubYear
-   = Publication  -- Default
-      -- epub3: use first date of any kind
-      -- epub2: use date 'original-publication' or event='publication'
-   | AnyDate      -- Failing above, use any date found
+   = AnyDate      -- Default
+      -- Use any date found in this order: Issued, Created, Epub (date element), Modified
+   | NoModified   -- Don't use Modified date: Issued, Created, Epub (date element)
    | NoDate       -- Don't do publication date at all
 
 
@@ -74,18 +73,18 @@ defaultOptions = do
       , optRulesPaths      = maybeToList urp
       , optTargetDir       = "."
       , optVerbose         = Nothing
-      , optPubYear         = Publication
+      , optPubYear         = AnyDate
       }
 
 
 options :: [OptDescr (Options -> Options)]
 options =
-   [ Option ['d'] ["any-date"]
-      (NoArg (\opts -> opts { optPubYear = AnyDate } )) 
-      "If no publication year found, use first date element of any kind"
+   [ Option ['M'] ["no-modified-date"]
+      (NoArg (\opts -> opts { optPubYear = NoModified } ))
+      "Don't use modified date for publication year"
    , Option ['D'] ["no-date"]
       (NoArg (\opts -> opts { optPubYear = NoDate } )) 
-      "Suppress inclusion of original publication year"
+      "Suppress inclusion of any publication year"
    , Option [] ["dump-rules"] 
       (NoArg (\opts -> opts { optDumpRules = True } ))
       "Output built-in rules definitions, use to make your own"
@@ -181,16 +180,19 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "This software will attempt to locate a publication date to use at the end of the filename. This can be suppressed with the --no-date switch. How the date is found depends on the document epub version:"
          , ""
-         , "epub2: metadata/date elements like the examples below will be looked for in this order:"
-         , "  <dc:date opf:event='original-publication'>2013-09-17</dc:date>"
-         , "  <dc:date opf:event='publication'>2013-09-17T12:00:00Z</dc:date>"
+         , "epub2: These date values are looked for in this order"
+         , "  issued    <dc:date opf:event='original-publication'>2013-09-17</dc:date>"
+         , "  created   <dc:date opf:event='publication'>2013-09-17T12:00:00Z</dc:date>"
+         , "  epub      <dc:date>2013-09-17</dc:date>"
+         , "  modified  <meta property='dcterms:modified'>2013-09-17</meta>"
          , ""
-         , "The --any-date switch will force the use of the first date found in epub2 documents."
+         , "epub3: These date values are looked for in this order"
+         , "  issued    <meta property='dcterms:issued'>2013-09-17</meta>"
+         , "  created   <meta property='dcterms:created'>2013-09-17T12:00:00Z</created>"
+         , "  epub      <dc:date>2013-09-17T12:00:00Z</dc:date>"
+         , "  modified  <meta property='dcterms:modified'>2013-09-17</meta>"
          , ""
-         , "epub3: the single allowed (but optional) metadata/date element will be used and would look like this:"
-         , "    <dc:date>2013-09-17T12:00:00Z</dc:date>"
-         , ""
-         , "My understanding is it doesn't have to be a complete date string, this software will fish the year out of whatever it can find."
+         , "This software will fish the year out of whatever string it can find. Use the examples above as a guide for adding/editing these values yourself."
          , ""
          , "PUBLISHER:"
          , ""
@@ -218,7 +220,7 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , ""
          , "For more information on the epub format:"
          , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
-         , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
+         , "   epub3: https://www.w3.org/TR/epub/"
          , ""
          , ""
          , "Version " ++ (showVersion version) ++ "  Dino Morelli <dino@ui3.info>"

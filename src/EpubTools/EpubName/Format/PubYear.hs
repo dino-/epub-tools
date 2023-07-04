@@ -7,10 +7,12 @@ module EpubTools.EpubName.Format.PubYear
    )
    where
 
-import Codec.Epub.Data.Metadata
-import Codec.Epub.Data.Package
-import Control.Monad
-import Text.Regex
+import Codec.Epub.Data.Metadata ( Date (..), DateEvent (Created, Epub,
+  Issued, Modified), Metadata (metaDates) )
+import Control.Monad ( (<=<) )
+import qualified Data.Map.Strict as Map
+import Data.Monoid ( First (..), getFirst )
+import Text.Regex ( matchRegex, mkRegex )
 
 import EpubTools.EpubName.Opts
 import EpubTools.EpubName.Format.Util
@@ -20,42 +22,18 @@ import EpubTools.EpubName.Format.Util
 -}
 getPubYear :: EN String
 getPubYear = do
-   yearHandling <- asks $ optPubYear . gOpts
-   md <- asks gMetadata
-   version <- asks $ pkgVersion . gPackage
-
-   case (version, yearHandling) of
-      ('3' : _ , Publication) -> getPubYear' md $ [getFirstDate]
-      ('3' : _ , AnyDate    ) -> getPubYear' md $ [getFirstDate]
-      ('2' : _ , Publication) -> getPubYear' md pubAttrs
-      ('2' : _ , AnyDate    ) -> getPubYear' md $
-         pubAttrs ++ [getFirstDate]
-      (_       , _          ) -> return ""
-
-   where
-      getPubYear' md = return . maybe "" ('_' :) . foldr mplus Nothing .
-         map (\f -> f (metaDates md))
-
-      pubAttrs =
-         [ getDateWithAttr "original-publication"
-         , getDateWithAttr "publication"
-         ]
+  yearHandling <- asks $ optPubYear . gOpts
+  let events = case yearHandling of
+        AnyDate -> [Issued, Created, Epub, Modified]
+        NoModified -> [Issued, Created, Epub]
+        NoDate -> []
+  datesMap <- asks (metaDates . gMetadata)
+  let fs = map (flip Map.lookup $ datesMap) events
+  pure . maybe "" ('_' :) . (extractYear <=< getFirst) . mconcat . map First $ fs
 
 
-getDateWithAttr :: String -> [Date] -> Maybe String
-getDateWithAttr attrVal mds = foldr mplus Nothing $ map getPublication' mds
-   where
-      getPublication' (Date (Just av) d)
-         | av == attrVal = extractYear d
-      getPublication' _  = Nothing
-
-
-getFirstDate :: [Date] -> Maybe String
-getFirstDate ((Date _ d) : _) = extractYear d
-getFirstDate _                = Nothing
-
-
-extractYear :: String -> Maybe String
-extractYear s = case matchRegex (mkRegex "(^| )([0-9]{4})") s of
-   Just (_ : y : []) -> Just y
-   _                 -> Nothing
+extractYear :: Date -> Maybe String
+extractYear (Date dateString) =
+  case matchRegex (mkRegex "(^| )([0-9]{4})") dateString of
+    Just (_ : y : []) -> Just y
+    _                 -> Nothing

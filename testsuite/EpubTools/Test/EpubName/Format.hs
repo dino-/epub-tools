@@ -9,6 +9,7 @@ module EpubTools.Test.EpubName.Format
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
 import Control.Monad.Except
+import qualified Data.Map.Strict as Map
 import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
@@ -17,14 +18,9 @@ import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Opts
 
 
-pkg2, pkg3 :: Package
-pkg2 = Package "2.01" ""
-pkg3 = Package "3.0" ""
-
-
 formatTests :: Options -> [Formatter] -> Test
 formatTests opts fs = TestLabel "Format" $ TestList $
-   map (\f -> f ((Globals opts pkg2 emptyMetadata), fs))
+   map (\f -> f ((Globals opts (Package "3.3" "") emptyMetadata), fs))
       [ testAuthorMinimal
       , testAuthorOneName
       , testAuthorRole
@@ -48,12 +44,13 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testTitleRomanNum
       , testAllPunctuation
       , testPubYearNoDatesPresent
-      , testPubYearEpub3
-      , testPubYearEpub3Unwanted
-      , testPubYearEpub2
-      , testPubYearEpub2Any
-      , testPubYearEpub2Orig
-      , testPubYearEpub2Unwanted
+      , testPubYearAnyIssued
+      , testPubYearAnyCreated
+      , testPubYearAnyEpub
+      , testPubYearAnyModified
+      , testPubYearAnyAllPresent
+      , testPubYearNoModified
+      , testPubYearNoDate
       , testMagAeon
       , testMagAEon
       , testMagApexPound
@@ -341,8 +338,7 @@ testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
             ]
          , metaTitles = [Title Nothing Nothing Nothing
             "Some Collection of Fine Stories, Volume 1"]
-         , metaDates = [Date (Just "publication")
-            "2008"]
+         , metaDates = Map.fromList [(Created, Date "2008")]
          }
       expected =
          ( "ordinary_book"
@@ -523,90 +519,83 @@ testPubYearNoDatesPresent (gs, fs) = TestCase $
          )
 
 
-testPubYearEpub3 :: (Globals, [Formatter]) -> Test
-testPubYearEpub3 (gs, fs) = TestCase $
-   assertNewName gs { gPackage = pkg3, gMetadata = meta} fs
-      "book with epub3 style (simple) date" expected
-   where
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
-         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [ Date Nothing "2003" ]
-         }
-      expected =
-         ( "ordinary_book"
-         , "JonesJim-ATimelessStory_2003.epub"
-         )
-
-
-testPubYearEpub3Unwanted :: (Globals, [Formatter]) -> Test
-testPubYearEpub3Unwanted (gs, fs) = TestCase $
-   assertNewName gs { gOpts = testOpts, gPackage = pkg3,
-      gMetadata = meta } fs
-      "epub3 book with a publication year but we don't want"
-      expected
-   where
-      testOpts = (gOpts gs) { optPubYear = NoDate }
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
-         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates =
-            [ Date Nothing "2001"
-            , Date (Just "some date") "2000"
-            ]
-         }
-      expected =
-         ( "ordinary_book"
-         , "JonesJim-ATimelessStory.epub"
-         )
-
-
-testPubYearEpub2 :: (Globals, [Formatter]) -> Test
-testPubYearEpub2 (gs, fs) = TestCase $
-   assertNewName gs { gMetadata = meta} fs
-      "book with epub2 style (simple) date" expected
-   where
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
-         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [ Date Nothing "2003" ]
-         }
-      expected =
-         ( "ordinary_book"
-         , "JonesJim-ATimelessStory.epub"
-         )
-
-
-testPubYearEpub2Any :: (Globals, [Formatter]) -> Test
-testPubYearEpub2Any (gs, fs) = TestCase $
-   assertNewName gs { gOpts = testOpts, gMetadata = meta} fs
-      "book with epub2 style (simple) date, any switch" expected
-   where
-      testOpts = (gOpts gs) { optPubYear = AnyDate }
-      meta = emptyMetadata
-         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
-         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = [ Date Nothing "2003" ]
-         }
-      expected =
-         ( "ordinary_book"
-         , "JonesJim-ATimelessStory_2003.epub"
-         )
-
-
-testPubYearEpub2Orig :: (Globals, [Formatter]) -> Test
-testPubYearEpub2Orig (gs, fs) = TestCase $
+testPubYearAnyIssued :: (Globals, [Formatter]) -> Test
+testPubYearAnyIssued (gs, fs) = TestCase $
    assertNewName gs { gMetadata = meta } fs
-      "book with epub2 style dates, orig attr" expected
+      "book with only issued date" expected
    where
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates =
-            [ Date Nothing "2001"
-            , Date (Just "publication") "2003"
-            , Date (Just "some date") "2000"
-            , Date (Just "original-publication") "2002"
+         , metaDates = Map.fromList [(Issued, Date "2003")]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAnyCreated :: (Globals, [Formatter]) -> Test
+testPubYearAnyCreated (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with only created date" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList [(Created, Date "2003")]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAnyEpub :: (Globals, [Formatter]) -> Test
+testPubYearAnyEpub (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with only the simple (date element) date" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList [(Epub, Date "2003")]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAnyModified :: (Globals, [Formatter]) -> Test
+testPubYearAnyModified (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with only modified date" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList [(Modified, Date "2003")]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAnyAllPresent :: (Globals, [Formatter]) -> Test
+testPubYearAnyAllPresent (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with all dates" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList
+            [ (Epub, Date "2001")
+            , (Modified, Date "2004")
+            , (Created, Date "2003")
+            , (Issued, Date "2002")
             ]
          }
       expected =
@@ -615,21 +604,38 @@ testPubYearEpub2Orig (gs, fs) = TestCase $
          )
 
 
-testPubYearEpub2Unwanted :: (Globals, [Formatter]) -> Test
-testPubYearEpub2Unwanted (gs, fs) = TestCase $
+testPubYearNoModified :: (Globals, [Formatter]) -> Test
+testPubYearNoModified (gs, fs) = TestCase $
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
-      "epub2 book with a publication year but we don't want"
+      "book with only modified date, --no-modified-date switch" expected
+   where
+      testOpts = (gOpts gs) { optPubYear = NoModified }
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList [ (Modified, Date "2004") ]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory.epub"
+         )
+
+
+testPubYearNoDate :: (Globals, [Formatter]) -> Test
+testPubYearNoDate (gs, fs) = TestCase $
+   assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
+      "epub book with lots of dates but we don't want"
       expected
    where
       testOpts = (gOpts gs) { optPubYear = NoDate }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates =
-            [ Date Nothing "2001"
-            , Date (Just "publication") "2003"
-            , Date (Just "some date") "2000"
-            , Date (Just "original-publication") "2002"
+         , metaDates = Map.fromList
+            [ (Epub, Date "2001")
+            , (Modified, Date "2004")
+            , (Created, Date "2003")
+            , (Issued, Date "2002")
             ]
          }
       expected =
@@ -1543,7 +1549,7 @@ testMagSubjWithIssue (gs, fs) = TestCase $
             , Creator (Just "aut") Nothing Nothing
                "Rachel Swirsky"
             ]
-         , metaDates = [Date (Just "publication") "2013-10-01"]
+         , metaDates = Map.fromList [(Created, Date "2013-10-01")]
          , metaSubjects =
             [ "magazine"
             , "horror"
@@ -1588,7 +1594,7 @@ testAnthologyDate (gs, fs) = TestCase $
             , Creator (Just "aut") (Just "Pearlman, Laura") Nothing
                "Laura Pearlman"
             ]
-         , metaDates = [ Date Nothing "2015-05-30T18:47:28.000000+00:00" ]
+         , metaDates = Map.fromList [(Epub, Date "2015-05-30T18:47:28.000000+00:00")]
          , metaSubjects = ["anthology"]
          }
       expected =
@@ -1609,7 +1615,7 @@ testAnthology (gs, fs) = TestCase $
             , Creator (Just "aut") (Just "Baxter, Joanne") Nothing
                "Joanne Baxter"
             ]
-         , metaDates = [Date (Just "publication") "2010-11-01"]
+         , metaDates = Map.fromList [(Created, Date "2010-11-01")]
          , metaSubjects = ["fantasy and horror anthology"]
          }
       expected =

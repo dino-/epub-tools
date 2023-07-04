@@ -8,6 +8,7 @@ module EpubTools.Test.EpubName.PubYear
 
 import Test.HUnit ( Test (..), assertEqual )
 
+import Codec.Epub.Data.Metadata ( Date (..) )
 import EpubTools.EpubName.Format.PubYear
 
 
@@ -27,5 +28,5 @@ pubYearTests = TestLabel "PubYear" $ TestList
 
 
 testExtractYear :: String -> String -> Test
-testExtractYear src expected = TestCase $
-   assertEqual src (extractYear src) (Just expected)
+testExtractYear dateStr expected = TestCase $
+   assertEqual dateStr (extractYear . Date $ dateStr) (Just expected)
