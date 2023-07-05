@@ -1,3 +1,7 @@
 resolver: lts-20.12
 packages:
 - .
+
+extra-deps:
+- git: https://github.com/dino-/epub-metadata.git
+  commit: fe8c268c081a9c0cc4de89ead9cd6b9bda99908f
