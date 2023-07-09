@@ -9,6 +9,7 @@
   * Reorganized source code
   * Fixed a bug in epub opf editing
   * Supporting another EPUB3 date event type
+  * Fixed an sdist problem with missing autogen-modules
 
 
 2.11 (2018-01-16)

@@ -44,6 +44,8 @@ common lang
     -Wincomplete-record-updates
     -Wincomplete-uni-patterns
     -Wredundant-constraints
+  autogen-modules:
+    Paths_epub_tools
 
 common rts
   ghc-options:
