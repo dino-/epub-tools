@@ -189,6 +189,7 @@ usageText = return $ (usageInfo header options) ++ "\n" ++ footer
          , "epub3: These date values are looked for in this order"
          , "  issued    <meta property='dcterms:issued'>2013-09-17</meta>"
          , "  created   <meta property='dcterms:created'>2013-09-17T12:00:00Z</created>"
+         , "  date      <meta property='dcterms:date'>2013-09-18</meta>"
          , "  epub      <dc:date>2013-09-17T12:00:00Z</dc:date>"
          , "  modified  <meta property='dcterms:modified'>2013-09-17</meta>"
          , ""

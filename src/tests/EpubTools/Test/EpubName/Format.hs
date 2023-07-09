@@ -46,6 +46,7 @@ formatTests opts fs = TestLabel "Format" $ TestList $
       , testPubYearNoDatesPresent
       , testPubYearAnyIssued
       , testPubYearAnyCreated
+      , testPubYearAnyDate
       , testPubYearAnyEpub
       , testPubYearAnyModified
       , testPubYearAnyAllPresent
@@ -338,7 +339,7 @@ testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
             ]
          , metaTitles = [Title Nothing Nothing Nothing
             "Some Collection of Fine Stories, Volume 1"]
-         , metaDates = Map.fromList [(Created, Date "2008")]
+         , metaDates = Map.fromList [(Created, DateValue "2008")]
          }
       expected =
          ( "ordinary_book"
@@ -527,7 +528,7 @@ testPubYearAnyIssued (gs, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = Map.fromList [(Issued, Date "2003")]
+         , metaDates = Map.fromList [(Issued, DateValue "2003")]
          }
       expected =
          ( "ordinary_book"
@@ -543,7 +544,23 @@ testPubYearAnyCreated (gs, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = Map.fromList [(Created, Date "2003")]
+         , metaDates = Map.fromList [(Created, DateValue "2003")]
+         }
+      expected =
+         ( "ordinary_book"
+         , "JonesJim-ATimelessStory_2003.epub"
+         )
+
+
+testPubYearAnyDate :: (Globals, [Formatter]) -> Test
+testPubYearAnyDate (gs, fs) = TestCase $
+   assertNewName gs { gMetadata = meta } fs
+      "book with only created date" expected
+   where
+      meta = emptyMetadata
+         { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
+         , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
+         , metaDates = Map.fromList [(Date, DateValue "2003")]
          }
       expected =
          ( "ordinary_book"
@@ -559,7 +576,7 @@ testPubYearAnyEpub (gs, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = Map.fromList [(Epub, Date "2003")]
+         , metaDates = Map.fromList [(Epub, DateValue "2003")]
          }
       expected =
          ( "ordinary_book"
@@ -575,7 +592,7 @@ testPubYearAnyModified (gs, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = Map.fromList [(Modified, Date "2003")]
+         , metaDates = Map.fromList [(Modified, DateValue "2003")]
          }
       expected =
          ( "ordinary_book"
@@ -592,10 +609,11 @@ testPubYearAnyAllPresent (gs, fs) = TestCase $
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
          , metaDates = Map.fromList
-            [ (Epub, Date "2001")
-            , (Modified, Date "2004")
-            , (Created, Date "2003")
-            , (Issued, Date "2002")
+            [ (Epub, DateValue "2001")
+            , (Date, DateValue "2005")
+            , (Modified, DateValue "2004")
+            , (Created, DateValue "2003")
+            , (Issued, DateValue "2002")
             ]
          }
       expected =
@@ -613,7 +631,7 @@ testPubYearNoModified (gs, fs) = TestCase $
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
-         , metaDates = Map.fromList [ (Modified, Date "2004") ]
+         , metaDates = Map.fromList [ (Modified, DateValue "2004") ]
          }
       expected =
          ( "ordinary_book"
@@ -632,10 +650,11 @@ testPubYearNoDate (gs, fs) = TestCase $
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
          , metaDates = Map.fromList
-            [ (Epub, Date "2001")
-            , (Modified, Date "2004")
-            , (Created, Date "2003")
-            , (Issued, Date "2002")
+            [ (Epub, DateValue "2001")
+            , (Date, DateValue "2005")
+            , (Modified, DateValue "2004")
+            , (Created, DateValue "2003")
+            , (Issued, DateValue "2002")
             ]
          }
       expected =
@@ -1549,7 +1568,7 @@ testMagSubjWithIssue (gs, fs) = TestCase $
             , Creator (Just "aut") Nothing Nothing
                "Rachel Swirsky"
             ]
-         , metaDates = Map.fromList [(Created, Date "2013-10-01")]
+         , metaDates = Map.fromList [(Created, DateValue "2013-10-01")]
          , metaSubjects =
             [ "magazine"
             , "horror"
@@ -1594,7 +1613,7 @@ testAnthologyDate (gs, fs) = TestCase $
             , Creator (Just "aut") (Just "Pearlman, Laura") Nothing
                "Laura Pearlman"
             ]
-         , metaDates = Map.fromList [(Epub, Date "2015-05-30T18:47:28.000000+00:00")]
+         , metaDates = Map.fromList [(Epub, DateValue "2015-05-30T18:47:28.000000+00:00")]
          , metaSubjects = ["anthology"]
          }
       expected =
@@ -1615,7 +1634,7 @@ testAnthology (gs, fs) = TestCase $
             , Creator (Just "aut") (Just "Baxter, Joanne") Nothing
                "Joanne Baxter"
             ]
-         , metaDates = Map.fromList [(Created, Date "2010-11-01")]
+         , metaDates = Map.fromList [(Created, DateValue "2010-11-01")]
          , metaSubjects = ["fantasy and horror anthology"]
          }
       expected =
