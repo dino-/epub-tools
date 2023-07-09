@@ -5,10 +5,12 @@ module EpubTools.EpubMeta.Import
    ( importOpf )
    where
 
-import Codec.Archive.Zip ( Entry (..), addEntryToArchive, readEntry, toArchive )
+import Codec.Archive.Zip ( Entry (..), addEntryToArchive, findEntryByPath
+  , readEntry, toArchive )
 import Codec.Epub.IO ( getPkgPathXmlFromBS, writeArchive )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
+import Data.List ( foldl' )
 import Data.Maybe ( fromJust )
 import System.Directory ( removeFile )
 
@@ -18,27 +20,36 @@ import EpubTools.EpubMeta.Util
 
 importOpf :: Options -> FilePath -> EM ()
 importOpf opts zipPath = do
-   -- The file we want to insert into the book
-   let pathToNewOpf = fromJust . optImport $ opts
+  -- The modified file we want to insert into the book
+  let pathToNewOpf = fromJust . optImport $ opts
 
-   -- Make new file into a Zip Entry
-   tempEntry <- liftIO $ readEntry [] pathToNewOpf
+  -- Make new file into a Zip Entry
+  tempEntry <- liftIO $ readEntry [] pathToNewOpf
 
-   -- The path in the book where new file must go
-   strictBytes <- liftIO $ BS.readFile zipPath
-   (pathToOldFile, _) <- getPkgPathXmlFromBS strictBytes
+  -- Read the zip archive in, we'll need it in several steps
+  strictBytes <- liftIO $ BS.readFile zipPath
 
-   -- Adjust the entry's path
-   let newEntry = tempEntry { eRelativePath = pathToOldFile }
+  -- The path in the book where new file must go
+  (pathToOldFile, _) <- getPkgPathXmlFromBS strictBytes
 
-   -- Bytes of existing archive already loaded, make an Archive from that
-   let oldArchive = toArchive . BL.fromChunks $ [strictBytes]
+  -- Adjust the entry's path
+  let newOpfEntry = tempEntry { eRelativePath = pathToOldFile }
 
-   -- Add new entry to it (replacing old one)
-   let newArchive = addEntryToArchive newEntry oldArchive
+  -- Bytes of existing archive already loaded, make an Archive from that
+  let oldArchive = toArchive . BL.fromChunks $ [strictBytes]
 
-   -- We're ready to write the new file, delete the old one
-   liftIO $ removeFile zipPath
+  -- Make an entry from the existing mimetype file
+  mimeEntry <- maybe
+    (throwError "Something went wrong: This epub has no mimetype, which shouldn't be possible. Original file unchanged.")
+    return $ findEntryByPath "mimetype" oldArchive
 
-   -- Write the new archive out
-   liftIO $ writeArchive zipPath newArchive
+  -- Add the two entries back to the archive in this order to preserve the
+  -- mimetype as the first one
+  let newArchive = foldl' (flip id) oldArchive
+        [addEntryToArchive newOpfEntry, addEntryToArchive mimeEntry]
+
+  -- We're ready to write the new zip archive, delete the old one
+  liftIO $ removeFile zipPath
+
+  -- Write the new archive out
+  liftIO $ writeArchive zipPath newArchive
