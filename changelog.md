@@ -1,3 +1,16 @@
+3.0 (2023-07-09)
+
+  * Fixed link to Windows binary dist
+  * Moved stackage resolver up to lts-20.12
+  * Upgraded cabal file to v2.2
+  * Updated .gitignore
+  * Extensive updates to publication date handling
+  * Fixed copyright date issues
+  * Reorganized source code
+  * Fixed a bug in epub opf editing
+  * Supporting another EPUB3 date event type
+
+
 2.11 (2018-01-16)
 
   * Switched license from BSD3 to ISC
