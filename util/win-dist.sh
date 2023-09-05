@@ -1,12 +1,14 @@
-#! /bin/bash
+#! /usr/bin/env bash
 
-version=$(awk '/^[Vv]ersion/ { print $2 }' epub-tools.cabal)
+projectName="epub-tools"
+version=$(awk '/^[Vv]ersion/ { print $2 }' "${projectName}.cabal")
 
-buildDir="dist"
+buildDir="win-dist"
 
-./util/install.hs -p $buildDir -t bundle
+PREFIX="$buildDir" ./util/install.sh
+install -Dm0644 doc/INSTALL "${buildDir}/usr/share/doc/${projectName}/INSTALL"
 
-zipFile="epub-tools-$version-win.zip"
+zipFile="${projectName}-${version}-win.zip"
 
 rm $zipFile
 
