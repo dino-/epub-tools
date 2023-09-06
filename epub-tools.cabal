@@ -21,6 +21,7 @@ extra-source-files:
   doc/INSTALL
   README.md
   stack.yaml
+  stack.yaml.lock
   TODO.md
   util/all-books.hs
   util/install.sh
