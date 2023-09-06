@@ -1,3 +1,9 @@
+3.1 (2023-09-05)
+
+  * Adjustments to deployment tooling and layout
+  * Replaced license file with a better-formatted version
+
+
 3.0 (2023-07-09)
 
   * Fixed link to Windows binary dist
