@@ -72,7 +72,7 @@ epubzip is a handy utility for zipping up the files that comprise an epub into a
 Binaries
 
 - epub-tools is available for Arch Linux [from the AUR](http://aur.archlinux.org/packages/epub-tools/)
-- Download binary distributions for generic Linux, OSX and Windows [from this directory](https://github.com/dino-/epub-tools/releases/download/3.1)
+- Download binary distributions for generic Linux, OSX and Windows [from this directory](https://github.com/dino-/epub-tools/releases/download/3.2)
 
 
 Getting source for development
