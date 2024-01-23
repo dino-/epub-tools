@@ -4,4 +4,4 @@ packages:
 - .
 
 extra-deps:
-- epub-metadata-5.1
+- epub-metadata-5.3

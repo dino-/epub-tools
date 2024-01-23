@@ -5,12 +5,12 @@
 
 packages:
 - completed:
-    hackage: epub-metadata-5.1@sha256:c04142a99c9c437bcef9b4ac7ad681bdbddd0a555583a68ef2cbf83bd49babe1,3460
+    hackage: epub-metadata-5.3@sha256:32599ce748a1e3ad626ff0e293b66fbaf51afc672d9afe6e3b3b38ed7ec06697,3460
     pantry-tree:
-      sha256: 299c53341b5fd1e81d096bd9c9574a51b616224c43bd4d47d711afb92758c1c1
-      size: 3659
+      sha256: a6a4a8a3925578ee833bf2035ca98878c66c7e7bd824571ce98d154828b32de8
+      size: 3660
   original:
-    hackage: epub-metadata-5.1
+    hackage: epub-metadata-5.3
 snapshots:
 - completed:
     sha256: af5d667f6096e535b9c725a72cffe0f6c060e0568d9f9eeda04caee70d0d9d2d
