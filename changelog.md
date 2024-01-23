@@ -1,3 +1,9 @@
+3.2 (2024-01-22)
+
+  * Updated to build against recent changes and bug fixes in
+    epub-metadata 5.3
+
+
 3.1 (2023-09-05)
 
   * Adjustments to deployment tooling and layout
