@@ -79,7 +79,10 @@ executable epubname
   main-is: epubname.hs
   build-depends:
       base >= 3 && < 5
+    , ansi-wl-pprint
     , containers
+    , heredoc
+    , optparse-applicative
     , parsec
     , regex-compat
   other-modules:
@@ -128,7 +131,10 @@ executable epubzip
   main-is: epubzip.hs
   build-depends:
       base >= 3 && < 5
+    , ansi-wl-pprint
     , containers
+    , heredoc
+    , optparse-applicative
     , parsec
     , regex-compat
   other-modules:

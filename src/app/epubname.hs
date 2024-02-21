@@ -27,7 +27,7 @@ import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
-import EpubTools.EpubName.Opts ( Options (..), parseOpts, usageText )
+import EpubTools.EpubName.Opts ( Options (..), parseOpts )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
 
@@ -124,7 +124,8 @@ main = do
 
    either exitWith exitWith =<< (runExceptT $ do
       -- Parse command-line arguments
-      (opts, paths) <- (liftIO getArgs) >>= parseOpts
+      -- (opts, paths) <- liftIO parseOpts
+      opts <- liftIO parseOpts
 
       -- User asked for rules help, this is a special termination case
       when (optHelpRules opts) $ do
@@ -137,10 +138,11 @@ main = do
          liftIO $ putStr Rules.defaults
          throwError ExitSuccess
 
-      -- User asked for help, this is a special termination case
-      when ((optHelp opts) || (null paths)) $ do
-         liftIO $ usageText >>= putStrLn
-         throwError ExitSuccess
+      -- FIXME Should we even be doing this here?
+      -- -- User asked for help, this is a special termination case
+      -- when ((optHelp opts) || (null paths)) $ do
+      --    liftIO $ usageText >>= putStrLn
+      --    throwError ExitSuccess
 
       let targetDir = optTargetDir opts
       targetDirExists <- liftIO $ doesDirectoryExist targetDir
@@ -157,7 +159,8 @@ main = do
          $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
-      code <- liftIO $ processBook opts fs paths True True
+      -- code <- liftIO $ processBook opts fs paths True True
+      code <- liftIO $ processBook opts fs (optFiles opts) True True
       case code of
          True  -> return ExitSuccess
          False -> throwError exitProcessingFailure
