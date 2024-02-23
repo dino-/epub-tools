@@ -161,7 +161,6 @@ versionHelper progName =
   infoOption (printf "%s %s" progName (showVersion version)) $ mconcat
   [ long "version"
   , help "Show version information"
-  , hidden
   ]
 
 
