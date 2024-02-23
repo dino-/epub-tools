@@ -16,15 +16,11 @@ import Data.Maybe
 import Data.Version ( showVersion )
 import Options.Applicative
 import Paths_epub_tools ( version )
--- import System.Console.GetOpt
 import System.Environment
-import System.Exit
 import System.FilePath
 import Text.Heredoc (here)
 import Text.PrettyPrint.ANSI.Leijen (string)
 import Text.Printf (printf)
-
-import EpubTools.EpubName.Util
 
 
 data PubYear
@@ -33,6 +29,7 @@ data PubYear
    | NoModified   -- Don't use Modified date: Issued, Created, Epub (date element)
    | NoDate       -- Don't do publication date at all
 
+tfToPubYear :: Bool -> PubYear
 tfToPubYear True = AnyDate
 tfToPubYear False = NoDate
 
@@ -77,16 +74,16 @@ defaultOptions = do
   urp <- userRulesPath
 
   return Options
-    { optDumpRules    = False
-    , optHelpRules    = False
+    { optPubYear      = AnyDate
     , optInteractive  = False
     , optNoAction     = False
     , optPublisher    = False
     , optRulesPaths   = maybeToList urp
     , optTargetDir    = "."
     , optVerbose      = Nothing
-    , optPubYear      = AnyDate
     , optFiles        = []
+    , optDumpRules    = False
+    , optHelpRules    = False
     }
 
 
