@@ -28,10 +28,7 @@ data PubYear
       -- Use any date found in this order: Issued, Created, Epub (date element), Modified
    | NoModified   -- Don't use Modified date: Issued, Created, Epub (date element)
    | NoDate       -- Don't do publication date at all
-
-tfToPubYear :: Bool -> PubYear
-tfToPubYear True = AnyDate
-tfToPubYear False = NoDate
+  deriving Show  -- FIXME
 
 
 data Options = Options
@@ -42,10 +39,11 @@ data Options = Options
   , optRulesPaths   :: [FilePath]
   , optTargetDir    :: FilePath
   , optVerbose      :: Maybe Int
-  , optFiles        :: [FilePath]
   , optDumpRules    :: Bool
   , optHelpRules    :: Bool
+  , optFiles        :: [FilePath]
   }
+  deriving Show  -- FIXME
 
 
 intToVerbosity :: Int -> Maybe Int
@@ -81,18 +79,26 @@ defaultOptions = do
     , optRulesPaths   = maybeToList urp
     , optTargetDir    = "."
     , optVerbose      = Nothing
-    , optFiles        = []
     , optDumpRules    = False
     , optHelpRules    = False
+    , optFiles        = []
     }
 
 
 parser :: Parser Options
 parser = Options
-  <$> ( tfToPubYear <$> switch
-        (  long "no-date"
-        <> short 'D'
-        <> help "Suppress inclusion of any publication year"
+  <$> ( ( (\b -> if b then NoModified else AnyDate) <$> switch
+          (  long "no-modified-date"
+          <> short 'M'
+          <> help "Don't use modified date for publication year"
+          )
+        )
+        <|>
+        ( (\b -> if b then NoDate else AnyDate) <$> switch
+          (  long "no-date"
+          <> short 'D'
+          <> help "Suppress inclusion of any publication year"
+          )
         )
       )
   <*> ( switch
@@ -124,7 +130,9 @@ parser = Options
         (  long "target-dir"
         <> short 't'
         <> metavar "DIR"
-        <> help "Target directory for successfully renamed books. Default: ."
+        <> help "Target directory for successfully renamed books"
+        <> showDefault
+        <> value "."
         )
       )
   <*> ( intToVerbosity <$> option auto
@@ -136,11 +144,6 @@ parser = Options
         <> value 0
         )
       )
-  <*> ( (: []) <$> strArgument
-        (  metavar "FILES"
-        <> help "One or more files to rename/move"
-        )
-      )
   <*> ( switch
         (  long "dump-rules"
         <> help "Output built-in rules definitions, use to make your own"
@@ -149,6 +152,11 @@ parser = Options
   <*> ( switch
         (  long "help-rules"
         <> help "Help on the naming rules domain specific language"
+        )
+      )
+  <*> ( (: []) <$> strArgument  -- FIXME
+        (  metavar "FILES"
+        <> help "One or more files to rename/move"
         )
       )
 
