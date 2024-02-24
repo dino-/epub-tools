@@ -5,11 +5,11 @@
 {-# LANGUAGE OverloadedStrings, QuasiQuotes #-}
 
 module EpubTools.EpubName.Opts
-   ( PubYear (..), Options (..)
-   , defaultOptions
-   , parseOpts
-   )
-   where
+  ( Options (..), PubYear (..)
+  , defaultOptions
+  , parseOpts
+  )
+  where
 
 import Control.Monad.Except
 import Data.Maybe
