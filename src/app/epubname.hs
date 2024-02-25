@@ -124,8 +124,6 @@ main = do
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr, stdin ]
 
    either exitWith exitWith =<< (runExceptT $ do
-      -- Parse command-line arguments
-      -- (opts, paths) <- liftIO parseOpts
       opts <- liftIO parseOpts
       liftIO $ print opts
       void $ throwError ExitSuccess
@@ -141,16 +139,10 @@ main = do
          liftIO $ putStr Rules.defaults
          throwError ExitSuccess
 
-      -- FIXME Should we even be doing this here?
-      -- -- User asked for help, this is a special termination case
-      -- when ((optHelp opts) || (null paths)) $ do
-      --    liftIO $ usageText >>= putStrLn
-      --    throwError ExitSuccess
-
       let targetDir = optTargetDir opts
       targetDirExists <- liftIO $ doesDirectoryExist targetDir
       unless targetDirExists $ do
-         _ <- liftIO $ printf
+         void . liftIO $ printf
             "ERROR: Target directory doesn't exist: %s\n" targetDir
          throwError exitInitFailure
 
