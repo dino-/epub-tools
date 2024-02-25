@@ -49,7 +49,7 @@ data Options = Options
   , optVerbose      :: Maybe Int
   , optDumpRules    :: Bool
   , optHelpRules    :: Bool
-  , optFiles        :: [FilePath]
+  , optFiles        :: NonEmpty FilePath
   }
   deriving Show  -- FIXME
 
@@ -83,7 +83,7 @@ defaultOptions = Options
   , optVerbose      = Nothing
   , optDumpRules    = False
   , optHelpRules    = False
-  , optFiles        = []
+  , optFiles        = singleton "dummy-filename"
   }
 
 
@@ -162,11 +162,11 @@ parser = Options
         <> help "Help on the naming rules domain specific language"
         )
       )
-  <*> ( (: []) <$> strArgument  -- FIXME
+  <*> ( fromList <$> (some $ strArgument
         (  metavar "FILES"
         <> help "One or more files to rename/move"
         )
-      )
+      ))
 
 
 versionHelper :: String -> Parser (a -> a)

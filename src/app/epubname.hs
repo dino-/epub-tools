@@ -13,6 +13,7 @@ import Codec.Epub.Data.Package
 import Control.Applicative
 import Control.Monad
 import Control.Monad.Except
+import Data.List.NonEmpty (toList)
 import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
 import System.Environment ( getArgs )
 import System.FilePath
@@ -161,8 +162,7 @@ main = do
          $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
-      -- code <- liftIO $ processBook opts fs paths True True
-      code <- liftIO $ processBook opts fs (optFiles opts) True True
+      code <- liftIO $ processBook opts fs (toList . optFiles $ opts) True True
       case code of
          True  -> return ExitSuccess
          False -> throwError exitProcessingFailure
