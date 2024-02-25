@@ -7,6 +7,7 @@ module EpubTools.EpubName.Opts
   ( BookFiles (..), DumpRulesSwitch (..), HelpRulesSwitch (..)
   , InteractiveSwitch (..), NoActionSwitch (..), Options (..)
   , PublisherSwitch (..), PubYear (..), RulesLocation (..), RulesLocations (..)
+  , VerbosityLevel (..)
   , defaultOptions
   , parseOpts
   )
@@ -48,6 +49,9 @@ data RulesLocation
   | BuiltinRules
   deriving Show  -- FIXME
 
+data VerbosityLevel = Normal | ShowFormatter | ShowBookInfo
+  deriving (Eq, Ord, Show)  -- FIXME
+
 newtype DumpRulesSwitch = DumpRulesSwitch { v :: Bool }
   deriving Show  -- FIXME
 
@@ -64,7 +68,7 @@ data Options = Options
   , includePublisher  :: PublisherSwitch
   , rulesPaths        :: RulesLocations
   , optTargetDir      :: FilePath  -- FIXME Wrap in a newtype like BookFiles
-  , verbosityLevel    :: Maybe Int  -- FIXME Better type for this, lose the Maybe entirely
+  , verbosityLevel    :: VerbosityLevel
   , dumpRules         :: DumpRulesSwitch
   , helpRules         :: HelpRulesSwitch
   , bookFiles         :: BookFiles
@@ -72,9 +76,10 @@ data Options = Options
   deriving Show  -- FIXME
 
 
-intToVerbosity :: Int -> Maybe Int
-intToVerbosity 0 = Nothing
-intToVerbosity n = Just n
+intToVerbosity :: Int -> VerbosityLevel
+intToVerbosity 0 = Normal
+intToVerbosity 1 = ShowFormatter
+intToVerbosity _ = ShowBookInfo
 
 
 defaultRulesFile :: FilePath
@@ -98,7 +103,7 @@ defaultOptions = Options
   , includePublisher  = PublisherSwitch False
   , rulesPaths        = defaultRulesLocations
   , optTargetDir      = "."
-  , verbosityLevel    = Nothing
+  , verbosityLevel    = Normal
   , dumpRules         = DumpRulesSwitch False
   , helpRules         = HelpRulesSwitch False
   , bookFiles         = BookFiles (singleton "dummy-filename")

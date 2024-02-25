@@ -36,6 +36,7 @@ import EpubTools.EpubName.Opts
   , NoActionSwitch (..)
   , Options (bookFiles, dumpRules, helpRules, interactive, noAction,
       optTargetDir, verbosityLevel)
+  , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
   , parseOpts
   )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
@@ -61,9 +62,9 @@ displayResults opts oldPath newPath fmtUsed pkg md =
    liftIO $ printf "%s -> %s%s\n" oldPath newPath
       (additional (verbosityLevel opts) (fmtUsed, pkg, md))
    where
-      additional Nothing  = const ""
-      additional (Just 1) = formatF
-      additional _        = formatFM
+      additional Normal = const ""
+      additional ShowFormatter = formatF
+      additional ShowBookInfo = formatFM
 
 
 {- Process an individual epub book file

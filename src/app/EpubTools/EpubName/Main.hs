@@ -23,7 +23,8 @@ import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
 import EpubTools.EpubName.Opts (Options (rulesPaths, verbosityLevel),
-  RulesLocation (BuiltinRules, RulesPath, RulesViaEnv), RulesLocations (..))
+  RulesLocation (BuiltinRules, RulesPath, RulesViaEnv), RulesLocations (..),
+  VerbosityLevel (Normal))
 import EpubTools.EpubName.Util
 
 
@@ -74,7 +75,7 @@ mbExists p = do
 
 
 parseFormatters :: (MonadError ExitCode m, MonadIO m) =>
-   (Maybe Int) -> (String, String) -> m [Formatter]
+   VerbosityLevel -> (String, String) -> m [Formatter]
 parseFormatters verbosity (name, contents) = case parseRules name contents of
    Left err  -> do
       _ <- liftIO $ printf "%s:\n%s" name (show err)
@@ -84,7 +85,8 @@ parseFormatters verbosity (name, contents) = case parseRules name contents of
       return fs
 
 
-showRulesSource :: (Monad m, PrintfType (m ()), PrintfArg t, Num a, Eq a) =>
-   Maybe a -> t -> m ()
-showRulesSource (Just 1) name = printf "Rules loaded from: %s\n" name
-showRulesSource _        _    = return ()
+showRulesSource :: (Monad m, PrintfType (m ()), PrintfArg t) =>
+   VerbosityLevel -> t -> m ()
+showRulesSource verbosity name
+  | verbosity > Normal = printf "Rules loaded from: %s\n" name
+  | otherwise = return ()
