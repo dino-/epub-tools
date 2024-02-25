@@ -1,23 +1,21 @@
 -- License: ISC (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{- # LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings, QuasiQuotes #-}
 
 module EpubTools.EpubName.Opts
-  ( Options (..), PubYear (..)
+  ( Options (..), PubYear (..), RulesLocation (..), RulesLocations (..)
   , defaultOptions
   , parseOpts
   )
   where
 
-import Control.Monad.Except
-import Data.Maybe
-import Data.Version ( showVersion )
+import Data.List.NonEmpty
+import Data.Version (showVersion)
 import Options.Applicative
-import Paths_epub_tools ( version )
-import System.Environment
-import System.FilePath
+import Paths_epub_tools (version)
+import System.Environment (getProgName)
+import System.FilePath ((</>), (<.>))
 import Text.Heredoc (here)
 import Text.PrettyPrint.ANSI.Leijen (string)
 import Text.Printf (printf)
@@ -31,12 +29,22 @@ data PubYear
   deriving Show  -- FIXME
 
 
+newtype RulesLocations = RulesLocations (NonEmpty RulesLocation)
+  deriving Show  -- FIXME
+
+data RulesLocation
+  = RulesPath FilePath
+  | RulesViaEnv String FilePath
+  | BuiltinRules
+  deriving Show  -- FIXME
+
+
 data Options = Options
   { optPubYear      :: PubYear
   , optInteractive  :: Bool
   , optNoAction     :: Bool
   , optPublisher    :: Bool
-  , optRulesPaths   :: [FilePath]
+  , optRulesPaths   :: RulesLocations
   , optTargetDir    :: FilePath
   , optVerbose      :: Maybe Int
   , optDumpRules    :: Bool
@@ -52,37 +60,36 @@ intToVerbosity n = Just n
 
 
 defaultRulesFile :: FilePath
-defaultRulesFile = "default.rules"
+defaultRulesFile = "default" <.> "rules"
 
 
-userRulesPath :: IO (Maybe FilePath)
-userRulesPath = foldl (liftM2 mplus) (return Nothing) $ map mkdir
-   [ ("HOME", ".epubtools")      -- UNIX-like
-   , ("APPDATA", "epubtools")    -- Windows
-   ]
-
-   where
-      mkdir (var, subdir) = do
-         homeDir <- lookupEnv var
-         return $ (</> subdir </> defaultRulesFile) `fmap` homeDir
+defaultRulesLocations :: RulesLocations
+defaultRulesLocations = RulesLocations $ fromList
+  [ RulesViaEnv "HOME" $ ".config" </> "epubtools" </> defaultRulesFile   -- UNIX-like
+  , RulesViaEnv "HOME" $ ".epubtools" </> defaultRulesFile                -- UNIX-like, old-school
+  , RulesViaEnv "APPDATA" $ "epubtools" </> defaultRulesFile              -- Windows
+  , BuiltinRules
+  ]
 
 
-defaultOptions :: IO Options
-defaultOptions = do
-  urp <- userRulesPath
+defaultOptions :: Options
+defaultOptions = Options
+  { optPubYear      = AnyDate
+  , optInteractive  = False
+  , optNoAction     = False
+  , optPublisher    = False
+  , optRulesPaths   = defaultRulesLocations
+  , optTargetDir    = "."
+  , optVerbose      = Nothing
+  , optDumpRules    = False
+  , optHelpRules    = False
+  , optFiles        = []
+  }
 
-  return Options
-    { optPubYear      = AnyDate
-    , optInteractive  = False
-    , optNoAction     = False
-    , optPublisher    = False
-    , optRulesPaths   = maybeToList urp
-    , optTargetDir    = "."
-    , optVerbose      = Nothing
-    , optDumpRules    = False
-    , optHelpRules    = False
-    , optFiles        = []
-    }
+
+prependRulesLocation :: RulesLocations -> FilePath -> RulesLocations
+prependRulesLocation (RulesLocations rulesLocations) filePath =
+  RulesLocations ((RulesPath filePath) <| rulesLocations)
 
 
 parser :: Parser Options
@@ -119,7 +126,7 @@ parser = Options
         <> help "Include book publisher if present. See below"
         )
       )
-  <*> ( (: []) <$> strOption  -- FIXME
+  <*> ( prependRulesLocation defaultRulesLocations <$> strOption  -- FIXME
         (  long "rules"
         <> short 'r'
         <> metavar "FILE"
@@ -210,12 +217,6 @@ versionHelper progName =
 --    ]
 
 
-prependRulesPath :: FilePath -> Options -> Options
-prependRulesPath p opts = opts { optRulesPaths = newlist }
-   where
-      newlist = p : optRulesPaths opts
-
-
 parseOpts :: IO Options
 parseOpts = do
   pn <- getProgName
@@ -223,19 +224,6 @@ parseOpts = do
     (  header (printf "%s - Rename epub book files with clear names based on their metadata" pn)
     <> footer'
     )
-
-
--- parseOpts :: (MonadError ExitCode m, MonadIO m) =>
---    [String] -> m (Options, [String])
--- parseOpts argv = do
---    dos <- liftIO defaultOptions
---    case getOpt Permute options argv of
---       (o,n,[]  ) -> return (foldl (flip id) dos o, n)
---       (_,_,errs) -> do
---          liftIO $ do
---             ut <- usageText
---             putStrLn $ concat errs ++ ut
---          throwError exitInitFailure
 
 
 footer' :: InfoMod a
@@ -302,10 +290,11 @@ Another case is anthologies, which is to say: collections of works by multiple a
 
 epubname will search the following locations for a rules file, in this order:
 
-  Path specified in a --rules switch
-  $HOME/.epubtools/default.rules  -- or:
-  %%APPDATA%%\\epubtools\\default.rules  -- in Windows
-  Built-in rules, a comprehensive stock set of naming rules
+  1. Path specified in the optional --rules switch
+  2. $HOME/.config/epubtools/default.rules   Modern UNIX-like location
+  3. $HOME/.epubtools/default.rules          Older UNIX-like location
+  4. %%APPDATA%%\\epubtools\\default.rules   Windows
+  5. Built-in rules, a comprehensive stock set of naming rules
 
 Use the built-in rules as a model for a custom file. See --dump-rules above
 

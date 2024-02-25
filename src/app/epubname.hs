@@ -127,7 +127,7 @@ main = do
       -- (opts, paths) <- liftIO parseOpts
       opts <- liftIO parseOpts
       liftIO $ print opts
-      throwError ExitSuccess
+      void $ throwError ExitSuccess
 
       -- User asked for rules help, this is a special termination case
       when (optHelpRules opts) $ do

@@ -39,7 +39,7 @@ main = do
 
       en <- if isDir
             then do
-               dos <- liftIO EN.defaultOptions
+               let dos = EN.defaultOptions
                fs <- initialize dos
                runExceptT $ do
                   xml <- snd `fmap` getPkgPathXmlFromDir "."
