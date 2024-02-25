@@ -87,21 +87,22 @@ defaultOptions = Options
   }
 
 
-prependRulesLocation :: RulesLocations -> FilePath -> RulesLocations
-prependRulesLocation (RulesLocations rulesLocations) filePath =
-  RulesLocations ((RulesPath filePath) <| rulesLocations)
+prependRulesLocation :: RulesLocations -> Maybe FilePath -> RulesLocations
+prependRulesLocation rulesLocations Nothing = rulesLocations
+prependRulesLocation (RulesLocations rulesLocList) (Just filePath) =
+  RulesLocations ((RulesPath filePath) <| rulesLocList)
 
 
 parser :: Parser Options
 parser = Options
-  <$> ( ( (\b -> if b then NoModified else AnyDate) <$> switch
+  <$> ( ( flag AnyDate NoModified
           (  long "no-modified-date"
           <> short 'M'
           <> help "Don't use modified date for publication year"
           )
         )
         <|>
-        ( (\b -> if b then NoDate else AnyDate) <$> switch
+        ( flag AnyDate NoDate
           (  long "no-date"
           <> short 'D'
           <> help "Suppress inclusion of any publication year"
@@ -126,13 +127,13 @@ parser = Options
         <> help "Include book publisher if present. See below"
         )
       )
-  <*> ( prependRulesLocation defaultRulesLocations <$> strOption  -- FIXME
+  <*> ( prependRulesLocation defaultRulesLocations <$> (optional $ strOption
         (  long "rules"
         <> short 'r'
         <> metavar "FILE"
         <> help "Specify a rules file for naming the books"
         )
-      )
+      ))
   <*> ( strOption
         (  long "target-dir"
         <> short 't'
