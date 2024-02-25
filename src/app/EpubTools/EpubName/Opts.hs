@@ -10,7 +10,7 @@ module EpubTools.EpubName.Opts
   )
   where
 
-import Data.List.NonEmpty
+import Data.List.NonEmpty (NonEmpty, (<|), fromList, singleton)
 import Data.Version (showVersion)
 import Options.Applicative
 import Paths_epub_tools (version)
