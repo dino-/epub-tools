@@ -1,10 +1,12 @@
 -- License: ISC (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE OverloadedStrings, QuasiQuotes #-}
+{-# LANGUAGE DuplicateRecordFields, OverloadedStrings, QuasiQuotes #-}
 
 module EpubTools.EpubName.Opts
-  ( Options (..), PubYear (..), RulesLocation (..), RulesLocations (..)
+  ( BookFiles (..), DumpRulesSwitch (..), HelpRulesSwitch (..)
+  , InteractiveSwitch (..), NoActionSwitch (..), Options (..)
+  , PublisherSwitch (..), PubYear (..), RulesLocation (..), RulesLocations (..)
   , defaultOptions
   , parseOpts
   )
@@ -28,6 +30,14 @@ data PubYear
    | NoDate       -- Don't do publication date at all
   deriving Show  -- FIXME
 
+newtype InteractiveSwitch = InteractiveSwitch { v :: Bool }
+  deriving Show  -- FIXME
+
+newtype NoActionSwitch = NoActionSwitch { v :: Bool }
+  deriving Show  -- FIXME
+
+newtype PublisherSwitch = PublisherSwitch { v :: Bool }
+  deriving Show  -- FIXME
 
 newtype RulesLocations = RulesLocations (NonEmpty RulesLocation)
   deriving Show  -- FIXME
@@ -38,18 +48,26 @@ data RulesLocation
   | BuiltinRules
   deriving Show  -- FIXME
 
+newtype DumpRulesSwitch = DumpRulesSwitch { v :: Bool }
+  deriving Show  -- FIXME
+
+newtype HelpRulesSwitch = HelpRulesSwitch { v :: Bool }
+  deriving Show  -- FIXME
+
+newtype BookFiles = BookFiles { v :: NonEmpty FilePath }
+  deriving Show  -- FIXME
 
 data Options = Options
-  { optPubYear      :: PubYear
-  , optInteractive  :: Bool
-  , optNoAction     :: Bool
-  , optPublisher    :: Bool
-  , optRulesPaths   :: RulesLocations
-  , optTargetDir    :: FilePath
-  , optVerbose      :: Maybe Int
-  , optDumpRules    :: Bool
-  , optHelpRules    :: Bool
-  , optFiles        :: NonEmpty FilePath
+  { pubYear           :: PubYear
+  , interactive       :: InteractiveSwitch
+  , noAction          :: NoActionSwitch
+  , includePublisher  :: PublisherSwitch
+  , rulesPaths        :: RulesLocations
+  , optTargetDir      :: FilePath  -- FIXME Wrap in a newtype like BookFiles
+  , verbosityLevel    :: Maybe Int  -- FIXME Better type for this, lose the Maybe entirely
+  , dumpRules         :: DumpRulesSwitch
+  , helpRules         :: HelpRulesSwitch
+  , bookFiles         :: BookFiles
   }
   deriving Show  -- FIXME
 
@@ -74,16 +92,16 @@ defaultRulesLocations = RulesLocations $ fromList
 
 defaultOptions :: Options
 defaultOptions = Options
-  { optPubYear      = AnyDate
-  , optInteractive  = False
-  , optNoAction     = False
-  , optPublisher    = False
-  , optRulesPaths   = defaultRulesLocations
-  , optTargetDir    = "."
-  , optVerbose      = Nothing
-  , optDumpRules    = False
-  , optHelpRules    = False
-  , optFiles        = singleton "dummy-filename"
+  { pubYear           = AnyDate
+  , interactive       = InteractiveSwitch False
+  , noAction          = NoActionSwitch False
+  , includePublisher  = PublisherSwitch False
+  , rulesPaths        = defaultRulesLocations
+  , optTargetDir      = "."
+  , verbosityLevel    = Nothing
+  , dumpRules         = DumpRulesSwitch False
+  , helpRules         = HelpRulesSwitch False
+  , bookFiles         = BookFiles (singleton "dummy-filename")
   }
 
 
@@ -109,19 +127,19 @@ parser = Options
           )
         )
       )
-  <*> ( switch
+  <*> ( InteractiveSwitch <$> switch
         (  long "interactive"
         <> short 'i'
         <> help "Prompt user interactively"
         )
       )
-  <*> ( switch
+  <*> ( NoActionSwitch <$> switch
         (  long "no-action"
         <> short 'n'
         <> help "Display what would be done, but do nothing"
         )
       )
-  <*> ( switch
+  <*> ( PublisherSwitch <$> switch
         (  long "publisher"
         <> short 'p'
         <> help "Include book publisher if present. See below"
@@ -152,17 +170,17 @@ parser = Options
         <> value 0
         )
       )
-  <*> ( switch
+  <*> ( DumpRulesSwitch <$> switch
         (  long "dump-rules"
         <> help "Output built-in rules definitions, use to make your own"
         )
       )
-  <*> ( switch
+  <*> ( HelpRulesSwitch <$> switch
         (  long "help-rules"
         <> help "Help on the naming rules domain specific language"
         )
       )
-  <*> ( fromList <$> (some $ strArgument
+  <*> ( BookFiles . fromList <$> (some $ strArgument
         (  metavar "FILES"
         <> help "One or more files to rename/move"
         )

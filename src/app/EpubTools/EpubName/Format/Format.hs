@@ -1,7 +1,7 @@
 -- License: ISC (see LICENSE)
 -- Author: Dino Morelli <dino@ui3.info>
 
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts, OverloadedRecordDot #-}
 
 module EpubTools.EpubName.Format.Format
    ( ReplF
@@ -113,7 +113,8 @@ pad sWidth sIndex matches = do
 publisher :: ReplF
 publisher _ = do
    md <- asks gMetadata
-   fmap (extractPublisher md) $ asks $ optPublisher . gOpts
+   opts <- asks gOpts
+   pure $ extractPublisher md opts.includePublisher.v
 
 
 -- Clean up an item from the pattern match results

@@ -22,7 +22,7 @@ import EpubTools.EpubName.Format.Util
 -}
 getPubYear :: EN String
 getPubYear = do
-  yearHandling <- asks $ optPubYear . gOpts
+  yearHandling <- asks $ pubYear . gOpts
   let events = case yearHandling of
         AnyDate -> [Issued, Created, Date, Epub, Modified]
         NoModified -> [Issued, Created, Date, Epub]

@@ -22,7 +22,7 @@ import Text.Printf
 import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Opts (Options (..),
+import EpubTools.EpubName.Opts (Options (rulesPaths, verbosityLevel),
   RulesLocation (BuiltinRules, RulesPath, RulesViaEnv), RulesLocations (..))
 import EpubTools.EpubName.Util
 
@@ -30,13 +30,13 @@ import EpubTools.EpubName.Util
 initialize :: (MonadError ExitCode m, MonadIO m) =>
    Options -> m [Formatter]
 initialize opts = do
-  erls <- liftIO . tryIOError . locateRules . optRulesPaths $ opts
+  erls <- liftIO . tryIOError . locateRules . rulesPaths $ opts
   rls <- case erls of
     Right rls' -> pure rls'
     Left err   -> do
       _ <- liftIO $ print err
       throwError exitInitFailure
-  parseFormatters (optVerbose opts) rls
+  parseFormatters (verbosityLevel opts) rls
 
 
 locateRules :: RulesLocations -> IO (String, String)

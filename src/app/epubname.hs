@@ -5,7 +5,7 @@
 -- Control.Applicative import below
 {-# OPTIONS_GHC -fno-warn-unused-imports #-}
 
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts, OverloadedRecordDot #-}
 
 import Codec.Epub
 import Codec.Epub.Data.Metadata
@@ -28,7 +28,16 @@ import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
-import EpubTools.EpubName.Opts ( Options (..), parseOpts )
+import EpubTools.EpubName.Opts
+  ( BookFiles (..)
+  , DumpRulesSwitch (..)
+  , HelpRulesSwitch (..)
+  , InteractiveSwitch (..)
+  , NoActionSwitch (..)
+  , Options (bookFiles, dumpRules, helpRules, interactive, noAction,
+      optTargetDir, verbosityLevel)
+  , parseOpts
+  )
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
 
@@ -50,7 +59,7 @@ displayResults :: MonadIO m => Options
    -> FilePath -> FilePath -> String -> Package -> Metadata -> m ()
 displayResults opts oldPath newPath fmtUsed pkg md =
    liftIO $ printf "%s -> %s%s\n" oldPath newPath
-      (additional (optVerbose opts) (fmtUsed, pkg, md))
+      (additional (verbosityLevel opts) (fmtUsed, pkg, md))
    where
       additional Nothing  = const ""
       additional (Just 1) = formatF
@@ -95,11 +104,11 @@ processBook opts formatters (oldPath:paths) _     priRes = do
 
       displayResults opts oldPath newPath fmtUsed pkg md
 
-      promptResult <- liftIO $ case (optInteractive opts) of
+      promptResult <- liftIO $ case opts.interactive.v of
          True  -> prompt
          False -> return Yes
 
-      when ((promptResult == Yes) && (optNoAction opts == False)) $
+      when ((promptResult == Yes) && (opts.noAction.v == False)) $
          liftIO $ renameFile oldPath newPath
 
       return $ continue promptResult
@@ -129,13 +138,13 @@ main = do
       void $ throwError ExitSuccess
 
       -- User asked for rules help, this is a special termination case
-      when (optHelpRules opts) $ do
+      when opts.helpRules.v $ do
          liftIO $ putStrLn Dsl.docs
          throwError ExitSuccess
 
       -- User asked for a dump of the built-in rules,
       -- this is a special termination case
-      when (optDumpRules opts) $ do
+      when opts.dumpRules.v $ do
          liftIO $ putStr Rules.defaults
          throwError ExitSuccess
 
@@ -150,11 +159,11 @@ main = do
       -- formatters
       fs <- initialize opts
 
-      when (optNoAction opts) $ liftIO
+      when opts.noAction.v $ liftIO
          $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
-      code <- liftIO $ processBook opts fs (toList . optFiles $ opts) True True
+      code <- liftIO $ processBook opts fs (toList opts.bookFiles.v) True True
       case code of
          True  -> return ExitSuccess
          False -> throwError exitProcessingFailure
