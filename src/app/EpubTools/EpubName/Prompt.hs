@@ -20,7 +20,7 @@ data PromptResult
 
 prompt :: IO PromptResult
 prompt = do
-   putStr "Rename this file? [Ynq], or ? for more options: "
+   putStr "Link file to this new location? [Ynq], or ? for more options: "
    c <- getChar
    putStr "\n"
 

@@ -11,16 +11,18 @@ import Codec.Epub
 import Codec.Epub.Data.Metadata
 import Codec.Epub.Data.Package
 import Control.Applicative
+import Control.Exception (try)
 import Control.Monad
 import Control.Monad.Except
 import Data.List.NonEmpty (toList)
-import System.Directory ( doesDirectoryExist, doesFileExist, renameFile )
-import System.Environment ( getArgs )
+import GHC.IO.Exception (IOException)
+import System.Directory (copyFile, doesDirectoryExist, doesFileExist)
 import System.FilePath
 import System.Exit
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdin, stdout, stderr 
                  )
+import System.Posix (createLink, removeLink)
 import Text.Printf
 
 import qualified EpubTools.EpubName.Doc.Dsl as Dsl
@@ -33,8 +35,9 @@ import EpubTools.EpubName.Opts
   , DumpRulesSwitch (..)
   , HelpRulesSwitch (..)
   , InteractiveSwitch (..)
+  , MoveSwitch (..)
   , NoActionSwitch (..)
-  , Options (bookFiles, dumpRules, helpRules, interactive, noAction,
+  , Options (bookFiles, dumpRules, helpRules, interactive, move, noAction,
       optTargetDir, verbosityLevel)
   , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
   , parseOpts
@@ -109,8 +112,9 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          True  -> prompt
          False -> return Yes
 
-      when ((promptResult == Yes) && (opts.noAction.v == False)) $
-         liftIO $ renameFile oldPath newPath
+      liftIO $ when ((promptResult == Yes) && (opts.noAction.v == False)) $ do
+        succeeded <- tryHardLink oldPath newPath
+        when (succeeded && opts.move.v) $ removeLink oldPath
 
       return $ continue promptResult
 
@@ -126,6 +130,23 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          (_    , r) -> r
 
    processBook opts formatters paths cont newRes
+
+
+tryHardLink :: FilePath -> FilePath -> IO Bool
+tryHardLink srcFp destFp = do
+  el <- try $ createLink srcFp destFp
+  either tryCopy (const $ pure True) el
+  where
+    tryCopy :: IOException -> IO Bool
+    tryCopy _ = do
+      putStrLn "Hard link failed, attempting to copy instead"
+      ec <- try $ copyFile srcFp destFp
+      either failureHandler (const $ pure True) ec
+
+    failureHandler :: IOException -> IO Bool
+    failureHandler _ = do
+      putStrLn "Copy failed"
+      pure False
 
 
 main :: IO ()

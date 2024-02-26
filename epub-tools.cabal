@@ -85,6 +85,7 @@ executable epubname
     , optparse-applicative
     , parsec
     , regex-compat
+    , unix
   other-modules:
     EpubTools.EpubName.Doc.Dsl
     EpubTools.EpubName.Doc.Rules

@@ -5,7 +5,7 @@
 
 module EpubTools.EpubName.Opts
   ( BookFiles (..), DumpRulesSwitch (..), HelpRulesSwitch (..)
-  , InteractiveSwitch (..), NoActionSwitch (..), Options (..)
+  , InteractiveSwitch (..), MoveSwitch (..), NoActionSwitch (..), Options (..)
   , PublisherSwitch (..), PubYear (..), RulesLocation (..), RulesLocations (..)
   , VerbosityLevel (..)
   , defaultOptions
@@ -49,6 +49,9 @@ data RulesLocation
   | BuiltinRules
   deriving Show  -- FIXME
 
+newtype MoveSwitch = MoveSwitch { v :: Bool }
+  deriving Show  -- FIXME
+
 data VerbosityLevel = Normal | ShowFormatter | ShowBookInfo
   deriving (Eq, Ord, Show)  -- FIXME
 
@@ -68,6 +71,7 @@ data Options = Options
   , includePublisher  :: PublisherSwitch
   , rulesPaths        :: RulesLocations
   , optTargetDir      :: FilePath  -- FIXME Wrap in a newtype like BookFiles
+  , move              :: MoveSwitch
   , verbosityLevel    :: VerbosityLevel
   , dumpRules         :: DumpRulesSwitch
   , helpRules         :: HelpRulesSwitch
@@ -103,6 +107,7 @@ defaultOptions = Options
   , includePublisher  = PublisherSwitch False
   , rulesPaths        = defaultRulesLocations
   , optTargetDir      = "."
+  , move              = MoveSwitch False
   , verbosityLevel    = Normal
   , dumpRules         = DumpRulesSwitch False
   , helpRules         = HelpRulesSwitch False
@@ -164,6 +169,11 @@ parser = Options
         <> help "Target directory for successfully renamed books"
         <> showDefault
         <> value "."
+        )
+      )
+  <*> ( MoveSwitch <$> switch
+        (  long "move"
+        <> help "Remove the original file after linking (or copying) to target directories"
         )
       )
   <*> ( intToVerbosity <$> option auto
