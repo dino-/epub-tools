@@ -8,17 +8,17 @@ import Control.Monad.Except
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), runTestTT )
 
+import EpubTools.EpubName.Common (Options, defaultOptions)
 import EpubTools.EpubName.Format.Format
 import EpubTools.EpubName.Main
-import EpubTools.EpubName.Opts
 import EpubTools.Test.EpubName.Format
 import EpubTools.Test.EpubName.PubYear
 
 
 main :: IO ()
 main = do
-   dos <- defaultOptions
-   let testOpts = dos  -- Can use this to adjust the options with dos { ... }
+   -- Can use this def to adjust the options with defaultOptions { ... }
+   let testOpts = defaultOptions
    ir <- runExceptT $ initialize testOpts
    either (exitWith) (runTests testOpts) ir
    

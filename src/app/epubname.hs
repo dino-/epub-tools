@@ -25,12 +25,7 @@ import System.IO ( BufferMode ( NoBuffering )
 import System.Posix (createLink, removeLink)
 import Text.Printf
 
-import qualified EpubTools.EpubName.Doc.Dsl as Dsl
-import qualified EpubTools.EpubName.Doc.Rules as Rules
-import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
-import EpubTools.EpubName.Format.Util
-import EpubTools.EpubName.Main
-import EpubTools.EpubName.Opts
+import EpubTools.EpubName.Common
   ( BookFiles (..)
   , DumpRulesSwitch (..)
   , HelpRulesSwitch (..)
@@ -40,8 +35,13 @@ import EpubTools.EpubName.Opts
   , Options (bookFiles, dumpRules, helpRules, interactive, move, noAction,
       optTargetDir, verbosityLevel)
   , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
-  , parseOpts
   )
+import qualified EpubTools.EpubName.Doc.Dsl as Dsl
+import qualified EpubTools.EpubName.Doc.Rules as Rules
+import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
+import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Main
+import EpubTools.EpubName.Opts (parseOpts)
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
 import EpubTools.EpubName.Util
 

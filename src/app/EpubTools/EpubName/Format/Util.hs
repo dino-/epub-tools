@@ -20,7 +20,7 @@ import Data.Char
 import Data.List ( foldl' )
 import Text.Regex
 
-import EpubTools.EpubName.Opts
+import EpubTools.EpubName.Common (Options)
 
 
 data Globals = Globals

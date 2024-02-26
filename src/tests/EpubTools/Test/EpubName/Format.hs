@@ -13,9 +13,13 @@ import qualified Data.Map.Strict as Map
 import Test.HUnit ( Test (..), assertEqual )
 import Test.HUnit.Base ( Assertion )
 
+import EpubTools.EpubName.Common
+  ( Options (includePublisher, pubYear)
+  , PublisherSwitch (..)
+  , PubYear (NoDate, NoModified)
+  )
 import EpubTools.EpubName.Format.Format
 import EpubTools.EpubName.Format.Util
-import EpubTools.EpubName.Opts
 
 
 formatTests :: Options -> [Formatter] -> Test
@@ -627,7 +631,7 @@ testPubYearNoModified (gs, fs) = TestCase $
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book with only modified date, --no-modified-date switch" expected
    where
-      testOpts = (gOpts gs) { optPubYear = NoModified }
+      testOpts = (gOpts gs) { pubYear = NoModified }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
@@ -645,7 +649,7 @@ testPubYearNoDate (gs, fs) = TestCase $
       "epub book with lots of dates but we don't want"
       expected
    where
-      testOpts = (gOpts gs) { optPubYear = NoDate }
+      testOpts = (gOpts gs) { pubYear = NoDate }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing Nothing Nothing "Jim Jones"]
          , metaTitles = [Title Nothing Nothing Nothing "A Timeless Story"]
@@ -1308,7 +1312,7 @@ testBkpFileAs (gs, fs) = TestCase $
       "book publisher suffix requested and present in file-as"
       expected
    where
-      testOpts = (gOpts gs) { optPublisher = True }
+      testOpts = (gOpts gs) { includePublisher = PublisherSwitch True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -1328,7 +1332,7 @@ testBkpText (gs, fs) = TestCase $
       "book publisher suffix requested and present in text"
       expected
    where
-      testOpts = (gOpts gs) { optPublisher = True }
+      testOpts = (gOpts gs) { includePublisher = PublisherSwitch True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -1348,7 +1352,7 @@ testBkpMissing (gs, fs) = TestCase $
       "book publisher suffix requested and not present"
       expected
    where
-      testOpts = (gOpts gs) { optPublisher = True }
+      testOpts = (gOpts gs) { includePublisher = PublisherSwitch True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Herman Melville"]
@@ -1365,7 +1369,7 @@ testMagUniverse (gs, fs) = TestCase $
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "Jim Baen's Universe Magazine" expected
    where
-      testOpts = (gOpts gs) { optPublisher = True }
+      testOpts = (gOpts gs) { includePublisher = PublisherSwitch True }
       meta = emptyMetadata
          { metaCreators = [Creator (Just "aut") Nothing
             Nothing "Jim Baen's Universe"]
@@ -1586,7 +1590,7 @@ testWomensInstituteLib (gs, fs) = TestCase $
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "Women's Institute Library" expected
    where
-      testOpts = (gOpts gs) { optPublisher = True }
+      testOpts = (gOpts gs) { includePublisher = PublisherSwitch True }
       meta = emptyMetadata
          { metaCreators = [Creator Nothing
             (Just "Woman's Institute of Domestic Arts and Sciences")

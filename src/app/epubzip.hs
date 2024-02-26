@@ -16,7 +16,7 @@ import Text.Printf
 import EpubTools.EpubName.Format.Format ( tryFormatting )
 import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
-import qualified EpubTools.EpubName.Opts as EN
+import qualified EpubTools.EpubName.Common as EN
 import EpubTools.EpubZip.Opts
 
 

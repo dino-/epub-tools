@@ -14,7 +14,10 @@ import qualified Data.Map.Strict as Map
 import Data.Monoid ( First (..), getFirst )
 import Text.Regex ( matchRegex, mkRegex )
 
-import EpubTools.EpubName.Opts
+import EpubTools.EpubName.Common
+  ( Options (pubYear)
+  , PubYear (AnyDate, NoDate, NoModified)
+  )
 import EpubTools.EpubName.Format.Util
 
 

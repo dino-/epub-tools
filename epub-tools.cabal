@@ -94,6 +94,7 @@ executable epubname
     EpubTools.EpubName.Format.Format
     EpubTools.EpubName.Format.PubYear
     EpubTools.EpubName.Format.Util
+    EpubTools.EpubName.Common
     EpubTools.EpubName.Main
     EpubTools.EpubName.Opts
     EpubTools.EpubName.Prompt
@@ -113,6 +114,7 @@ test-suite epubname-tests
     , parsec
     , regex-compat
   other-modules:
+    EpubTools.EpubName.Common
     EpubTools.EpubName.Doc.Rules
     EpubTools.EpubName.Format.Author
     EpubTools.EpubName.Format.Compile
@@ -120,7 +122,6 @@ test-suite epubname-tests
     EpubTools.EpubName.Format.PubYear
     EpubTools.EpubName.Format.Util
     EpubTools.EpubName.Main
-    EpubTools.EpubName.Opts
     EpubTools.EpubName.Util
     EpubTools.Test.EpubName.Format
     EpubTools.Test.EpubName.PubYear
@@ -139,6 +140,7 @@ executable epubzip
     , parsec
     , regex-compat
   other-modules:
+    EpubTools.EpubName.Common
     EpubTools.EpubName.Doc.Rules
     EpubTools.EpubName.Format.Author
     EpubTools.EpubName.Format.Compile
@@ -146,7 +148,6 @@ executable epubzip
     EpubTools.EpubName.Format.PubYear
     EpubTools.EpubName.Format.Util
     EpubTools.EpubName.Main
-    EpubTools.EpubName.Opts
     EpubTools.EpubName.Util
     EpubTools.EpubZip.Opts
     Paths_epub_tools

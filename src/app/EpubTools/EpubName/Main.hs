@@ -19,12 +19,14 @@ import System.FilePath
 import System.IO.Error (tryIOError)
 import Text.Printf
 
+import EpubTools.EpubName.Common
+  ( Options (rulesPaths, verbosityLevel)
+  , RulesLocation (BuiltinRules, RulesPath, RulesViaEnv), RulesLocations (..)
+  , VerbosityLevel (Normal)
+  )
 import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Compile
 import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Opts (Options (rulesPaths, verbosityLevel),
-  RulesLocation (BuiltinRules, RulesPath, RulesViaEnv), RulesLocations (..),
-  VerbosityLevel (Normal))
 import EpubTools.EpubName.Util
 
 

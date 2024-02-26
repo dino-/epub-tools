@@ -21,10 +21,13 @@ import Data.Maybe ( isJust, listToMaybe )
 import Text.Printf
 import Text.Regex
 
+import EpubTools.EpubName.Common
+  ( Options (includePublisher)
+  , PublisherSwitch (..)
+  )
 import EpubTools.EpubName.Format.Author
 import EpubTools.EpubName.Format.PubYear
 import EpubTools.EpubName.Format.Util
-import EpubTools.EpubName.Opts
 
 
 type ReplF = [String] -> EN String
