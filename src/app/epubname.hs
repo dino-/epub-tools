@@ -156,8 +156,9 @@ main = do
 
    either exitWith exitWith =<< (runExceptT $ do
       opts <- liftIO parseOpts
-      liftIO $ print opts
-      void $ throwError ExitSuccess
+      -- FIXME For debugging
+      -- liftIO $ print opts
+      -- void $ throwError ExitSuccess
 
       -- User asked for rules help, this is a special termination case
       when opts.helpRules.v $ do
