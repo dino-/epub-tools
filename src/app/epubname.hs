@@ -1,6 +1,3 @@
--- License: ISC (see LICENSE)
--- Author: Dino Morelli <dino@ui3.info>
-
 -- This is for GHC 7.8/7.10 compatibility with the
 -- Control.Applicative import below
 {-# OPTIONS_GHC -fno-warn-unused-imports #-}

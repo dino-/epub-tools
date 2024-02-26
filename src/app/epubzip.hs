@@ -1,6 +1,3 @@
--- License: ISC (see LICENSE)
--- Author: Dino Morelli <dino@ui3.info>
-
 import Codec.Epub
 import Control.Monad
 import Control.Monad.Except

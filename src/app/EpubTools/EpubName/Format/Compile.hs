@@ -1,6 +1,3 @@
--- License: ISC (see LICENSE)
--- Author: Dino Morelli <dino@ui3.info>
-
 {-# OPTIONS_GHC -fno-warn-unused-do-bind #-}
 
 module EpubTools.EpubName.Format.Compile

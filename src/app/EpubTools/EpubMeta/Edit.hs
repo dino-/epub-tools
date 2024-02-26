@@ -1,6 +1,3 @@
--- License: ISC (see LICENSE)
--- Author: Dino Morelli <dino@ui3.info>
-
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module EpubTools.EpubMeta.Edit
