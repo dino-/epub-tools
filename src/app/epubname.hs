@@ -101,9 +101,11 @@ processBook opts formatters (oldPath:paths) _     priRes = do
         False -> return Yes
 
       liftIO $ when ((promptResult == Yes) && (not opts.noAction.v)) $ do
+        -- We need enough Data.List functions inside this block that it's
+        -- easier to convert the NonEmpty a back into a [a]
         let destDirs = toList opts.targetDirs.v
 
-        linkOutcomes <- sequence . map (doOneDest opts.noAction oldPath newName) $ destDirs
+        linkOutcomes <- sequence . map (doOneDest oldPath newName) $ destDirs
 
         if ((all (== True) linkOutcomes) && opts.move.v)
           then do
@@ -127,9 +129,8 @@ processBook opts formatters (oldPath:paths) _     priRes = do
    processBook opts formatters paths cont newRes
 
 
-doOneDest :: NoActionSwitch -> FilePath -> FilePath -> FilePath -> IO Bool
-doOneDest (NoActionSwitch True) _ _ _ = pure True
-doOneDest (NoActionSwitch False) srcPath newName destDir = do
+doOneDest :: FilePath -> FilePath -> FilePath -> IO Bool
+doOneDest srcPath newName destDir = do
   let destPath = destDir </> newName
   fileExists <- liftIO $ doesFileExist destPath
   if fileExists
