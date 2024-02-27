@@ -1,9 +1,9 @@
 {-# LANGUAGE DuplicateRecordFields #-}
 
 module EpubTools.EpubName.Common
-  ( BookFiles (..), DumpRulesSwitch (..), HelpRulesSwitch (..)
-  , InteractiveSwitch (..), MoveSwitch (..), NoActionSwitch (..), Options (..)
-  , PublisherSwitch (..), PubYear (..), RulesLocation (..), RulesLocations (..)
+  ( BookFiles (..), InteractiveSwitch (..), MoveSwitch (..)
+  , NoActionSwitch (..), Options (..), PublisherSwitch (..), PubYear (..)
+  , RulesLocation (..), RulesLocations (..)
   , TargetDirs (..), VerbosityLevel (..)
   , defaultOptions
   , defaultRulesLocations
@@ -49,12 +49,6 @@ newtype MoveSwitch = MoveSwitch { v :: Bool }
 data VerbosityLevel = Normal | ShowFormatter | ShowBookInfo
   deriving (Eq, Ord, Show)  -- FIXME
 
-newtype DumpRulesSwitch = DumpRulesSwitch { v :: Bool }
-  deriving Show  -- FIXME
-
-newtype HelpRulesSwitch = HelpRulesSwitch { v :: Bool }
-  deriving Show  -- FIXME
-
 newtype BookFiles = BookFiles { v :: NonEmpty FilePath }
   deriving Show  -- FIXME
 
@@ -67,8 +61,6 @@ data Options = Options
   , targetDirs        :: TargetDirs
   , move              :: MoveSwitch
   , verbosityLevel    :: VerbosityLevel
-  , dumpRules         :: DumpRulesSwitch
-  , helpRules         :: HelpRulesSwitch
   , bookFiles         :: BookFiles
   }
   deriving Show  -- FIXME
@@ -103,7 +95,5 @@ defaultOptions = Options
   , targetDirs        = TargetDirs (singleton ".")
   , move              = MoveSwitch False
   , verbosityLevel    = Normal
-  , dumpRules         = DumpRulesSwitch False
-  , helpRules         = HelpRulesSwitch False
   , bookFiles         = BookFiles (singleton "dummy-filename")
   }

@@ -24,19 +24,14 @@ import Text.Printf
 
 import EpubTools.EpubName.Common
   ( BookFiles (..)
-  , DumpRulesSwitch (..)
-  , HelpRulesSwitch (..)
   , InteractiveSwitch (..)
   , MoveSwitch (..)
   , NoActionSwitch (..)
-  , Options (bookFiles, dumpRules, helpRules, interactive, move, noAction,
-      targetDirs, verbosityLevel)
+  , Options (bookFiles, interactive, move, noAction, targetDirs, verbosityLevel)
   , TargetDirs (..)
   , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
   )
 import qualified EpubTools.EpubName.Common (VerbosityLevel (Normal, ShowBookInfo, ShowFormatter))
-import qualified EpubTools.EpubName.Doc.Dsl as Dsl
-import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
 import EpubTools.EpubName.Format.Util
 import EpubTools.EpubName.Main
@@ -172,17 +167,6 @@ main = do
       -- FIXME For debugging
       -- liftIO $ print opts
       -- void $ throwError ExitSuccess
-
-      -- User asked for rules help, this is a special termination case
-      when opts.helpRules.v $ do
-         liftIO $ putStrLn Dsl.docs
-         throwError ExitSuccess
-
-      -- User asked for a dump of the built-in rules,
-      -- this is a special termination case
-      when opts.dumpRules.v $ do
-         liftIO $ putStr Rules.defaults
-         throwError ExitSuccess
 
       -- Locate the rules file, load it and parse into a list of formatters
       fs <- initialize opts

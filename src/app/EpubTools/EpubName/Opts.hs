@@ -16,8 +16,6 @@ import Text.Printf (printf)
 
 import EpubTools.EpubName.Common
   ( BookFiles (..)
-  , DumpRulesSwitch (..)
-  , HelpRulesSwitch (..)
   , InteractiveSwitch (..)
   , MoveSwitch (..)
   , NoActionSwitch (..)
@@ -29,6 +27,8 @@ import EpubTools.EpubName.Common
   , defaultRulesLocations
   , intToVerbosity
   )
+import qualified EpubTools.EpubName.Doc.Dsl as Dsl
+import qualified EpubTools.EpubName.Doc.Rules as Rules
 
 
 prependRulesLocation :: RulesLocations -> Maybe FilePath -> RulesLocations
@@ -104,16 +104,6 @@ parser = Options
         <> value 0
         )
       )
-  <*> ( DumpRulesSwitch <$> switch
-        (  long "dump-rules"
-        <> help "Output built-in rules definitions, use to make your own"
-        )
-      )
-  <*> ( HelpRulesSwitch <$> switch
-        (  long "help-rules"
-        <> help "Help on the naming rules domain specific language"
-        )
-      )
   <*> ( BookFiles . fromList <$> (some $ strArgument
         (  metavar "FILES"
         <> help "One or more files to rename/move"
@@ -121,8 +111,24 @@ parser = Options
       ))
 
 
-versionHelper :: String -> Parser (a -> a)
-versionHelper progName =
+parseDumpRules :: Parser (a -> a)
+parseDumpRules =
+  infoOption Rules.defaults $ mconcat
+  [ long "dump-rules"
+  , help "Output built-in rules definitions, use to make your own"
+  ]
+
+
+parseHelpRules :: Parser (a -> a)
+parseHelpRules =
+  infoOption Dsl.docs $ mconcat
+  [ long "help-rules"
+  , help "Help on the naming rules domain specific language"
+  ]
+
+
+parseVersion :: String -> Parser (a -> a)
+parseVersion progName =
   infoOption (printf "%s %s" progName (showVersion version)) $ mconcat
   [ long "version"
   , help "Show version information"
@@ -132,7 +138,7 @@ versionHelper progName =
 parseOpts :: IO Options
 parseOpts = do
   pn <- getProgName
-  execParser $ info (parser <**> helper <**> versionHelper pn)
+  execParser $ info (parser <**> helper <**> parseDumpRules <**> parseHelpRules <**> parseVersion pn)
     (  header (printf "%s - Rename epub book files with clear names based on their metadata" pn)
     <> footer'
     )
