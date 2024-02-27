@@ -110,6 +110,7 @@ test-suite epubname-tests
   build-depends:
       base >= 3 && < 5
     , containers
+    , heredoc
     , HUnit
     , parsec
     , regex-compat
