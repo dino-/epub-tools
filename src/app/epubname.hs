@@ -30,7 +30,8 @@ import EpubTools.EpubName.Common
   , MoveSwitch (..)
   , NoActionSwitch (..)
   , Options (bookFiles, dumpRules, helpRules, interactive, move, noAction,
-      optTargetDir, verbosityLevel)
+      targetDirs, verbosityLevel)
+  , TargetDirs (..)
   , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
   )
 import qualified EpubTools.EpubName.Common (VerbosityLevel (Normal, ShowBookInfo, ShowFormatter))
@@ -104,14 +105,16 @@ processBook opts formatters (oldPath:paths) _     priRes = do
         True  -> prompt
         False -> return Yes
 
-      liftIO $ when (promptResult == Yes) $ do
-        let destDirs = [opts.optTargetDir]
+      liftIO $ when ((promptResult == Yes) && (not opts.noAction.v)) $ do
+        let destDirs = toList opts.targetDirs.v
 
         linkOutcomes <- sequence . map (doOneDest opts.noAction oldPath newName) $ destDirs
 
-        when ((all (== True) linkOutcomes) && (not opts.noAction.v) && opts.move.v) $ do
-          putStrLn "All links successfully created, removing original file"
-          removeLink oldPath
+        if ((all (== True) linkOutcomes) && opts.move.v)
+          then do
+            putStrLn "All links successfully created, removing original file"
+            removeLink oldPath
+          else putStrLn "One or more links failed, NOT removing original file"
 
       return $ continue promptResult
 
@@ -136,7 +139,7 @@ doOneDest (NoActionSwitch False) srcPath newName destDir = do
   fileExists <- liftIO $ doesFileExist destPath
   if fileExists
     then do
-      printf "File %s already exists. No change." destPath
+      printf "File %s already exists. No change.\n" destPath
       pure False
     else
       tryHardLink srcPath destPath
@@ -149,13 +152,13 @@ tryHardLink srcFp destFp = do
   where
     tryCopy :: IOException -> IO Bool
     tryCopy _ = do
-      putStrLn "Hard link failed, attempting to copy instead"
+      printf "Hard link at %s failed, attempting to copy instead\n" destFp
       ec <- try $ copyFile srcFp destFp
       either failureHandler (const $ pure True) ec
 
     failureHandler :: IOException -> IO Bool
     failureHandler _ = do
-      putStrLn "Copy failed"
+      printf "Copy to %s failed\n" destFp
       pure False
 
 

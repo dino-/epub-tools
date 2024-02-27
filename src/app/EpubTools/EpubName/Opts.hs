@@ -5,7 +5,7 @@ module EpubTools.EpubName.Opts
   )
   where
 
-import Data.List.NonEmpty ((<|), fromList)
+import Data.List.NonEmpty ((<|), fromList, singleton)
 import Data.Version (showVersion)
 import Options.Applicative
 import Paths_epub_tools (version)
@@ -25,6 +25,7 @@ import EpubTools.EpubName.Common
   , PublisherSwitch (..)
   , PubYear (AnyDate, NoDate, NoModified)
   , RulesLocation (RulesPath), RulesLocations (..)
+  , TargetDirs (..)
   , defaultRulesLocations
   , intToVerbosity
   )
@@ -34,6 +35,11 @@ prependRulesLocation :: RulesLocations -> Maybe FilePath -> RulesLocations
 prependRulesLocation rulesLocations Nothing = rulesLocations
 prependRulesLocation (RulesLocations rulesLocList) (Just filePath) =
   RulesLocations ((RulesPath filePath) <| rulesLocList)
+
+
+setTargetDirs :: [FilePath] -> TargetDirs
+setTargetDirs [] = TargetDirs $ singleton "."
+setTargetDirs ds = TargetDirs $ fromList ds
 
 
 parser :: Parser Options
@@ -77,15 +83,13 @@ parser = Options
         <> help "Specify a rules file for naming the books"
         )
       ))
-  <*> ( strOption
+  <*> ( setTargetDirs <$> (many $ strOption
         (  long "target-dir"
         <> short 't'
         <> metavar "DIR"
-        <> help "Target directory for successfully renamed books"
-        <> showDefault
-        <> value "."
+        <> help "Target directory for successfully renamed books. Specify multiple times for additional directories (default: \".\")"
         )
-      )
+      ))
   <*> ( MoveSwitch <$> switch
         (  long "move"
         <> help "Remove the original file after linking (or copying) to target directories"

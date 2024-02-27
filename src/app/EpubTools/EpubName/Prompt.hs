@@ -17,7 +17,7 @@ data PromptResult
 
 prompt :: IO PromptResult
 prompt = do
-   putStr "Link file to this new location? [Ynq], or ? for more options: "
+   putStr "Link new filename into dest directories? [Ynq], or ? for more options: "
    c <- getChar
    putStr "\n"
 

@@ -4,7 +4,7 @@ module EpubTools.EpubName.Common
   ( BookFiles (..), DumpRulesSwitch (..), HelpRulesSwitch (..)
   , InteractiveSwitch (..), MoveSwitch (..), NoActionSwitch (..), Options (..)
   , PublisherSwitch (..), PubYear (..), RulesLocation (..), RulesLocations (..)
-  , VerbosityLevel (..)
+  , TargetDirs (..), VerbosityLevel (..)
   , defaultOptions
   , defaultRulesLocations
   , intToVerbosity
@@ -40,6 +40,9 @@ data RulesLocation
   | BuiltinRules
   deriving Show  -- FIXME
 
+newtype TargetDirs = TargetDirs { v :: NonEmpty FilePath }
+  deriving Show  -- FIXME
+
 newtype MoveSwitch = MoveSwitch { v :: Bool }
   deriving Show  -- FIXME
 
@@ -61,7 +64,7 @@ data Options = Options
   , noAction          :: NoActionSwitch
   , includePublisher  :: PublisherSwitch
   , rulesPaths        :: RulesLocations
-  , optTargetDir      :: FilePath  -- FIXME Wrap in a newtype like BookFiles
+  , targetDirs        :: TargetDirs
   , move              :: MoveSwitch
   , verbosityLevel    :: VerbosityLevel
   , dumpRules         :: DumpRulesSwitch
@@ -97,7 +100,7 @@ defaultOptions = Options
   , noAction          = NoActionSwitch False
   , includePublisher  = PublisherSwitch False
   , rulesPaths        = defaultRulesLocations
-  , optTargetDir      = "."
+  , targetDirs        = TargetDirs (singleton ".")
   , move              = MoveSwitch False
   , verbosityLevel    = Normal
   , dumpRules         = DumpRulesSwitch False
