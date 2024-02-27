@@ -168,8 +168,7 @@ main = do
       -- Locate the rules file, load it and parse into a list of formatters
       fs <- initialize opts
 
-      when opts.noAction.v $ liftIO
-         $ putStrLn "No-action specified"
+      when opts.noAction.v $ liftIO $ putStrLn "No-action specified"
 
       -- Perform the formatting operation on the books
       code <- liftIO $ processBook opts fs (toList opts.bookFiles.v) True True

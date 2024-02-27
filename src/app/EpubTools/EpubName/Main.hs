@@ -57,10 +57,7 @@ loadRuleFile (RulesPath filePath) = do
 loadRuleFile (RulesViaEnv varName pathSuffix) = do
   mbPathPrefix <- lookupEnv varName
   let mbFullPath = (</> pathSuffix) <$> mbPathPrefix
-  mbExistFile <- maybe (pure Nothing) mbExists mbFullPath
-  case mbExistFile of
-    Nothing -> pure Nothing
-    (Just path) -> (Just . (path,)) <$> readFile path
+  maybe (pure Nothing) (loadRuleFile . RulesPath) mbFullPath
 
 loadRuleFile BuiltinRules = pure $ Just ("built-in", Rules.defaults)
 
