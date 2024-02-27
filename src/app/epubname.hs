@@ -33,6 +33,7 @@ import EpubTools.EpubName.Common
       optTargetDir, verbosityLevel)
   , VerbosityLevel (Normal, ShowFormatter, ShowBookInfo)
   )
+import qualified EpubTools.EpubName.Common (VerbosityLevel (Normal, ShowBookInfo, ShowFormatter))
 import qualified EpubTools.EpubName.Doc.Dsl as Dsl
 import qualified EpubTools.EpubName.Doc.Rules as Rules
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
@@ -56,11 +57,11 @@ formatFM (fmtUsed, pkg, md) =
 
 {- Format and display output for a book that was processed
 -}
-displayResults :: MonadIO m => Options
+displayResults :: MonadIO m => VerbosityLevel
    -> FilePath -> FilePath -> String -> Package -> Metadata -> m ()
-displayResults opts oldPath newPath fmtUsed pkg md =
-   liftIO $ printf "%s -> %s%s\n" oldPath newPath
-      (additional (verbosityLevel opts) (fmtUsed, pkg, md))
+displayResults verbosityLevel' origPath newName fmtUsed pkg md =
+   liftIO $ printf "%s -> %s%s\n" origPath newName
+      (additional verbosityLevel' (fmtUsed, pkg, md))
    where
       additional Normal = const ""
       additional ShowFormatter = formatF
@@ -94,24 +95,23 @@ processBook opts formatters (oldPath:paths) _     priRes = do
             $ printf "ERROR: File %s: %s" oldPath msg
          ) return epm
 
-      (fmtUsed, shortPath) <-
+      (fmtUsed, newName) <-
          tryFormatting (Globals opts pkg md) formatters oldPath
 
-      let newPath = optTargetDir opts </> shortPath
-
-      fileExists <- liftIO $ doesFileExist newPath
-      when fileExists $ throwError $ 
-         printf "File %s already exists. No change." newPath
-
-      displayResults opts oldPath newPath fmtUsed pkg md
+      displayResults opts.verbosityLevel oldPath newName fmtUsed pkg md
 
       promptResult <- liftIO $ case opts.interactive.v of
-         True  -> prompt
-         False -> return Yes
+        True  -> prompt
+        False -> return Yes
 
-      liftIO $ when ((promptResult == Yes) && (opts.noAction.v == False)) $ do
-        succeeded <- tryHardLink oldPath newPath
-        when (succeeded && opts.move.v) $ removeLink oldPath
+      liftIO $ when (promptResult == Yes) $ do
+        let destDirs = [opts.optTargetDir]
+
+        linkOutcomes <- sequence . map (doOneDest opts.noAction oldPath newName) $ destDirs
+
+        when ((all (== True) linkOutcomes) && (not opts.noAction.v) && opts.move.v) $ do
+          putStrLn "All links successfully created, removing original file"
+          removeLink oldPath
 
       return $ continue promptResult
 
@@ -127,6 +127,19 @@ processBook opts formatters (oldPath:paths) _     priRes = do
          (_    , r) -> r
 
    processBook opts formatters paths cont newRes
+
+
+doOneDest :: NoActionSwitch -> FilePath -> FilePath -> FilePath -> IO Bool
+doOneDest (NoActionSwitch True) _ _ _ = pure True
+doOneDest (NoActionSwitch False) srcPath newName destDir = do
+  let destPath = destDir </> newName
+  fileExists <- liftIO $ doesFileExist destPath
+  if fileExists
+    then do
+      printf "File %s already exists. No change." destPath
+      pure False
+    else
+      tryHardLink srcPath destPath
 
 
 tryHardLink :: FilePath -> FilePath -> IO Bool
@@ -168,15 +181,7 @@ main = do
          liftIO $ putStr Rules.defaults
          throwError ExitSuccess
 
-      let targetDir = optTargetDir opts
-      targetDirExists <- liftIO $ doesDirectoryExist targetDir
-      unless targetDirExists $ do
-         void . liftIO $ printf
-            "ERROR: Target directory doesn't exist: %s\n" targetDir
-         throwError exitInitFailure
-
-      -- Locate the rules file, load it and parse into a list of
-      -- formatters
+      -- Locate the rules file, load it and parse into a list of formatters
       fs <- initialize opts
 
       when opts.noAction.v $ liftIO
