@@ -4,23 +4,22 @@
 
 {-# LANGUAGE FlexibleContexts, OverloadedRecordDot #-}
 
-import Codec.Epub
-import Codec.Epub.Data.Metadata
-import Codec.Epub.Data.Package
+import Codec.Epub (format, getMetadata, getPackage, getPkgXmlFromZip)
+import Codec.Epub.Data.Metadata (Metadata)
+import Codec.Epub.Data.Package (Package)
 import Control.Applicative
 import Control.Exception (try)
-import Control.Monad
-import Control.Monad.Except
+import Control.Monad.Except (MonadIO, liftIO, runExceptT, when)
 import Data.List.NonEmpty (toList)
 import GHC.IO.Exception (IOException)
 import System.Directory (copyFile, doesDirectoryExist, doesFileExist)
-import System.FilePath
-import System.Exit
+import System.FilePath ((</>))
+import System.Exit (ExitCode (ExitSuccess), exitWith)
 import System.IO ( BufferMode ( NoBuffering )
                  , hSetBuffering, stdin, stdout, stderr 
                  )
 import System.Posix (createLink, removeLink)
-import Text.Printf
+import Text.Printf (printf)
 
 import EpubTools.EpubName.Common
   ( BookFiles (..)
@@ -33,11 +32,11 @@ import EpubTools.EpubName.Common
   )
 import qualified EpubTools.EpubName.Common (VerbosityLevel (Normal, ShowBookInfo, ShowFormatter))
 import EpubTools.EpubName.Format.Format ( Formatter (..), tryFormatting )
-import EpubTools.EpubName.Format.Util
-import EpubTools.EpubName.Main
+import EpubTools.EpubName.Format.Util (Globals (..), throwError)
+import EpubTools.EpubName.Main (initialize)
 import EpubTools.EpubName.Opts (parseOpts)
 import EpubTools.EpubName.Prompt ( PromptResult (..), prompt, continue )
-import EpubTools.EpubName.Util
+import EpubTools.EpubName.Util (exitProcessingFailure)
 
 
 {- Construct additional verbose output

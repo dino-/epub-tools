@@ -1,7 +1,10 @@
 module EpubTools.EpubName.Util
-   where
+  ( exitInitFailure
+  , exitProcessingFailure
+  )
+  where
 
-import System.Exit
+import System.Exit (ExitCode (ExitFailure))
 
 
 exitInitFailure, exitProcessingFailure :: ExitCode

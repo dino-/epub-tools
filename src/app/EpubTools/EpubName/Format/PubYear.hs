@@ -1,21 +1,21 @@
 module EpubTools.EpubName.Format.PubYear
-   ( extractYear
-   , getPubYear
-   )
-   where
+  ( extractYear
+  , getPubYear
+  )
+  where
 
-import Codec.Epub.Data.Metadata ( DateValue (..), DateEvent (Created, Date,
-  Epub, Issued, Modified), Metadata (metaDates) )
-import Control.Monad ( (<=<) )
+import Codec.Epub.Data.Metadata (DateValue (..), DateEvent (Created, Date,
+  Epub, Issued, Modified), Metadata (metaDates))
+import Control.Monad ((<=<))
 import qualified Data.Map.Strict as Map
-import Data.Monoid ( First (..), getFirst )
-import Text.Regex ( matchRegex, mkRegex )
+import Data.Monoid (First (..), getFirst)
+import Text.Regex (matchRegex, mkRegex)
 
 import EpubTools.EpubName.Common
   ( Options (pubYear)
   , PubYear (AnyDate, NoDate, NoModified)
   )
-import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Format.Util (EN, Globals (gMetadata, gOpts), asks)
 
 
 {- Look for publication date, return "" if none found

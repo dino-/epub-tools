@@ -1,20 +1,20 @@
 {-# LANGUAGE FlexibleContexts, TupleSections #-}
 
 module EpubTools.EpubName.Main
-   ( initialize
-   )
-   where
+  ( initialize
+  )
+  where
 
-import Control.Monad.Except
+import Control.Monad.Except (MonadError, MonadIO, liftIO, throwError)
 import Data.List.NonEmpty hiding (map)
 import Data.Maybe (fromMaybe)
-import Data.Monoid
-import System.Directory ( doesFileExist )
-import System.Environment
-import System.Exit
-import System.FilePath
+import Data.Monoid (First (..), getFirst)
+import System.Directory (doesFileExist)
+import System.Environment (lookupEnv)
+import System.Exit (ExitCode)
+import System.FilePath ((</>))
 import System.IO.Error (tryIOError)
-import Text.Printf
+import Text.Printf (PrintfArg, PrintfType, printf)
 
 import EpubTools.EpubName.Common
   ( Options (rulesPaths, verbosityLevel)
@@ -22,9 +22,9 @@ import EpubTools.EpubName.Common
   , VerbosityLevel (Normal)
   )
 import qualified EpubTools.EpubName.Doc.Rules as Rules
-import EpubTools.EpubName.Format.Compile
-import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Util
+import EpubTools.EpubName.Format.Compile (parseRules)
+import EpubTools.EpubName.Format.Format (Formatter)
+import EpubTools.EpubName.Util (exitInitFailure)
 
 
 initialize :: (MonadError ExitCode m, MonadIO m) =>

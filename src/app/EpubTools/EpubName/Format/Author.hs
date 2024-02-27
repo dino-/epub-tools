@@ -4,15 +4,15 @@ module EpubTools.EpubName.Format.Author
    )
    where
 
-import Codec.Epub.Data.Metadata
-import Control.Monad
+import Codec.Epub.Data.Metadata (Creator (..), Metadata (metaCreators))
+import Control.Monad ((>=>), mplus, unless)
 import Data.List ( intercalate )
 import Data.Maybe ( isJust )
 import Prelude hiding ( last )
-import Text.Printf
-import Text.Regex
+import Text.Printf (printf)
+import Text.Regex (matchRegex, mkRegex, splitRegex)
 
-import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Format.Util (EN, asks, gMetadata, scrubString, throwError)
 
 
 extractAuthors :: EN String

@@ -3,11 +3,13 @@
 module EpubTools.EpubName.Format.Compile
    where
 
-import Data.Maybe ( catMaybes )
+import Data.Maybe (catMaybes)
 import Text.ParserCombinators.Parsec
 
-import EpubTools.EpubName.Format.Author
-import EpubTools.EpubName.Format.Format
+import EpubTools.EpubName.Format.Author (authorMatches)
+import EpubTools.EpubName.Format.Format (Formatter (..), ReplF, authors,
+  extractTitle, index, literal, monthNum, pad, publisher, scrub,
+  subjectMatches, wordNum, year)
 
 
 parseRules :: SourceName -> String -> Either ParseError [Formatter]

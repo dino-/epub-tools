@@ -11,20 +11,21 @@ module EpubTools.EpubName.Format.Format
    )
    where
 
-import Codec.Epub.Data.Metadata
-import Control.Monad.Except
+import Codec.Epub.Data.Metadata (Creator (..), Metadata (..), titleText)
+import Control.Monad.Except (MonadError, MonadIO, mplus, unless)
 import Data.List ( isPrefixOf )
 import Data.Maybe ( isJust, listToMaybe )
-import Text.Printf
-import Text.Regex
+import Text.Printf (printf)
+import Text.Regex (matchRegex, mkRegex, mkRegexWithOpts)
 
 import EpubTools.EpubName.Common
   ( Options (includePublisher)
   , PublisherSwitch (..)
   )
-import EpubTools.EpubName.Format.Author
-import EpubTools.EpubName.Format.PubYear
-import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Format.Author (extractAuthors)
+import EpubTools.EpubName.Format.PubYear (getPubYear)
+import EpubTools.EpubName.Format.Util (EN, Globals (gMetadata, gOpts), asks,
+  runEN, sanitizeString, scrubString, throwError)
 
 
 type ReplF = [String] -> EN String

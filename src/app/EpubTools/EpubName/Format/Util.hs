@@ -1,21 +1,24 @@
 module EpubTools.EpubName.Format.Util
-   ( Globals (..)
-   , EN , runEN
-   , throwError
-   , asks
-   , scrubString
-   , sanitizeString
-   )
-   where
+  ( EN
+  , Globals (..)
+  , runEN
+  , scrubString
+  , sanitizeString
 
-import Codec.Epub.Data.Metadata
-import Codec.Epub.Data.Package
-import Control.Monad.Except
-import Control.Monad.Identity
-import Control.Monad.Reader
-import Data.Char
-import Data.List ( foldl' )
-import Text.Regex
+  -- re-exporting
+  , asks
+  , throwError
+  )
+  where
+
+import Codec.Epub.Data.Metadata (Metadata)
+import Codec.Epub.Data.Package (Package)
+import Control.Monad.Except (ExceptT, runExceptT, throwError)
+import Control.Monad.Identity (Identity, runIdentity)
+import Control.Monad.Reader (ReaderT, asks, runReaderT)
+import Data.Char (toLower, toUpper)
+import Data.List (foldl')
+import Text.Regex (mkRegex, subRegex)
 
 import EpubTools.EpubName.Common (Options)
 
