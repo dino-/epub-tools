@@ -129,47 +129,6 @@ versionHelper progName =
   ]
 
 
--- options :: [OptDescr (Options -> Options)]
--- options =
---    [ Option ['M'] ["no-modified-date"]
---       (NoArg (\opts -> opts { optPubYear = NoModified } ))
---       "Don't use modified date for publication year"
---    , Option ['D'] ["no-date"]
---       (NoArg (\opts -> opts { optPubYear = NoDate } )) 
---       "Suppress inclusion of any publication year"
---    , Option [] ["dump-rules"] 
---       (NoArg (\opts -> opts { optDumpRules = True } ))
---       "Output built-in rules definitions, use to make your own"
---    , Option ['h'] ["help"] 
---       (NoArg (\opts -> opts { optHelp = True } ))
---       "This help text"
---    , Option [] ["help-rules"] 
---       (NoArg (\opts -> opts { optHelpRules = True } ))
---       "Help on the naming rules domain specific language"
---    , Option ['i'] ["interactive"] 
---       (NoArg (\opts -> opts { optInteractive = True } ))
---       "Prompt user interactively"
---    , Option ['n'] ["no-action"]
---       (NoArg (\opts -> opts { optNoAction = True } )) 
---       "Display what would be done, but do nothing"
---    , Option ['p'] ["publisher"]
---       (NoArg (\opts -> opts { optPublisher = True } )) 
---       "Include book publisher if present. See below"
---    , Option ['r'] ["rules"] (ReqArg prependRulesPath "FILE")
---       "Specify a rules file for naming the books"
---    , Option ['t'] ["target-dir"]
---       ( ReqArg
---          (\p opts -> opts { optTargetDir = p } )
---          "DIR")
---       "Target directory for successfully renamed books. Default: ."
---    , Option ['v'] ["verbose"]
---       ( OptArg
---          ((\n opts -> opts { optVerbose = Just (read n)}) . fromMaybe "1")
---          "LEVEL")
---       "Verbosity level: 1, 2"
---    ]
-
-
 parseOpts :: IO Options
 parseOpts = do
   pn <- getProgName
