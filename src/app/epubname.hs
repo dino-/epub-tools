@@ -165,9 +165,6 @@ main = do
 
    either exitWith exitWith =<< (runExceptT $ do
       opts <- liftIO parseOpts
-      -- FIXME For debugging
-      -- liftIO $ print opts
-      -- void $ throwError ExitSuccess
 
       -- Locate the rules file, load it and parse into a list of formatters
       fs <- initialize opts

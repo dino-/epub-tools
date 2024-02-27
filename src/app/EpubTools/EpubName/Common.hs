@@ -20,37 +20,28 @@ data PubYear
       -- Use any date found in this order: Issued, Created, Epub (date element), Modified
    | NoModified   -- Don't use Modified date: Issued, Created, Epub (date element)
    | NoDate       -- Don't do publication date at all
-  deriving Show  -- FIXME
 
 newtype InteractiveSwitch = InteractiveSwitch { v :: Bool }
-  deriving Show  -- FIXME
 
 newtype NoActionSwitch = NoActionSwitch { v :: Bool }
-  deriving Show  -- FIXME
 
 newtype PublisherSwitch = PublisherSwitch { v :: Bool }
-  deriving Show  -- FIXME
 
 newtype RulesLocations = RulesLocations (NonEmpty RulesLocation)
-  deriving Show  -- FIXME
 
 data RulesLocation
   = RulesPath FilePath
   | RulesViaEnv String FilePath
   | BuiltinRules
-  deriving Show  -- FIXME
 
 newtype TargetDirs = TargetDirs { v :: NonEmpty FilePath }
-  deriving Show  -- FIXME
 
 newtype MoveSwitch = MoveSwitch { v :: Bool }
-  deriving Show  -- FIXME
 
 data VerbosityLevel = Normal | ShowFormatter | ShowBookInfo
-  deriving (Eq, Ord, Show)  -- FIXME
+  deriving (Eq, Ord)
 
 newtype BookFiles = BookFiles { v :: NonEmpty FilePath }
-  deriving Show  -- FIXME
 
 data Options = Options
   { pubYear           :: PubYear
@@ -63,7 +54,6 @@ data Options = Options
   , verbosityLevel    :: VerbosityLevel
   , bookFiles         :: BookFiles
   }
-  deriving Show  -- FIXME
 
 
 intToVerbosity :: Int -> VerbosityLevel
