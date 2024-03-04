@@ -1,6 +1,3 @@
-module Main
-   where
-
 import Control.Monad.Except
 import System.Exit
 import Test.HUnit ( Counts (..), Test (..), runTestTT )
