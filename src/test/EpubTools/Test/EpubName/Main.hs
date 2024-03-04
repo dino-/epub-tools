@@ -11,14 +11,14 @@ import EpubTools.Test.EpubName.PubYear (pubYearTests)
 
 main :: IO ()
 main = do
-   -- Can use this def to adjust the options with defaultOptions { ... }
-   let testOpts = defaultOptions
-   ir <- runExceptT $ initialize testOpts
-   either (exitWith) (runTests testOpts) ir
-   
+  -- Can use this def to adjust the options with defaultOptions { ... }
+  let testOpts = defaultOptions
+  ir <- runExceptT $ initialize testOpts
+  either (exitWith) (runTests testOpts) ir
+
 
 runTests :: Options -> [Formatter] -> IO ()
 runTests opts fs = defaultMain $ testGroup " EpubName tests"
-   [ formatTests opts fs
-   , pubYearTests
-   ]
+  [ formatTests opts fs
+  , pubYearTests
+  ]
