@@ -3,14 +3,15 @@ module EpubTools.Test.EpubName.PubYear
    )
    where
 
-import Test.HUnit ( Test (..), assertEqual )
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit ((@=?), testCase)
 
-import Codec.Epub.Data.Metadata ( DateValue (..) )
-import EpubTools.EpubName.Format.PubYear
+import Codec.Epub.Data.Metadata (DateValue (..))
+import EpubTools.EpubName.Format.PubYear (extractYear)
 
 
-pubYearTests :: Test
-pubYearTests = TestLabel "PubYear" $ TestList
+pubYearTests :: TestTree
+pubYearTests = testGroup "PubYear"
    [ testExtractYear "2001-03-25T00:00:00" "2001"
    , testExtractYear "2007" "2007"
    , testExtractYear "Sat Nov 03 18:49:50 +0100 2007" "2007"
@@ -24,6 +25,6 @@ pubYearTests = TestLabel "PubYear" $ TestList
    ]
 
 
-testExtractYear :: String -> String -> Test
-testExtractYear dateStr expected = TestCase $
-   assertEqual dateStr (extractYear . DateValue $ dateStr) (Just expected)
+testExtractYear :: String -> String -> TestTree
+testExtractYear dateStr expected = testCase dateStr $
+   (Just expected) @=? (extractYear . DateValue $ dateStr)

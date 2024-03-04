@@ -103,17 +103,21 @@ executable epubname
 
 test-suite epubname-tests
   import: lang
-  import: rts
   type: exitcode-stdio-1.0
   hs-source-dirs: src/app src/test
   main-is: EpubTools/Test/EpubName/Main.hs
+  ghc-options:
+    -rtsopts
+    -threaded
+    -with-rtsopts=-N
   build-depends:
       base >= 3 && < 5
     , containers
     , heredoc
-    , HUnit
     , parsec
     , regex-compat
+    , tasty
+    , tasty-hunit
   other-modules:
     EpubTools.EpubName.Common
     EpubTools.EpubName.Doc.Rules

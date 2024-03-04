@@ -16,7 +16,6 @@
       - `<dc:subject>anthology</dc:subject>`
    - Perhaps as part of epubmeta?
 - Perform util/win-dist.sh behavior in post-build step of Setup.hs? I think it makes sense.
-- Replace HUnit alone with tasty, tasty-hunit in test code everywhere
 
 
 ## epubmeta

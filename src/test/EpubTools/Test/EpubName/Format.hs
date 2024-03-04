@@ -3,24 +3,25 @@ module EpubTools.Test.EpubName.Format
    )
    where
 
-import Codec.Epub.Data.Metadata
-import Codec.Epub.Data.Package
-import Control.Monad.Except
+import Codec.Epub.Data.Metadata (Creator (..), DateEvent (..), DateValue (..),
+  Metadata (..), Title (..), emptyMetadata)
+import Codec.Epub.Data.Package (Package (..))
+import Control.Monad.Except (runExceptT)
 import qualified Data.Map.Strict as Map
-import Test.HUnit ( Test (..), assertEqual )
-import Test.HUnit.Base ( Assertion )
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.HUnit ((@=?), testCase)
 
 import EpubTools.EpubName.Common
   ( Options (includePublisher, pubYear)
   , PublisherSwitch (..)
   , PubYear (NoDate, NoModified)
   )
-import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Format.Util
+import EpubTools.EpubName.Format.Format (Formatter, tryFormatting)
+import EpubTools.EpubName.Format.Util (Globals (..))
 
 
-formatTests :: Options -> [Formatter] -> Test
-formatTests opts fs = TestLabel "Format" $ TestList $
+formatTests :: Options -> [Formatter] -> TestTree
+formatTests opts fs = testGroup "Format" $
    map (\f -> f ((Globals opts (Package "3.3" "") emptyMetadata), fs))
       [ testAuthorMinimal
       , testAuthorOneName
@@ -114,15 +115,15 @@ formatTests opts fs = TestLabel "Format" $ TestList $
 
 
 assertNewName :: Globals -> [Formatter] -> String
-   -> (String, String) -> Assertion
-assertNewName globals fs desc expected = do
+   -> (String, FilePath) -> TestTree
+assertNewName globals fs desc expected = testCase desc $ do
    result <- runExceptT $ tryFormatting globals fs ""
    let actual = either (\em -> ("NO FORMATTER", em)) id result
-   assertEqual desc expected actual
+   expected @=? actual
 
 
-testAuthorMinimal :: (Globals, [Formatter]) -> Test
-testAuthorMinimal (gs, fs) = TestCase $
+testAuthorMinimal :: (Globals, [Formatter]) -> TestTree
+testAuthorMinimal (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "minimal author" expected
    where
       meta = emptyMetadata
@@ -136,8 +137,8 @@ testAuthorMinimal (gs, fs) = TestCase $
          )
 
 
-testAuthorOneName :: (Globals, [Formatter]) -> Test
-testAuthorOneName (gs, fs) = TestCase $
+testAuthorOneName :: (Globals, [Formatter]) -> TestTree
+testAuthorOneName (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "author is a single word" expected
    where
@@ -152,8 +153,8 @@ testAuthorOneName (gs, fs) = TestCase $
          )
 
 
-testAuthorRole :: (Globals, [Formatter]) -> Test
-testAuthorRole (gs, fs) = TestCase $
+testAuthorRole :: (Globals, [Formatter]) -> TestTree
+testAuthorRole (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "author with role" expected
    where
       meta = emptyMetadata
@@ -167,8 +168,8 @@ testAuthorRole (gs, fs) = TestCase $
          )
 
 
-testAuthorFileas :: (Globals, [Formatter]) -> Test
-testAuthorFileas (gs, fs) = TestCase $
+testAuthorFileas :: (Globals, [Formatter]) -> TestTree
+testAuthorFileas (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "author with file-as" expected
    where
       meta = emptyMetadata
@@ -184,8 +185,8 @@ testAuthorFileas (gs, fs) = TestCase $
          )
 
 
-testAuthorFileasParens :: (Globals, [Formatter]) -> Test
-testAuthorFileasParens (gs, fs) = TestCase $
+testAuthorFileasParens :: (Globals, [Formatter]) -> TestTree
+testAuthorFileasParens (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "author with file-as and pesky parenthesized full names" expected
    where
@@ -202,8 +203,8 @@ testAuthorFileasParens (gs, fs) = TestCase $
          )
 
 
-testAuthorFull :: (Globals, [Formatter]) -> Test
-testAuthorFull (gs, fs) = TestCase $
+testAuthorFull :: (Globals, [Formatter]) -> TestTree
+testAuthorFull (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "author fully filled out" expected
    where
       meta = emptyMetadata
@@ -219,8 +220,8 @@ testAuthorFull (gs, fs) = TestCase $
          )
 
 
-testAuthorMiddle :: (Globals, [Formatter]) -> Test
-testAuthorMiddle (gs, fs) = TestCase $
+testAuthorMiddle :: (Globals, [Formatter]) -> TestTree
+testAuthorMiddle (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "author with middle-name" expected
    where
       meta = emptyMetadata
@@ -236,8 +237,8 @@ testAuthorMiddle (gs, fs) = TestCase $
          )
 
 
-testMultiAutCreators :: (Globals, [Formatter]) -> Test
-testMultiAutCreators (gs, fs) = TestCase $
+testMultiAutCreators :: (Globals, [Formatter]) -> TestTree
+testMultiAutCreators (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "several authors" expected
    where
       meta = emptyMetadata
@@ -258,8 +259,8 @@ testMultiAutCreators (gs, fs) = TestCase $
          )
 
 
-testMultiAutOneString :: (Globals, [Formatter]) -> Test
-testMultiAutOneString (gs, fs) = TestCase $
+testMultiAutOneString :: (Globals, [Formatter]) -> TestTree
+testMultiAutOneString (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "more than one author separated by & and/or and" expected
    where
       meta = emptyMetadata
@@ -273,8 +274,8 @@ testMultiAutOneString (gs, fs) = TestCase $
          )
 
 
-testNoAuthor :: (Globals, [Formatter]) -> Test
-testNoAuthor (gs, fs) = TestCase $
+testNoAuthor :: (Globals, [Formatter]) -> TestTree
+testNoAuthor (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "no creator(s) at all" expected
    where
       meta = emptyMetadata
@@ -288,8 +289,8 @@ testNoAuthor (gs, fs) = TestCase $
          )
 
 
-testCreatorsNoAuthor :: (Globals, [Formatter]) -> Test
-testCreatorsNoAuthor (gs, fs) = TestCase $
+testCreatorsNoAuthor :: (Globals, [Formatter]) -> TestTree
+testCreatorsNoAuthor (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "creators, but no author(s) at all" expected
    where
@@ -309,8 +310,8 @@ testCreatorsNoAuthor (gs, fs) = TestCase $
          )
 
 
-testColon :: (Globals, [Formatter]) -> Test
-testColon (gs, fs) = TestCase $
+testColon :: (Globals, [Formatter]) -> TestTree
+testColon (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "colon becomes underscore" expected
    where
@@ -326,8 +327,8 @@ testColon (gs, fs) = TestCase $
          )
 
 
-testCreatorsNoAuthorPubDate :: (Globals, [Formatter]) -> Test
-testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
+testCreatorsNoAuthorPubDate :: (Globals, [Formatter]) -> TestTree
+testCreatorsNoAuthorPubDate (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "creators, but no author(s) at all, with pub date" expected
    where
@@ -348,8 +349,8 @@ testCreatorsNoAuthorPubDate (gs, fs) = TestCase $
          )
 
 
-testCreatorLastFirst :: (Globals, [Formatter]) -> Test
-testCreatorLastFirst (gs, fs) = TestCase $
+testCreatorLastFirst :: (Globals, [Formatter]) -> TestTree
+testCreatorLastFirst (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "creator text (not file-as) is last-name-first" expected
    where
@@ -367,8 +368,8 @@ testCreatorLastFirst (gs, fs) = TestCase $
          )
 
 
-testTitleCaps :: (Globals, [Formatter]) -> Test
-testTitleCaps (gs, fs) = TestCase $
+testTitleCaps :: (Globals, [Formatter]) -> TestTree
+testTitleCaps (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "title all caps" expected
    where
       meta = emptyMetadata
@@ -381,8 +382,8 @@ testTitleCaps (gs, fs) = TestCase $
          )
 
 
-testTitleBracket :: (Globals, [Formatter]) -> Test
-testTitleBracket (gs, fs) = TestCase $
+testTitleBracket :: (Globals, [Formatter]) -> TestTree
+testTitleBracket (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "title with brackets" expected
    where
@@ -397,8 +398,8 @@ testTitleBracket (gs, fs) = TestCase $
          )
 
 
-testTitleNone :: (Globals, [Formatter]) -> Test
-testTitleNone (gs, fs) = TestCase $
+testTitleNone :: (Globals, [Formatter]) -> TestTree
+testTitleNone (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "missing title" expected
    where
       meta = emptyMetadata
@@ -411,8 +412,8 @@ testTitleNone (gs, fs) = TestCase $
          )
 
 
-testTitleMultiline :: (Globals, [Formatter]) -> Test
-testTitleMultiline (gs, fs) = TestCase $
+testTitleMultiline :: (Globals, [Formatter]) -> TestTree
+testTitleMultiline (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "multiline title" expected
    where
@@ -431,8 +432,8 @@ testTitleMultiline (gs, fs) = TestCase $
          )
 
 
-testTitleHyphen :: (Globals, [Formatter]) -> Test
-testTitleHyphen (gs, fs) = TestCase $
+testTitleHyphen :: (Globals, [Formatter]) -> TestTree
+testTitleHyphen (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "title with hyphen" expected
    where
@@ -451,8 +452,8 @@ testTitleHyphen (gs, fs) = TestCase $
          )
 
 
-testTitleHyphenDates :: (Globals, [Formatter]) -> Test
-testTitleHyphenDates (gs, fs) = TestCase $
+testTitleHyphenDates :: (Globals, [Formatter]) -> TestTree
+testTitleHyphenDates (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "title with hyphen separating dates" expected
    where
@@ -470,8 +471,8 @@ testTitleHyphenDates (gs, fs) = TestCase $
          , "Anonymous-QueenVictoria_StoryOfHerLifeAndReign1819-1901.epub"
          )
 
-testTitleRomanNum :: (Globals, [Formatter]) -> Test
-testTitleRomanNum (gs, fs) = TestCase $
+testTitleRomanNum :: (Globals, [Formatter]) -> TestTree
+testTitleRomanNum (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "title with Roman numerals" expected
    where
@@ -490,8 +491,8 @@ testTitleRomanNum (gs, fs) = TestCase $
          )
 
 
-testAllPunctuation :: (Globals, [Formatter]) -> Test
-testAllPunctuation (gs, fs) = TestCase $
+testAllPunctuation :: (Globals, [Formatter]) -> TestTree
+testAllPunctuation (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "big test of all punctuation" expected
    where
       meta = emptyMetadata
@@ -506,8 +507,8 @@ testAllPunctuation (gs, fs) = TestCase $
          )
 
 
-testPubYearNoDatesPresent :: (Globals, [Formatter]) -> Test
-testPubYearNoDatesPresent (gs, fs) = TestCase $
+testPubYearNoDatesPresent :: (Globals, [Formatter]) -> TestTree
+testPubYearNoDatesPresent (gs, fs) =
    assertNewName gs { gMetadata = meta} fs
       "book with no dates at all" expected
    where
@@ -521,8 +522,8 @@ testPubYearNoDatesPresent (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyIssued :: (Globals, [Formatter]) -> Test
-testPubYearAnyIssued (gs, fs) = TestCase $
+testPubYearAnyIssued :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyIssued (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with only issued date" expected
    where
@@ -537,8 +538,8 @@ testPubYearAnyIssued (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyCreated :: (Globals, [Formatter]) -> Test
-testPubYearAnyCreated (gs, fs) = TestCase $
+testPubYearAnyCreated :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyCreated (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with only created date" expected
    where
@@ -553,8 +554,8 @@ testPubYearAnyCreated (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyDate :: (Globals, [Formatter]) -> Test
-testPubYearAnyDate (gs, fs) = TestCase $
+testPubYearAnyDate :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyDate (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with only created date" expected
    where
@@ -569,8 +570,8 @@ testPubYearAnyDate (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyEpub :: (Globals, [Formatter]) -> Test
-testPubYearAnyEpub (gs, fs) = TestCase $
+testPubYearAnyEpub :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyEpub (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with only the simple (date element) date" expected
    where
@@ -585,8 +586,8 @@ testPubYearAnyEpub (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyModified :: (Globals, [Formatter]) -> Test
-testPubYearAnyModified (gs, fs) = TestCase $
+testPubYearAnyModified :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyModified (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with only modified date" expected
    where
@@ -601,8 +602,8 @@ testPubYearAnyModified (gs, fs) = TestCase $
          )
 
 
-testPubYearAnyAllPresent :: (Globals, [Formatter]) -> Test
-testPubYearAnyAllPresent (gs, fs) = TestCase $
+testPubYearAnyAllPresent :: (Globals, [Formatter]) -> TestTree
+testPubYearAnyAllPresent (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "book with all dates" expected
    where
@@ -623,8 +624,8 @@ testPubYearAnyAllPresent (gs, fs) = TestCase $
          )
 
 
-testPubYearNoModified :: (Globals, [Formatter]) -> Test
-testPubYearNoModified (gs, fs) = TestCase $
+testPubYearNoModified :: (Globals, [Formatter]) -> TestTree
+testPubYearNoModified (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book with only modified date, --no-modified-date switch" expected
    where
@@ -640,8 +641,8 @@ testPubYearNoModified (gs, fs) = TestCase $
          )
 
 
-testPubYearNoDate :: (Globals, [Formatter]) -> Test
-testPubYearNoDate (gs, fs) = TestCase $
+testPubYearNoDate :: (Globals, [Formatter]) -> TestTree
+testPubYearNoDate (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "epub book with lots of dates but we don't want"
       expected
@@ -664,8 +665,8 @@ testPubYearNoDate (gs, fs) = TestCase $
          )
 
 
-testMagAeon :: (Globals, [Formatter]) -> Test
-testMagAeon (gs, fs) = TestCase $
+testMagAeon :: (Globals, [Formatter]) -> TestTree
+testMagAeon (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Aeon magazine" expected
    where
       meta = emptyMetadata
@@ -678,8 +679,8 @@ testMagAeon (gs, fs) = TestCase $
          )
 
 
-testMagAEon :: (Globals, [Formatter]) -> Test
-testMagAEon (gs, fs) = TestCase $
+testMagAEon :: (Globals, [Formatter]) -> TestTree
+testMagAEon (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "AEon magazine" expected
    where
       meta = emptyMetadata
@@ -692,8 +693,8 @@ testMagAEon (gs, fs) = TestCase $
          )
 
 
-testMagApexPound :: (Globals, [Formatter]) -> Test
-testMagApexPound (gs, fs) = TestCase $
+testMagApexPound :: (Globals, [Formatter]) -> TestTree
+testMagApexPound (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Apex Magazine, pound sign and issue number" expected
    where
@@ -709,8 +710,8 @@ testMagApexPound (gs, fs) = TestCase $
          )
 
 
-testMagApexIssue :: (Globals, [Formatter]) -> Test
-testMagApexIssue (gs, fs) = TestCase $
+testMagApexIssue :: (Globals, [Formatter]) -> TestTree
+testMagApexIssue (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Apex Magazine, Issue number" expected
    where
@@ -726,8 +727,8 @@ testMagApexIssue (gs, fs) = TestCase $
          )
 
 
-testMagApexLong :: (Globals, [Formatter]) -> Test
-testMagApexLong (gs, fs) = TestCase $
+testMagApexLong :: (Globals, [Formatter]) -> TestTree
+testMagApexLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Apex Magazine, title with month year" expected
    where
@@ -743,8 +744,8 @@ testMagApexLong (gs, fs) = TestCase $
          )
 
 
-testChallengingDestinyShort :: (Globals, [Formatter]) -> Test
-testChallengingDestinyShort (gs, fs) = TestCase $
+testChallengingDestinyShort :: (Globals, [Formatter]) -> TestTree
+testChallengingDestinyShort (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Challenging Destiny Magazine, short title" expected
    where
@@ -760,8 +761,8 @@ testChallengingDestinyShort (gs, fs) = TestCase $
          )
 
 
-testChallengingDestinyLong :: (Globals, [Formatter]) -> Test
-testChallengingDestinyLong (gs, fs) = TestCase $
+testChallengingDestinyLong :: (Globals, [Formatter]) -> TestTree
+testChallengingDestinyLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Challenging Destiny Magazine, long title" expected
    where
@@ -777,8 +778,8 @@ testChallengingDestinyLong (gs, fs) = TestCase $
          )
 
 
-testAnalogSingle :: (Globals, [Formatter]) -> Test
-testAnalogSingle (gs, fs) = TestCase $
+testAnalogSingle :: (Globals, [Formatter]) -> TestTree
+testAnalogSingle (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Analog, single month" expected
    where
       meta = emptyMetadata
@@ -793,8 +794,8 @@ testAnalogSingle (gs, fs) = TestCase $
          )
 
 
-testAnalogDouble :: (Globals, [Formatter]) -> Test
-testAnalogDouble (gs, fs) = TestCase $
+testAnalogDouble :: (Globals, [Formatter]) -> TestTree
+testAnalogDouble (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Analog, double month" expected
    where
       meta = emptyMetadata
@@ -809,8 +810,8 @@ testAnalogDouble (gs, fs) = TestCase $
          )
 
 
-testAsimovs :: (Globals, [Formatter]) -> Test
-testAsimovs (gs, fs) = TestCase $
+testAsimovs :: (Globals, [Formatter]) -> TestTree
+testAsimovs (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Asimovs" expected
    where
       meta = emptyMetadata
@@ -824,8 +825,8 @@ testAsimovs (gs, fs) = TestCase $
          , "AsimovsSF2003-08.epub"
          )
 
-testFantasyMagazine :: (Globals, [Formatter]) -> Test
-testFantasyMagazine (gs, fs) = TestCase $
+testFantasyMagazine :: (Globals, [Formatter]) -> TestTree
+testFantasyMagazine (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Fantasy Magazine" expected
    where
       meta = emptyMetadata
@@ -847,8 +848,8 @@ testFantasyMagazine (gs, fs) = TestCase $
          )
 
 
-testFsfShort :: (Globals, [Formatter]) -> Test
-testFsfShort (gs, fs) = TestCase $
+testFsfShort :: (Globals, [Formatter]) -> TestTree
+testFsfShort (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, short" expected
    where
@@ -863,8 +864,8 @@ testFsfShort (gs, fs) = TestCase $
          )
 
 
-testFsfShortComma :: (Globals, [Formatter]) -> Test
-testFsfShortComma (gs, fs) = TestCase $
+testFsfShortComma :: (Globals, [Formatter]) -> TestTree
+testFsfShortComma (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, short, comma" expected
    where
@@ -879,8 +880,8 @@ testFsfShortComma (gs, fs) = TestCase $
          )
 
 
-testFsfLong :: (Globals, [Formatter]) -> Test
-testFsfLong (gs, fs) = TestCase $
+testFsfLong :: (Globals, [Formatter]) -> TestTree
+testFsfLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, long" expected
    where
@@ -896,8 +897,8 @@ testFsfLong (gs, fs) = TestCase $
          )
 
 
-testFsfAmpersand :: (Globals, [Formatter]) -> Test
-testFsfAmpersand (gs, fs) = TestCase $
+testFsfAmpersand :: (Globals, [Formatter]) -> TestTree
+testFsfAmpersand (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, ampersand" expected
    where
@@ -912,8 +913,8 @@ testFsfAmpersand (gs, fs) = TestCase $
          )
 
 
-testFsfAmpersandSpaces :: (Globals, [Formatter]) -> Test
-testFsfAmpersandSpaces (gs, fs) = TestCase $
+testFsfAmpersandSpaces :: (Globals, [Formatter]) -> TestTree
+testFsfAmpersandSpaces (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, ampersand, spaces" expected
    where
@@ -928,8 +929,8 @@ testFsfAmpersandSpaces (gs, fs) = TestCase $
          )
 
 
-testFsfVeryLong :: (Globals, [Formatter]) -> Test
-testFsfVeryLong (gs, fs) = TestCase $
+testFsfVeryLong :: (Globals, [Formatter]) -> TestTree
+testFsfVeryLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "FSF Magazine, very long name" expected
    where
@@ -944,8 +945,8 @@ testFsfVeryLong (gs, fs) = TestCase $
          )
 
 
-testMagFutureOrbits :: (Globals, [Formatter]) -> Test
-testMagFutureOrbits (gs, fs) = TestCase $
+testMagFutureOrbits :: (Globals, [Formatter]) -> TestTree
+testMagFutureOrbits (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "testMagFutureOrbits" expected
    where
@@ -961,8 +962,8 @@ testMagFutureOrbits (gs, fs) = TestCase $
          )
 
 
-testGudShort :: (Globals, [Formatter]) -> Test
-testGudShort (gs, fs) = TestCase $
+testGudShort :: (Globals, [Formatter]) -> TestTree
+testGudShort (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Gud Magazine, short" expected
    where
@@ -978,8 +979,8 @@ testGudShort (gs, fs) = TestCase $
          )
 
 
-testGudLong :: (Globals, [Formatter]) -> Test
-testGudLong (gs, fs) = TestCase $
+testGudLong :: (Globals, [Formatter]) -> TestTree
+testGudLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Gud Magazine, long" expected
    where
@@ -995,8 +996,8 @@ testGudLong (gs, fs) = TestCase $
          )
 
 
-testGudVeryLong :: (Globals, [Formatter]) -> Test
-testGudVeryLong (gs, fs) = TestCase $
+testGudVeryLong :: (Globals, [Formatter]) -> TestTree
+testGudVeryLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Gud Magazine, very long" expected
    where
@@ -1012,8 +1013,8 @@ testGudVeryLong (gs, fs) = TestCase $
          )
 
 
-testInterzone :: (Globals, [Formatter]) -> Test
-testInterzone (gs, fs) = TestCase $
+testInterzone :: (Globals, [Formatter]) -> TestTree
+testInterzone (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Interzone Magazine, Smashwords style" expected
    where
@@ -1029,8 +1030,8 @@ testInterzone (gs, fs) = TestCase $
          )
 
 
-testInterzoneCaps :: (Globals, [Formatter]) -> Test
-testInterzoneCaps (gs, fs) = TestCase $
+testInterzoneCaps :: (Globals, [Formatter]) -> TestTree
+testInterzoneCaps (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Interzone Magazine, started in 2014" expected
    where
@@ -1046,8 +1047,8 @@ testInterzoneCaps (gs, fs) = TestCase $
          )
 
 
-testInterzoneOldLong :: (Globals, [Formatter]) -> Test
-testInterzoneOldLong (gs, fs) = TestCase $
+testInterzoneOldLong :: (Globals, [Formatter]) -> TestTree
+testInterzoneOldLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Interzone Magazine, old style, long" expected
    where
@@ -1063,8 +1064,8 @@ testInterzoneOldLong (gs, fs) = TestCase $
          )
 
 
-testInterzoneOldShort :: (Globals, [Formatter]) -> Test
-testInterzoneOldShort (gs, fs) = TestCase $
+testInterzoneOldShort :: (Globals, [Formatter]) -> TestTree
+testInterzoneOldShort (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Interzone Magazine, old style, short" expected
    where
@@ -1080,8 +1081,8 @@ testInterzoneOldShort (gs, fs) = TestCase $
          )
 
 
-testNemesisShort :: (Globals, [Formatter]) -> Test
-testNemesisShort (gs, fs) = TestCase $
+testNemesisShort :: (Globals, [Formatter]) -> TestTree
+testNemesisShort (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Nemesis Magazine, short" expected
    where
@@ -1097,8 +1098,8 @@ testNemesisShort (gs, fs) = TestCase $
          )
 
 
-testNemesisLong :: (Globals, [Formatter]) -> Test
-testNemesisLong (gs, fs) = TestCase $
+testNemesisLong :: (Globals, [Formatter]) -> TestTree
+testNemesisLong (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Nemesis Magazine, long" expected
    where
@@ -1114,8 +1115,8 @@ testNemesisLong (gs, fs) = TestCase $
          )
 
 
-testMagSomethingWicked :: (Globals, [Formatter]) -> Test
-testMagSomethingWicked (gs, fs) = TestCase $
+testMagSomethingWicked :: (Globals, [Formatter]) -> TestTree
+testMagSomethingWicked (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Something Wicked Magazine" expected
    where
@@ -1131,8 +1132,8 @@ testMagSomethingWicked (gs, fs) = TestCase $
          )
 
 
-testMagSomethingWickedMonth :: (Globals, [Formatter]) -> Test
-testMagSomethingWickedMonth (gs, fs) = TestCase $
+testMagSomethingWickedMonth :: (Globals, [Formatter]) -> TestTree
+testMagSomethingWickedMonth (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Something Wicked Magazine, month in title" expected
    where
@@ -1150,8 +1151,8 @@ testMagSomethingWickedMonth (gs, fs) = TestCase $
          )
 
 
-testSFBestOf :: (Globals, [Formatter]) -> Test
-testSFBestOf (gs, fs) = TestCase $
+testSFBestOf :: (Globals, [Formatter]) -> TestTree
+testSFBestOf (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Science Fiction: The Best of the Year" expected
    where
@@ -1168,8 +1169,8 @@ testSFBestOf (gs, fs) = TestCase $
          )
 
 
-testBestSF :: (Globals, [Formatter]) -> Test
-testBestSF (gs, fs) = TestCase $
+testBestSF :: (Globals, [Formatter]) -> TestTree
+testBestSF (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "The Best Science Fiction and Fantasy of the Year" expected
    where
@@ -1188,8 +1189,8 @@ testBestSF (gs, fs) = TestCase $
          )
 
 
-testYearsBest :: (Globals, [Formatter]) -> Test
-testYearsBest (gs, fs) = TestCase $
+testYearsBest :: (Globals, [Formatter]) -> TestTree
+testYearsBest (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "The Year's Best SF" expected
    where
@@ -1206,8 +1207,8 @@ testYearsBest (gs, fs) = TestCase $
          )
 
 
-testMagBlackStatic :: (Globals, [Formatter]) -> Test
-testMagBlackStatic (gs, fs) = TestCase $
+testMagBlackStatic :: (Globals, [Formatter]) -> TestTree
+testMagBlackStatic (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Black Static Magazine" expected
    where
@@ -1223,8 +1224,8 @@ testMagBlackStatic (gs, fs) = TestCase $
          )
 
 
-testRageMachineMag :: (Globals, [Formatter]) -> Test
-testRageMachineMag (gs, fs) = TestCase $
+testRageMachineMag :: (Globals, [Formatter]) -> TestTree
+testRageMachineMag (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Rage Machine Magazine" expected
    where
@@ -1240,8 +1241,8 @@ testRageMachineMag (gs, fs) = TestCase $
          )
 
 
-testEclipseMagWord :: (Globals, [Formatter]) -> Test
-testEclipseMagWord (gs, fs) = TestCase $
+testEclipseMagWord :: (Globals, [Formatter]) -> TestTree
+testEclipseMagWord (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Eclipse Magazine" expected
    where
@@ -1259,8 +1260,8 @@ testEclipseMagWord (gs, fs) = TestCase $
          )
 
 
-testEclipseMagNum :: (Globals, [Formatter]) -> Test
-testEclipseMagNum (gs, fs) = TestCase $
+testEclipseMagNum :: (Globals, [Formatter]) -> TestTree
+testEclipseMagNum (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Eclipse Magazine" expected
    where
@@ -1278,8 +1279,8 @@ testEclipseMagNum (gs, fs) = TestCase $
          )
 
 
-testBcs :: (Globals, [Formatter]) -> Test
-testBcs (gs, fs) = TestCase $
+testBcs :: (Globals, [Formatter]) -> TestTree
+testBcs (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Beneath Ceaseless Skies Magazine" expected
    where
@@ -1303,8 +1304,8 @@ testBcs (gs, fs) = TestCase $
          )
 
 
-testBkpFileAs :: (Globals, [Formatter]) -> Test
-testBkpFileAs (gs, fs) = TestCase $
+testBkpFileAs :: (Globals, [Formatter]) -> TestTree
+testBkpFileAs (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and present in file-as"
       expected
@@ -1323,8 +1324,8 @@ testBkpFileAs (gs, fs) = TestCase $
          )
 
 
-testBkpText :: (Globals, [Formatter]) -> Test
-testBkpText (gs, fs) = TestCase $
+testBkpText :: (Globals, [Formatter]) -> TestTree
+testBkpText (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and present in text"
       expected
@@ -1343,8 +1344,8 @@ testBkpText (gs, fs) = TestCase $
          )
 
 
-testBkpMissing :: (Globals, [Formatter]) -> Test
-testBkpMissing (gs, fs) = TestCase $
+testBkpMissing :: (Globals, [Formatter]) -> TestTree
+testBkpMissing (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "book publisher suffix requested and not present"
       expected
@@ -1361,8 +1362,8 @@ testBkpMissing (gs, fs) = TestCase $
          )
 
 
-testMagUniverse :: (Globals, [Formatter]) -> Test
-testMagUniverse (gs, fs) = TestCase $
+testMagUniverse :: (Globals, [Formatter]) -> TestTree
+testMagUniverse (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "Jim Baen's Universe Magazine" expected
    where
@@ -1379,8 +1380,8 @@ testMagUniverse (gs, fs) = TestCase $
          )
 
 
-testMagClarkesworld :: (Globals, [Formatter]) -> Test
-testMagClarkesworld (gs, fs) = TestCase $
+testMagClarkesworld :: (Globals, [Formatter]) -> TestTree
+testMagClarkesworld (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Clarkesworld Magazine" expected
    where
@@ -1397,8 +1398,8 @@ testMagClarkesworld (gs, fs) = TestCase $
          )
 
 
-testLightspeedDate :: (Globals, [Formatter]) -> Test
-testLightspeedDate (gs, fs) = TestCase $
+testLightspeedDate :: (Globals, [Formatter]) -> TestTree
+testLightspeedDate (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Lightspeed Magazine, date in title" expected
    where
@@ -1414,8 +1415,8 @@ testLightspeedDate (gs, fs) = TestCase $
          )
 
 
-testLightspeedMagIssue :: (Globals, [Formatter]) -> Test
-testLightspeedMagIssue (gs, fs) = TestCase $
+testLightspeedMagIssue :: (Globals, [Formatter]) -> TestTree
+testLightspeedMagIssue (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Lightspeed Magazine, issue number in title" expected
    where
@@ -1430,8 +1431,8 @@ testLightspeedMagIssue (gs, fs) = TestCase $
          )
 
 
-testLightspeedIssue :: (Globals, [Formatter]) -> Test
-testLightspeedIssue (gs, fs) = TestCase $
+testLightspeedIssue :: (Globals, [Formatter]) -> TestTree
+testLightspeedIssue (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Lightspeed Magazine, issue number in title" expected
    where
@@ -1445,8 +1446,8 @@ testLightspeedIssue (gs, fs) = TestCase $
          )
 
 
-testLightspeedMagIssueDate :: (Globals, [Formatter]) -> Test
-testLightspeedMagIssueDate (gs, fs) = TestCase $
+testLightspeedMagIssueDate :: (Globals, [Formatter]) -> TestTree
+testLightspeedMagIssueDate (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Lightspeed Magazine, both issue and date in title" expected
    where
@@ -1460,8 +1461,8 @@ testLightspeedMagIssueDate (gs, fs) = TestCase $
          )
 
 
-testMagWeirdTales :: (Globals, [Formatter]) -> Test
-testMagWeirdTales (gs, fs) = TestCase $
+testMagWeirdTales :: (Globals, [Formatter]) -> TestTree
+testMagWeirdTales (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Weird Tales magazine" expected
    where
@@ -1481,8 +1482,8 @@ testMagWeirdTales (gs, fs) = TestCase $
          )
 
 
-testMagGalaxysEdge :: (Globals, [Formatter]) -> Test
-testMagGalaxysEdge (gs, fs) = TestCase $
+testMagGalaxysEdge :: (Globals, [Formatter]) -> TestTree
+testMagGalaxysEdge (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Galaxy's Edge magazine" expected
    where
@@ -1496,8 +1497,8 @@ testMagGalaxysEdge (gs, fs) = TestCase $
          )
 
 
-testMagPlasmaFreq :: (Globals, [Formatter]) -> Test
-testMagPlasmaFreq (gs, fs) = TestCase $
+testMagPlasmaFreq :: (Globals, [Formatter]) -> TestTree
+testMagPlasmaFreq (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Plasma Frequency magazine" expected
    where
@@ -1511,8 +1512,8 @@ testMagPlasmaFreq (gs, fs) = TestCase $
          )
 
 
-testMagPlasmaFreqMonth :: (Globals, [Formatter]) -> Test
-testMagPlasmaFreqMonth (gs, fs) = TestCase $
+testMagPlasmaFreqMonth :: (Globals, [Formatter]) -> TestTree
+testMagPlasmaFreqMonth (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Plasma Frequency magazine, incl month/year in title" expected
    where
@@ -1526,8 +1527,8 @@ testMagPlasmaFreqMonth (gs, fs) = TestCase $
          )
 
 
-testMagPunchinello1800s :: (Globals, [Formatter]) -> Test
-testMagPunchinello1800s (gs, fs) = TestCase $
+testMagPunchinello1800s :: (Globals, [Formatter]) -> TestTree
+testMagPunchinello1800s (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "Punchinello magazine from the 1800s" expected
    where
@@ -1541,8 +1542,8 @@ testMagPunchinello1800s (gs, fs) = TestCase $
          )
 
 
-testMagGenericVolNo3 :: (Globals, [Formatter]) -> Test
-testMagGenericVolNo3 (gs, fs) = TestCase $
+testMagGenericVolNo3 :: (Globals, [Formatter]) -> TestTree
+testMagGenericVolNo3 (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "generic magazine with volume and 3-digit number" expected
    where
@@ -1556,8 +1557,8 @@ testMagGenericVolNo3 (gs, fs) = TestCase $
          )
 
 
-testMagSubjWithIssue :: (Globals, [Formatter]) -> Test
-testMagSubjWithIssue (gs, fs) = TestCase $
+testMagSubjWithIssue :: (Globals, [Formatter]) -> TestTree
+testMagSubjWithIssue (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "with magazine subject and issue" expected
    where
@@ -1582,8 +1583,8 @@ testMagSubjWithIssue (gs, fs) = TestCase $
          )
 
 
-testWomensInstituteLib :: (Globals, [Formatter]) -> Test
-testWomensInstituteLib (gs, fs) = TestCase $
+testWomensInstituteLib :: (Globals, [Formatter]) -> TestTree
+testWomensInstituteLib (gs, fs) =
    assertNewName gs { gOpts = testOpts, gMetadata = meta } fs
       "Women's Institute Library" expected
    where
@@ -1601,8 +1602,8 @@ testWomensInstituteLib (gs, fs) = TestCase $
          )
 
 
-testAnthologyDate :: (Globals, [Formatter]) -> Test
-testAnthologyDate (gs, fs) = TestCase $
+testAnthologyDate :: (Globals, [Formatter]) -> TestTree
+testAnthologyDate (gs, fs) =
    assertNewName gs { gMetadata = meta } fs
       "anthology with date in title" expected
    where
@@ -1623,8 +1624,8 @@ testAnthologyDate (gs, fs) = TestCase $
          )
 
 
-testAnthology :: (Globals, [Formatter]) -> Test
-testAnthology (gs, fs) = TestCase $
+testAnthology :: (Globals, [Formatter]) -> TestTree
+testAnthology (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "anthology" expected
    where
       meta = emptyMetadata
@@ -1644,8 +1645,8 @@ testAnthology (gs, fs) = TestCase $
          )
 
 
-testMagLunaStation :: (Globals, [Formatter]) -> Test
-testMagLunaStation (gs, fs) = TestCase $
+testMagLunaStation :: (Globals, [Formatter]) -> TestTree
+testMagLunaStation (gs, fs) =
    assertNewName gs { gMetadata = meta } fs "Luna Station Quarterly magazine" expected
    where
       meta = emptyMetadata

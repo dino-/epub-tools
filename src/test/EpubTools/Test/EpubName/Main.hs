@@ -1,12 +1,12 @@
-import Control.Monad.Except
-import System.Exit
-import Test.HUnit ( Counts (..), Test (..), runTestTT )
+import Control.Monad.Except (runExceptT)
+import System.Exit (exitWith)
+import Test.Tasty (defaultMain, testGroup)
 
 import EpubTools.EpubName.Common (Options, defaultOptions)
-import EpubTools.EpubName.Format.Format
-import EpubTools.EpubName.Main
-import EpubTools.Test.EpubName.Format
-import EpubTools.Test.EpubName.PubYear
+import EpubTools.EpubName.Format.Format (Formatter)
+import EpubTools.EpubName.Main (initialize)
+import EpubTools.Test.EpubName.Format (formatTests)
+import EpubTools.Test.EpubName.PubYear (pubYearTests)
 
 
 main :: IO ()
@@ -18,22 +18,7 @@ main = do
    
 
 runTests :: Options -> [Formatter] -> IO ()
-runTests opts fs = do
-   counts <- runTestTT $ tests opts fs
-   exit $ testsPassed counts
-
-
-exit :: Bool -> IO ()
-exit True  = exitWith ExitSuccess
-exit False = exitWith $ ExitFailure 1
-
-
-testsPassed :: Counts -> Bool
-testsPassed (Counts _ _ e f) = (e == 0) && (f == 0)
-
-
-tests :: Options -> [Formatter] -> Test
-tests opts fs = TestList
+runTests opts fs = defaultMain $ testGroup " EpubName tests"
    [ formatTests opts fs
    , pubYearTests
    ]
