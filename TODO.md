@@ -16,6 +16,7 @@
       - `<dc:subject>anthology</dc:subject>`
    - Perhaps as part of epubmeta?
 - Perform util/win-dist.sh behavior in post-build step of Setup.hs? I think it makes sense.
+- Replace HUnit alone with tasty, tasty-hunit in test code everywhere
 
 
 ## epubmeta
@@ -43,6 +44,12 @@
          Test/
             Compile
             Test
+
+2024-02-28
+
+- Redesign epubname.hs, Main.hs. These modules are poorly named and too much weird stuff is lumped together in this area of the code.
+- Change one or two date examples in the usage to just YYYY
+- When does exitProcessingFailure actually happen? Seems like never. Examine what processBook does more closely.
 
 
 ## epubzip
