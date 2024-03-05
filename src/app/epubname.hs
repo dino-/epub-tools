@@ -77,7 +77,7 @@ processBook _    _          _               False priRes =
 processBook opts formatters (oldPath:paths) _     priRes = do
    result <- runExceptT $ do
       {- Parse the book's metadata
-         The reason for the nested runErrorT block is, if there is
+         The reason for the nested runExceptT block is, if there is
          failure during parsing, we need to mark the result up with the
          file path. Failures here will otherwise get lost in the output
          when multiple books are processed at once.
