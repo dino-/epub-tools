@@ -5,7 +5,7 @@ module EpubTools.EpubMeta.Edit
    where
 
 import Control.Exception
-import Control.Monad
+import Data.Monoid (First (..), getFirst)
 import System.Directory
 import System.FilePath
 import System.Environment
@@ -24,21 +24,22 @@ import EpubTools.EpubMeta.Util
 -}
 ioMaybe :: IO a -> IO (Maybe a)
 ioMaybe action = do
-   result :: (Either SomeException a) <- try action
-   either (const . return $ Nothing) (return . Just) result
+  result :: (Either SomeException a) <- try action
+  either (const . return $ Nothing) (return . Just) result
 
 
-{- Look through the user's environment looking for their preferred 
-   editor. Use /usr/bin/vi as a default if none found
+{- Look through the user's environment for their preferred editor.
+   Use vi wherever it may be on the PATH as a default if none found.
 -}
 findEditor :: EM FilePath
 findEditor = do
-   mbEditor <- liftIO $ foldr (liftM2 mplus) (findExecutable "vi")
-      [ ioMaybe $ getEnv "EDITOR"
-      , ioMaybe $ getEnv "VISUAL"
-      ]
+  mbEditor <- liftIO $ (getFirst . mconcat . map First) <$> sequence
+    [ ioMaybe $ getEnv "EDITOR"
+    , ioMaybe $ getEnv "VISUAL"
+    , findExecutable "vi"
+    ]
 
-   maybe (throwError "epubmeta: ERROR: Could not find a suitable editor in your EDITOR or VISUAL environment variables, and could not find the vi binary. Fix this situation or use epubmeta export/import.") return mbEditor
+  maybe (throwError "epubmeta: ERROR: Could not find a suitable editor in your EDITOR or VISUAL environment variables, and could not find the vi binary. Fix this situation or use epubmeta export/import.") return mbEditor
 
 
 edit :: Options -> FilePath -> EM ()
