@@ -1,5 +1,3 @@
-import Data.Maybe
-import System.Environment ( getArgs )
 import System.Exit
 
 import EpubTools.EpubMeta.Display
@@ -10,21 +8,21 @@ import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-dispatch :: Options -> [FilePath] -> EM ()
-dispatch opts (f:[]) | optEdit opts /= NotEditing = edit opts f
-dispatch opts (f:[]) | isJust . optImport $ opts  = importOpf opts f
-dispatch opts (f:[]) | optExport opts /= NoExport = exportOpf opts f
-dispatch opts (f:[])                              = display opts f
-dispatch _    _                                   = throwError usageText
+dispatch :: Options -> EM ()
+dispatch (Options (View verbose) f) = display verbose f
+dispatch (Options (Export output) f) = exportOpf output f
+dispatch (Options (Edit backup) f) = edit backup f
+dispatch (Options (Import importPath backup) f) = importOpf importPath backup f
 
 
 main :: IO ()
 main = do
-   result <- runEM $
-      liftIO getArgs >>= parseOpts >>= uncurry dispatch
-   either exitFail (const (exitWith ExitSuccess)) result
+  opts <- parseOpts
+  -- print opts
+  result <- runEM $ dispatch opts
+  either exitFail (const (exitWith ExitSuccess)) result
 
-   where
-      exitFail msg = do
-         putStrLn msg
-         exitWith $ ExitFailure 1
+  where
+    exitFail msg = do
+      putStrLn msg
+      exitWith $ ExitFailure 1

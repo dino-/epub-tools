@@ -61,6 +61,7 @@ executable epubmeta
   build-depends:
       base >= 3 && < 5
     , bytestring
+    , optparse-applicative
     , process
     , zip-archive
   other-modules:

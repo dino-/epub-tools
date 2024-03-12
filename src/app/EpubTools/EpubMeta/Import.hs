@@ -8,18 +8,14 @@ import Codec.Epub.IO ( getPkgPathXmlFromBS, writeArchive )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.List ( foldl' )
-import Data.Maybe ( fromJust )
 import System.Directory ( removeFile )
 
 import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-importOpf :: Options -> FilePath -> EM ()
-importOpf opts zipPath = do
-  -- The modified file we want to insert into the book
-  let pathToNewOpf = fromJust . optImport $ opts
-
+importOpf :: ImportPath -> Backup -> FilePath -> EM ()
+importOpf (ImportPath pathToNewOpf) _backup zipPath = do  -- FIXME
   -- Make new file into a Zip Entry
   tempEntry <- liftIO $ readEntry [] pathToNewOpf
 

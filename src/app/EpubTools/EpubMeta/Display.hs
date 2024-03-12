@@ -8,15 +8,15 @@ import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-display :: Options -> FilePath -> EM ()
-display opts zipPath = do
+display :: Verbose -> FilePath -> EM ()
+display (Verbose verbose) zipPath = do
    xml <- getPkgXmlFromZip zipPath
 
    pkg <- format `fmap` getPackage xml
    meta <- format `fmap` getMetadata xml
    liftIO $ mapM_ putStr [pkg, meta]
 
-   when (optVerbose opts) $ do
+   when verbose $ do
       mf <- format `fmap` getManifest xml
       spine <- format `fmap` getSpine xml
       guide <- format `fmap` getGuide xml

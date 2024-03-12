@@ -15,18 +15,16 @@ write path contents = liftIO $ do
    putStrLn $ "OPF XML saved as: " ++ path
 
 
-exportOpf :: Options -> FilePath -> EM ()
-exportOpf opts = export' (optExport opts)
+exportOpf :: Output -> FilePath -> EM ()
 
-
-export' :: Export -> FilePath -> EM ()
-
-export' Existing zipPath = do
-   (fullPath, contents) <- getPkgPathXmlFromZip zipPath
-   write (takeFileName fullPath) contents
-
-export' (ToPath path) zipPath = do
+exportOpf (OutputFilename path) zipPath = do
    contents <- getPkgXmlFromZip zipPath
    write path contents
 
-export' NoExport _ = undefined
+exportOpf ExistingName zipPath = do
+   (fullPath, contents) <- getPkgPathXmlFromZip zipPath
+   write (takeFileName fullPath) contents
+
+exportOpf StdOut zipPath = do
+   (_, contents) <- getPkgPathXmlFromZip zipPath
+   liftIO $ putStrLn contents
