@@ -157,8 +157,14 @@ parseOpts = do
 
 footer' :: InfoMod a
 footer' = footerDoc . Just . string $ (printf content (showVersion version) :: String)
-  where content = [here|-E|--edit mode will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi
-Note that edit mode means you get dumped into the editor with the XML document and are on your own.
+  where content = [here|This software works in one of four modes. The modes each have additional options as shown above.
+
+view    (-V|--view)    Output a human-readable report of the book's metadata (Default mode)
+edit    (-E|--edit)    Edit the book's OPF metadata XML in an editor
+export  (-X|--export)  Export the book's OPF metadata XML to a file
+import  (-I|--import)  Import an OPF metadata XML file into the book
+
+edit mode will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi
 
 For more information on the epub format:
   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm
