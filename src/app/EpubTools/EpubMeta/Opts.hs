@@ -1,4 +1,3 @@
-{- # LANGUAGE OverloadedStrings, QuasiQuotes #-}
 {-# LANGUAGE QuasiQuotes #-}
 
 module EpubTools.EpubMeta.Opts
@@ -17,44 +16,6 @@ import System.Environment (getProgName)
 import Text.Heredoc (here)
 import Text.PrettyPrint.ANSI.Leijen (string)
 import Text.Printf (printf)
-
-import EpubTools.EpubMeta.Util
-
-
--- -- -- There are three states for this, representing with a new type
--- data Edit
---    = Backup String
---    | NoBackup
---    | NotEditing
---    deriving (Eq, Show)
---    -- deriving Eq
-
--- maybeToEdit :: Maybe String -> Edit
--- maybeToEdit (Just suffix) = Backup suffix
--- maybeToEdit Nothing       = NoBackup
-
-
--- -- There are three states for this, representing with a new type
--- data Export
---    = ToPath String   -- User specified a file to export to
---    | Existing        -- User wants export to use existing name
---    | NoExport        -- This arg wasn't used at all
---    deriving (Eq, Show)
---    -- deriving Eq
-
-
--- maybeToExport :: Maybe String -> Export
--- maybeToExport (Just file) = ToPath file
--- maybeToExport Nothing     = Existing
-
-{-
-    ( -V [-v]
-    | -X [(-o FILE|-e)]
-    | -E [-b SUF]
-    | -I FILE [-b SUF]
-    )
-    FILE
--}
 
 
 newtype Verbose = Verbose Bool
@@ -86,27 +47,6 @@ data Options = Options
   , inFile :: FilePath
   }
   deriving Show
-
--- defaultOptions :: Options
--- defaultOptions = Options (View (Verbose False)) "unknown_file"
-
-
--- data Options = Options
---    { optEdit :: Edit
---    , optExport :: Export
---    , optImport :: Maybe String
---    , optVerbose :: Bool
---    }
---    deriving Show
-
-
--- defaultOptions :: Options
--- defaultOptions = Options
---    { optEdit = NotEditing
---    , optExport = NoExport
---    , optImport = Nothing
---    , optVerbose = False
---    }
 
 
 parseView :: Parser Mode
@@ -184,8 +124,10 @@ parseImport = Import
       )
 
 -- This defaults to `-V EPUBFILE` behavior when invoked with just EPUBFILE
+parseNoMode :: Parser Mode
 parseNoMode = pure (View (Verbose False))
 
+parseExplicitMode :: Parser Mode
 parseExplicitMode = parseView <|> parseEdit <|> parseExport <|> parseImport
 
 parser :: Parser Options
@@ -196,131 +138,6 @@ parser = Options
         <> help "Path to EPUB file"
         )
       )
-
-
--- data Options = Options
---   { mode :: Mode
---   , backup :: Backup
---   , verbose :: Verbose
---    -- { optEdit :: Edit
---    -- , optExport :: Export
---    -- , optImport :: Maybe String
---    -- , optVerbose :: Bool
---    }
---    deriving Show
-
-
--- defaultOptions :: Options
--- defaultOptions = Options
---    { optEdit = NotEditing
---    , optExport = NoExport
---    , optImport = Nothing
---    , optVerbose = False
---    }
-
-
--- parser :: Parser Options
--- parser = Options
---   <$> ( ( flag' NoBackup
---           (  long "edit"
---           <> short 'e'
---           <> help "Edit a book's OPF XML data in a text editor"
---           )
---         )
---         <|>
---         ( Backup <$> strOption
---           (  long "edit-with-backup"
---           <> short 'b'
---           <> metavar "SUF"
---           <> help "Edit a book's OPF XML data in a text editor. A backup of the book will be created with the supplied suffix"
---           )
---         )
---         <|>
---         pure NotEditing
---       )
---   <*> ( maybeToExport <$> (optional $ strOption
---         (  long "export"
---         <> short 'x'
---         <> metavar "FILE"
---         <> help "Export the book's OPF XML metadata to a file. If no file name is given, the name of the file in the book will be used"
---         )
---       ))
---   <*> ( optional $ strOption
---         (  long "import"
---         <> short 'i'
---         <> metavar "FILE"
---         <> help "Import OPF metadata from the supplied XML file"
---         )
---       )
---   <*> ( switch
---         (  long "verbose"
---         <> short 'v'
---         <> help "Display all OPF package info, including manifest, spine and guide"
---         )
---       )
-
-
--- parser :: Parser Options
--- parser = Options
---   -- <$> ( maybeToEdit <$> (optional $ strOption
---   --       (  long "edit-opf"
---   --       <> short 'e'
---   --       <> metavar "SUF"
---   --       <> help "Edit a book's OPF XML data in a text editor. If an optional suffix is supplied, a backup of the book will be created with that suffix"
---   --       )
---   --     ))
---   <$> ( ( Backup <$> strOption
---           (  long "edit-opf"
---           <> short 'e'
---           <> metavar "SUF"
---           <> help "Edit a book's OPF XML data in a text editor. A backup of the book will be created with the supplied suffix"
---           )
---         )
---         <|>
---         ( flag' NoBackup
---           (  long "edit-opf"
---           <> short 'e'
---           <> help "Edit a book's OPF XML data in a text editor"
---           )
---         )
---         <|>
---         pure NotEditing
---       )
---   -- <$> ( ( flag NotEditing NoBackup
---   --         (  long "edit-opf"
---   --         <> short 'e'
---   --         <> help "Edit a book's OPF XML data in a text editor"
---   --         )
---   --       )
---   --       <|>
---   --       ( maybeToEdit <$> (optional $ strOption
---   --         (  long "edit-opf"
---   --         <> short 'e'
---   --         <> metavar "SUF"
---   --         <> help "Edit a book's OPF XML data in a text editor. A backup of the book will be created with the supplied suffix"
---   --         )
---   --       ))
---   --     )
---   <*> ( maybeToExport <$> (optional $ strOption
---         (  long "export"
---         <> short 'x'
---         <> metavar "FILE"
---         <> help "Export the book's OPF XML metadata to a file. If no file name is given, the name of the file in the book will be used"
---         )
---       ))
---   <*> ( optional $ strOption
---         (  long "import"
---         <> short 'i'
---         <> metavar "FILE"
---         <> help "Import OPF metadata from the supplied XML file"
---         )
---       )
---   <*> ( switch
---         (  long "verbose"
---         <> short 'v'
---         <> help "Display all OPF package info, including manifest, spine and guide"
---         )
---       )
 
 
 parseVersion :: String -> Parser (a -> a)
@@ -350,30 +167,3 @@ For more information on the epub format:
 
 
 Version %s  Dino Morelli <dino@ui3.info>|]
-
-
--- options :: [OptDescr (Options -> Options)]
--- options =
---    [ Option ['h'] ["help"] 
---       (NoArg (\opts -> opts { optHelp = True } ))
---       "This help text"
---    , Option ['e'] ["edit-opf"]
---       (OptArg (\f opts -> opts { optEdit = maybeToEdit f }) "SUF")
---       "Edit a book's OPF XML data in a text editor. If an optional suffix is supplied, a backup of the book will be created with that suffix"
---    , Option ['x'] ["export"]
---       (OptArg (\f opts -> opts { optExport = maybeToExport f }) "FILE")
---       "Export the book's OPF XML metadata to a file. If no file name is given, the name of the file in the book will be used"
---    , Option ['i'] ["import"]
---       (ReqArg (\f opts -> opts { optImport = Just f }) "FILE")
---       "Import OPF metadata from the supplied XML file"
---    , Option ['v'] ["verbose"]
---       (NoArg (\opts -> opts { optVerbose = True } )) 
---       "Display all OPF package info, including manifest, spine and guide"
---    ]
-
-
--- parseOpts :: [String] -> EM (Options, [String])
--- parseOpts argv = 
---    case getOpt Permute options argv of
---       (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
---       (_,_,errs) -> throwError $ concat errs ++ usageText
