@@ -1,13 +1,15 @@
 {-# LANGUAGE QuasiQuotes #-}
 
 module EpubTools.EpubMeta.Opts
-   -- -- ( Edit (..)
-   -- -- , Export (..)
-   -- ( Options (..), defaultOptions
-   -- , parseOpts
-   -- -- , parseOpts, usageText
-   -- )
-   where
+  ( Backup (..)
+  , ImportPath (..)
+  , Mode (..)
+  , Options (..)
+  , Output (..)
+  , Verbose (..)
+  , parseOpts
+  )
+  where
 
 import Data.Version ( showVersion )
 import Options.Applicative
@@ -28,9 +30,9 @@ data Output
   deriving Show
 
 data Backup
-   = BackupSuffix FilePath
-   | NoBackup
-   deriving Show
+  = BackupSuffix FilePath
+  | NoBackup
+  deriving Show
 
 newtype ImportPath = ImportPath FilePath
   deriving Show
