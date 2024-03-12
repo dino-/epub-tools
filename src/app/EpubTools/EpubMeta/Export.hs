@@ -15,16 +15,16 @@ write path contents = liftIO $ do
    putStrLn $ "OPF XML saved as: " ++ path
 
 
-exportOpf :: Output -> FilePath -> EM ()
+exportOpf :: Output -> EpubPath -> EM ()
 
-exportOpf (OutputFilename path) zipPath = do
+exportOpf (OutputFilename path) (EpubPath zipPath) = do
    contents <- getPkgXmlFromZip zipPath
    write path contents
 
-exportOpf ExistingName zipPath = do
+exportOpf ExistingName (EpubPath zipPath) = do
    (fullPath, contents) <- getPkgPathXmlFromZip zipPath
    write (takeFileName fullPath) contents
 
-exportOpf StdOut zipPath = do
+exportOpf StdOut (EpubPath zipPath) = do
    (_, contents) <- getPkgPathXmlFromZip zipPath
    liftIO $ putStrLn contents

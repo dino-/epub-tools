@@ -2,6 +2,7 @@
 
 module EpubTools.EpubMeta.Opts
   ( Backup (..)
+  , EpubPath (..)
   , ImportPath (..)
   , Mode (..)
   , Options (..)
@@ -44,9 +45,12 @@ data Mode
   | Import ImportPath Backup
   deriving Show
 
+newtype EpubPath = EpubPath FilePath
+  deriving Show
+
 data Options = Options
   { mode :: Mode
-  , inFile :: FilePath
+  , inFile :: EpubPath
   }
   deriving Show
 
@@ -135,7 +139,7 @@ parseExplicitMode = parseView <|> parseEdit <|> parseExport <|> parseImport
 parser :: Parser Options
 parser = Options
   <$> ( parseNoMode <|> parseExplicitMode )
-  <*> ( argument str
+  <*> ( EpubPath <$> argument str
         (  metavar "EPUBFILE"
         <> help "Path to EPUB file"
         )

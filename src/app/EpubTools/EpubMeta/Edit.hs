@@ -42,15 +42,15 @@ findEditor = do
   maybe (throwError "epubmeta: ERROR: Could not find a suitable editor in your EDITOR or VISUAL environment variables, and could not find the vi binary. Fix this situation or use epubmeta export/import.") return mbEditor
 
 
-edit :: Backup -> FilePath -> EM ()
+edit :: Backup -> EpubPath -> EM ()
 
-edit NoBackup zipPath = do
+edit NoBackup epubPath = do
    -- Make a temp path for the OPF document
    tempDir <- liftIO $ getTemporaryDirectory
    let opfPath = tempDir </> "epubmeta-temp-content.opf"
 
    -- Dump the OPF document to this path
-   exportOpf (OutputFilename opfPath) zipPath
+   exportOpf (OutputFilename opfPath) epubPath
 
    -- Open this file in the user's editor and wait for it
    editor <- findEditor
@@ -59,7 +59,7 @@ edit NoBackup zipPath = do
    case ec of
       ExitSuccess -> do
          -- Modify the book with the now-edited OPF data
-         importOpf (ImportPath opfPath) NoBackup zipPath
+         importOpf (ImportPath opfPath) NoBackup epubPath
 
          -- Delete the temp file
          liftIO $ removeFile opfPath
@@ -70,9 +70,9 @@ edit NoBackup zipPath = do
 
          throwError "epubmeta: ERROR: Something went wrong during editing, your file has not been changed."
 
-edit (BackupSuffix suffix) zipPath = do
+edit (BackupSuffix suffix) epubPath@(EpubPath zipPath) = do
    liftIO $ copyFile zipPath (zipPath ++ suffix)
-   edit NoBackup zipPath
+   edit NoBackup epubPath
 
 
 -- edit :: Options -> FilePath -> EM ()

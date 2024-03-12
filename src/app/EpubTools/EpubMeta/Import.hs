@@ -14,9 +14,9 @@ import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-importOpf :: ImportPath -> Backup -> FilePath -> EM ()
+importOpf :: ImportPath -> Backup -> EpubPath -> EM ()
 
-importOpf (ImportPath pathToNewOpf) NoBackup zipPath = do
+importOpf (ImportPath pathToNewOpf) NoBackup (EpubPath zipPath) = do
   -- Make new file into a Zip Entry
   tempEntry <- liftIO $ readEntry [] pathToNewOpf
 
@@ -48,6 +48,6 @@ importOpf (ImportPath pathToNewOpf) NoBackup zipPath = do
   -- Write the new archive out
   liftIO $ writeArchive zipPath newArchive
 
-importOpf importPath (BackupSuffix suffix) zipPath = do
+importOpf importPath (BackupSuffix suffix) epubPath@(EpubPath zipPath) = do
   liftIO $ copyFile zipPath (zipPath ++ suffix)
-  importOpf importPath NoBackup zipPath
+  importOpf importPath NoBackup epubPath

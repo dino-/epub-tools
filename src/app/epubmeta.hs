@@ -9,10 +9,10 @@ import EpubTools.EpubMeta.Util
 
 
 dispatch :: Options -> EM ()
-dispatch (Options (View verbose) f) = display verbose f
-dispatch (Options (Export output) f) = exportOpf output f
-dispatch (Options (Edit backup) f) = edit backup f
-dispatch (Options (Import importPath backup) f) = importOpf importPath backup f
+dispatch (Options (View verbose) epubPath) = display verbose epubPath
+dispatch (Options (Export output) epubPath) = exportOpf output epubPath
+dispatch (Options (Edit backup) epubPath) = edit backup epubPath
+dispatch (Options (Import importPath backup) epubPath) = importOpf importPath backup epubPath
 
 
 main :: IO ()

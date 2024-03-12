@@ -8,8 +8,8 @@ import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
-display :: Verbose -> FilePath -> EM ()
-display (Verbose verbose) zipPath = do
+display :: Verbose -> EpubPath -> EM ()
+display (Verbose verbose) (EpubPath zipPath) = do
    xml <- getPkgXmlFromZip zipPath
 
    pkg <- format `fmap` getPackage xml
