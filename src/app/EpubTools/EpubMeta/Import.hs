@@ -8,14 +8,15 @@ import Codec.Epub.IO ( getPkgPathXmlFromBS, writeArchive )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
 import Data.List ( foldl' )
-import System.Directory ( removeFile )
+import System.Directory ( copyFile, removeFile )
 
 import EpubTools.EpubMeta.Opts
 import EpubTools.EpubMeta.Util
 
 
 importOpf :: ImportPath -> Backup -> FilePath -> EM ()
-importOpf (ImportPath pathToNewOpf) _backup zipPath = do  -- FIXME
+
+importOpf (ImportPath pathToNewOpf) NoBackup zipPath = do
   -- Make new file into a Zip Entry
   tempEntry <- liftIO $ readEntry [] pathToNewOpf
 
@@ -46,3 +47,7 @@ importOpf (ImportPath pathToNewOpf) _backup zipPath = do  -- FIXME
 
   -- Write the new archive out
   liftIO $ writeArchive zipPath newArchive
+
+importOpf importPath (BackupSuffix suffix) zipPath = do
+  liftIO $ copyFile zipPath (zipPath ++ suffix)
+  importOpf importPath NoBackup zipPath
