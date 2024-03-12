@@ -22,37 +22,30 @@ import Text.Printf (printf)
 
 
 newtype Verbose = Verbose Bool
-  deriving Show
 
 data Output
   = OutputFilename FilePath
   | ExistingName
   | StdOut
-  deriving Show
 
 data Backup
   = BackupSuffix FilePath
   | NoBackup
-  deriving Show
 
 newtype ImportPath = ImportPath FilePath
-  deriving Show
 
 data Mode
   = View Verbose
   | Export Output
   | Edit Backup
   | Import ImportPath Backup
-  deriving Show
 
 newtype EpubPath = EpubPath FilePath
-  deriving Show
 
 data Options = Options
   { mode :: Mode
   , inFile :: EpubPath
   }
-  deriving Show
 
 
 parseView :: Parser Mode

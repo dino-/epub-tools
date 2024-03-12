@@ -18,7 +18,6 @@ dispatch (Options (Import importPath backup) epubPath) = importOpf importPath ba
 main :: IO ()
 main = do
   opts <- parseOpts
-  -- print opts
   result <- runEM $ dispatch opts
   either exitFail (const (exitWith ExitSuccess)) result
 
