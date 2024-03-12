@@ -12,9 +12,9 @@ module EpubTools.EpubMeta.Opts
   )
   where
 
-import Data.Version ( showVersion )
+import Data.Version (showVersion)
 import Options.Applicative
-import Paths_epub_tools ( version )
+import Paths_epub_tools (version)
 import System.Environment (getProgName)
 import Text.Heredoc (here)
 import Text.PrettyPrint.ANSI.Leijen (string)

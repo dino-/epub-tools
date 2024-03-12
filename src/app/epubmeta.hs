@@ -1,11 +1,12 @@
-import System.Exit
+import System.Exit (ExitCode (ExitFailure, ExitSuccess), exitWith)
 
-import EpubTools.EpubMeta.Display
-import EpubTools.EpubMeta.Edit
-import EpubTools.EpubMeta.Export
-import EpubTools.EpubMeta.Import
-import EpubTools.EpubMeta.Opts
-import EpubTools.EpubMeta.Util
+import EpubTools.EpubMeta.Display (display)
+import EpubTools.EpubMeta.Edit (edit)
+import EpubTools.EpubMeta.Export (exportOpf)
+import EpubTools.EpubMeta.Import (importOpf)
+import EpubTools.EpubMeta.Opts (Mode (Edit, Export, Import, View),
+  Options (..), parseOpts)
+import EpubTools.EpubMeta.Util (EM, runEM)
 
 
 dispatch :: Options -> EM ()

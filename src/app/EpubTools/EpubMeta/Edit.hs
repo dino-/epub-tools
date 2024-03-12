@@ -1,22 +1,24 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 
 module EpubTools.EpubMeta.Edit
-   ( edit )
-   where
+  ( edit )
+  where
 
-import Control.Exception
+import Control.Exception (SomeException, try)
 import Data.Monoid (First (..), getFirst)
-import System.Directory
-import System.FilePath
-import System.Environment
-import System.Exit
-import System.Process ( system )
-import Text.Printf
+import System.Directory (copyFile, findExecutable, getTemporaryDirectory,
+  removeFile)
+import System.FilePath ((</>))
+import System.Environment (getEnv)
+import System.Exit (ExitCode (ExitFailure, ExitSuccess))
+import System.Process (system)
+import Text.Printf (printf)
 
-import EpubTools.EpubMeta.Export
-import EpubTools.EpubMeta.Import
-import EpubTools.EpubMeta.Opts
-import EpubTools.EpubMeta.Util
+import EpubTools.EpubMeta.Export (exportOpf)
+import EpubTools.EpubMeta.Import (importOpf)
+import EpubTools.EpubMeta.Opts (Backup (BackupSuffix, NoBackup),
+  EpubPath (..), ImportPath (..), Output (OutputFilename))
+import EpubTools.EpubMeta.Util (EM, liftIO, throwError)
 
 
 {- Turn an (IO a) action into a (Maybe a) with a value of Nothing
@@ -45,31 +47,31 @@ findEditor = do
 edit :: Backup -> EpubPath -> EM ()
 
 edit NoBackup epubPath = do
-   -- Make a temp path for the OPF document
-   tempDir <- liftIO $ getTemporaryDirectory
-   let opfPath = tempDir </> "epubmeta-temp-content.opf"
+  -- Make a temp path for the OPF document
+  tempDir <- liftIO $ getTemporaryDirectory
+  let opfPath = tempDir </> "epubmeta-temp-content.opf"
 
-   -- Dump the OPF document to this path
-   exportOpf (OutputFilename opfPath) epubPath
+  -- Dump the OPF document to this path
+  exportOpf (OutputFilename opfPath) epubPath
 
-   -- Open this file in the user's editor and wait for it
-   editor <- findEditor
-   ec <- liftIO $ system $ printf "%s %s" editor opfPath
+  -- Open this file in the user's editor and wait for it
+  editor <- findEditor
+  ec <- liftIO $ system $ printf "%s %s" editor opfPath
 
-   case ec of
-      ExitSuccess -> do
-         -- Modify the book with the now-edited OPF data
-         importOpf (ImportPath opfPath) NoBackup epubPath
+  case ec of
+    ExitSuccess -> do
+      -- Modify the book with the now-edited OPF data
+      importOpf (ImportPath opfPath) NoBackup epubPath
 
-         -- Delete the temp file
-         liftIO $ removeFile opfPath
+      -- Delete the temp file
+      liftIO $ removeFile opfPath
 
-      ExitFailure _ -> do
-         -- Delete the temp file
-         liftIO $ removeFile opfPath
+    ExitFailure _ -> do
+      -- Delete the temp file
+      liftIO $ removeFile opfPath
 
-         throwError "epubmeta: ERROR: Something went wrong during editing, your file has not been changed."
+      throwError "epubmeta: ERROR: Something went wrong during editing, your file has not been changed."
 
 edit (BackupSuffix suffix) epubPath@(EpubPath zipPath) = do
-   liftIO $ copyFile zipPath (zipPath ++ suffix)
-   edit NoBackup epubPath
+  liftIO $ copyFile zipPath (zipPath ++ suffix)
+  edit NoBackup epubPath

@@ -1,23 +1,25 @@
 module EpubTools.EpubMeta.Display
-   where
+  ( display )
+  where
 
-import Codec.Epub
-import Control.Monad ( when )
+import Codec.Epub (format, getGuide, getManifest, getMetadata, getPackage,
+  getPkgXmlFromZip, getSpine)
+import Control.Monad (when)
 
-import EpubTools.EpubMeta.Opts
-import EpubTools.EpubMeta.Util
+import EpubTools.EpubMeta.Opts (EpubPath (..), Verbose (..))
+import EpubTools.EpubMeta.Util (EM, liftIO)
 
 
 display :: Verbose -> EpubPath -> EM ()
 display (Verbose verbose) (EpubPath zipPath) = do
-   xml <- getPkgXmlFromZip zipPath
+  xml <- getPkgXmlFromZip zipPath
 
-   pkg <- format `fmap` getPackage xml
-   meta <- format `fmap` getMetadata xml
-   liftIO $ mapM_ putStr [pkg, meta]
+  pkg <- format `fmap` getPackage xml
+  meta <- format `fmap` getMetadata xml
+  liftIO $ mapM_ putStr [pkg, meta]
 
-   when verbose $ do
-      mf <- format `fmap` getManifest xml
-      spine <- format `fmap` getSpine xml
-      guide <- format `fmap` getGuide xml
-      liftIO $ mapM_ putStr [mf, spine, guide]
+  when verbose $ do
+    mf <- format `fmap` getManifest xml
+    spine <- format `fmap` getSpine xml
+    guide <- format `fmap` getGuide xml
+    liftIO $ mapM_ putStr [mf, spine, guide]

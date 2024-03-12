@@ -1,17 +1,18 @@
 module EpubTools.EpubMeta.Import
-   ( importOpf )
-   where
+  ( importOpf )
+  where
 
-import Codec.Archive.Zip ( Entry (..), addEntryToArchive, findEntryByPath
-  , readEntry, toArchive )
+import Codec.Archive.Zip (Entry (..), addEntryToArchive, findEntryByPath,
+  readEntry, toArchive)
 import Codec.Epub.IO ( getPkgPathXmlFromBS, writeArchive )
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as BL
-import Data.List ( foldl' )
-import System.Directory ( copyFile, removeFile )
+import Data.List (foldl')
+import System.Directory (copyFile, removeFile)
 
-import EpubTools.EpubMeta.Opts
-import EpubTools.EpubMeta.Util
+import EpubTools.EpubMeta.Opts (Backup (BackupSuffix, NoBackup),
+  EpubPath (..), ImportPath (..))
+import EpubTools.EpubMeta.Util (EM, liftIO, throwError)
 
 
 importOpf :: ImportPath -> Backup -> EpubPath -> EM ()

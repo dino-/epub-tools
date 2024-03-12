@@ -1,11 +1,11 @@
 module EpubTools.EpubMeta.Util
-   ( EM , runEM
-   , liftIO
-   , throwError
-   )
-   where
+  ( EM , runEM
+  , liftIO
+  , throwError
+  )
+  where
 
-import Control.Monad.Except
+import Control.Monad.Except (ExceptT, liftIO, runExceptT, throwError)
 
 
 type EM a = (ExceptT String IO) a
