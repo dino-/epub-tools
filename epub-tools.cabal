@@ -60,7 +60,9 @@ executable epubmeta
   main-is: epubmeta.hs
   build-depends:
       base >= 3 && < 5
+    , ansi-wl-pprint
     , bytestring
+    , heredoc
     , optparse-applicative
     , process
     , zip-archive

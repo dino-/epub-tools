@@ -14,6 +14,8 @@ import Data.Version ( showVersion )
 import Options.Applicative
 import Paths_epub_tools ( version )
 import System.Environment (getProgName)
+import Text.Heredoc (here)
+import Text.PrettyPrint.ANSI.Leijen (string)
 import Text.Printf (printf)
 
 import EpubTools.EpubMeta.Util
@@ -321,15 +323,33 @@ parser = Options
 --       )
 
 
--- parseOpts :: IO Options
+parseVersion :: String -> Parser (a -> a)
+parseVersion progName =
+  infoOption (printf "%s %s" progName (showVersion version)) $ mconcat
+  [ long "version"
+  , help "Show version information"
+  ]
+
+
 parseOpts :: IO Options
 parseOpts = do
   pn <- getProgName
-  -- execParser $ info (parser <**> helper <**> parseVersion pn)
-  execParser $ info (parser <**> helper)
+  execParser $ info (parser <**> helper <**> parseVersion pn)
     (  header (printf "%s - View or edit epub book metadata" pn)
-    -- <> footer'
+    <> footer'
     )
+
+footer' :: InfoMod a
+footer' = footerDoc . Just . string $ (printf content (showVersion version) :: String)
+  where content = [here|-E|--edit mode will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi
+Note that edit mode means you get dumped into the editor with the XML document and are on your own.
+
+For more information on the epub format:
+  epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm
+  epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html
+
+
+Version %s  Dino Morelli <dino@ui3.info>|]
 
 
 -- options :: [OptDescr (Options -> Options)]
@@ -357,26 +377,3 @@ parseOpts = do
 --    case getOpt Permute options argv of
 --       (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
 --       (_,_,errs) -> throwError $ concat errs ++ usageText
-
-
--- usageText :: String
--- usageText = (usageInfo header options) ++ "\n" ++ footer
---    where
---       header = init $ unlines
---          [ "Usage: epubmeta [OPTIONS] EPUBFILE"
---          , "View or edit epub book metadata"
---          , ""
---          , "Note that 'edit' here means you get dumped into an editor with the XML document and are on your own."
---          , ""
---          , "Options:"
---          ]
---       footer = init $ unlines
---          [ "The -e feature will look for an editor in this order: the EDITOR environment variable, the VISUAL environment variable, vi"
---          , ""
---          , "For more information on the epub format:"
---          , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
---          , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
---          , ""
---          , ""
---          , "Version " ++ (showVersion version) ++ "  Dino Morelli <dino@ui3.info>"
---          ]
