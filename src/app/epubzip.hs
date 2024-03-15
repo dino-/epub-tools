@@ -1,20 +1,18 @@
-import Codec.Epub
-import Control.Monad
-import Control.Monad.Except
-import System.Directory
-import System.Environment
-import System.Exit
-import System.FilePath
-import System.IO ( BufferMode ( NoBuffering )
-                 , hSetBuffering, stdout, stderr 
-                 )
-import Text.Printf
+import Codec.Epub (getMetadata, getPackage, getPkgPathXmlFromDir,
+  mkEpubArchive, writeArchive)
+import Control.Monad.Except (liftIO, runExceptT)
+import System.Directory (doesDirectoryExist, doesFileExist, removeFile)
+import System.Exit (ExitCode (ExitFailure, ExitSuccess), exitWith)
+import System.FilePath ((</>))
+import System.IO (BufferMode ( NoBuffering ), hSetBuffering, stdout, stderr)
+import Text.Printf (printf)
 
-import EpubTools.EpubName.Format.Format ( tryFormatting )
-import EpubTools.EpubName.Format.Util
-import EpubTools.EpubName.Main
+import EpubTools.EpubName.Format.Format (tryFormatting)
+import EpubTools.EpubName.Format.Util (Globals (..), throwError)
+import EpubTools.EpubName.Main (initialize)
 import qualified EpubTools.EpubName.Common as EN
-import EpubTools.EpubZip.Opts
+import EpubTools.EpubZip.Opts (DirOrName (..),
+  Options (dirOrName, overwrite), Overwrite (..), parseOpts)
 
 
 main :: IO ()
@@ -23,15 +21,9 @@ main = do
    mapM_ (flip hSetBuffering NoBuffering) [ stdout, stderr ]
 
    either exitWith exitWith =<< (runExceptT $ do
-      -- Parse command-line arguments
-      (opts, paths) <- liftIO $ getArgs >>= parseOpts
+      opts <- liftIO parseOpts
 
-      -- User asked for help, this is a special termination case
-      when ((optHelp opts) || (null paths)) $ do
-         liftIO $ putStrLn usageText
-         throwError ExitSuccess
-
-      let inputPath = head paths
+      let (DirOrName inputPath) = dirOrName opts
       isDir <- liftIO $ doesDirectoryExist inputPath
 
       en <- if isDir
@@ -54,14 +46,14 @@ main = do
          Right zipPath -> do
             exists <- liftIO $ doesFileExist zipPath
 
-            case ((optOverwrite opts), exists) of
-               (False, True) -> do
+            case ((overwrite opts), exists) of
+               (Overwrite False, True) -> do
                   _ <- liftIO $ printf
                      "File %s exists, use --overwrite to force\n"
                      zipPath
                   throwError $ ExitFailure 1
-               (True,  True) -> liftIO $ removeFile zipPath
-               (_   ,  _   ) -> return ()
+               (Overwrite True,  True) -> liftIO $ removeFile zipPath
+               (_             ,  _   ) -> return ()
 
             _ <- liftIO $ do
                archive <- mkEpubArchive "."

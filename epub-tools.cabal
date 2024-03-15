@@ -37,6 +37,7 @@ common lang
       directory
     , epub-metadata >= 5.3
     , filepath
+    , heredoc
     , mtl
   ghc-options:
     -fwarn-tabs
@@ -62,7 +63,6 @@ executable epubmeta
       base >= 3 && < 5
     , ansi-wl-pprint
     , bytestring
-    , heredoc
     , optparse-applicative
     , process
     , zip-archive
@@ -84,7 +84,6 @@ executable epubname
       base >= 3 && < 5
     , ansi-wl-pprint
     , containers
-    , heredoc
     , optparse-applicative
     , parsec
     , regex-compat
@@ -116,7 +115,6 @@ test-suite epubname-tests
   build-depends:
       base >= 3 && < 5
     , containers
-    , heredoc
     , parsec
     , regex-compat
     , tasty
@@ -143,7 +141,6 @@ executable epubzip
       base >= 3 && < 5
     , ansi-wl-pprint
     , containers
-    , heredoc
     , optparse-applicative
     , parsec
     , regex-compat

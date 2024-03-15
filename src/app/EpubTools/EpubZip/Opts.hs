@@ -1,73 +1,84 @@
+{-# LANGUAGE QuasiQuotes #-}
+
 module EpubTools.EpubZip.Opts
-   ( Options (..)
-   , parseOpts, usageText
-   )
-   where
+  ( DirOrName (..)
+  , Options (..)
+  , Overwrite (..)
+  , parseOpts
+  )
+  where
 
-import Data.Version ( showVersion )
-import Paths_epub_tools ( version )
-import System.Console.GetOpt
+import Data.Version (showVersion)
+import Options.Applicative
+import Paths_epub_tools (version)
+import System.Environment (getProgName)
+import Text.Heredoc (here)
+import Text.PrettyPrint.ANSI.Leijen (string)
+import Text.Printf (printf)
 
+
+newtype Overwrite = Overwrite Bool
+
+newtype DirOrName = DirOrName FilePath
 
 data Options = Options
-   { optHelp :: Bool
-   , optOverwrite :: Bool
-   }
+  { overwrite :: Overwrite
+  , dirOrName :: DirOrName
+  }
 
 
-defaultOptions :: Options
-defaultOptions = Options
-   { optHelp = False
-   , optOverwrite = False
-   }
+parser :: Parser Options
+parser = Options
+  <$> ( Overwrite <$> switch
+        (  long "overwrite"
+        <> short 'o'
+        <> help "Force overwrite if dest file exists"
+        )
+      )
+  <*> ( DirOrName <$> argument str
+        (  metavar "(DIR | DIR/FILE)"
+        <> help "Directory or filename for the new EPUB file"
+        )
+      )
 
 
-options :: [OptDescr (Options -> Options)]
-options =
-   [ Option ['h'] ["help"] 
-      (NoArg (\opts -> opts { optHelp = True } ))
-      "This help text"
-   , Option ['o'] ["overwrite"] 
-      (NoArg (\opts -> opts { optOverwrite = True } ))
-      "Force overwrite if dest file exists"
-   ]
+parseVersion :: String -> Parser (a -> a)
+parseVersion progName =
+  infoOption (printf "%s %s" progName (showVersion version)) $ mconcat
+  [ long "version"
+  , help "Show version information"
+  ]
 
 
-parseOpts :: [String] -> IO (Options, [String])
-parseOpts argv = 
-   case getOpt Permute options argv of
-      (o,n,[]  ) -> return (foldl (flip id) defaultOptions o, n)
-      (_,_,errs) -> ioError $ userError (concat errs ++ usageText)
+parseOpts :: IO Options
+parseOpts = do
+  pn <- getProgName
+  execParser $ info (parser <**> helper <**> parseVersion pn)
+    (  header (printf "%s - Construct an EPUB zip archive from files in the current directory" pn)
+    <> footer'
+    )
 
 
-usageText :: String
-usageText = (usageInfo header options) ++ "\n" ++ footer
-   where
-      header = init $ unlines
-         [ "Usage: epubzip [OPTIONS] DESTDIR"
-         , "       epubzip [OPTIONS] DESTDIR/EPUBFILE"
-         , "Construct an epub zip archive from files in the current directory"
-         , ""
-         , "Options:"
-         ]
-      footer = init $ unlines
-         [ "If run with DESTDIR alone, epubzip will try to construct a name from the OPF package data for this book (see epubname). If run with DESTDIR/EPUBFILE, epubzip will use that name for the destination file."
-         , ""
-         , "You may have noticed that there is no epubunzip utility. Truth is, epubs are just zip files and you barely need epubzip either if you have the normal zip/unzip utilities installed. While not as fancy with file naming and leaving out dotfiles, this works for zipping:"
-         , ""
-         , "   $ cd DIR"
-         , "   $ zip -Xr9D ../EPUBFILE mimetype *"
-         , ""
-         , "And for unzipping, it's really just as easy:"
-         , ""
-         , "   $ mkdir TEMPDIR"
-         , "   $ cd TEMPDIR"
-         , "   $ unzip EPUBFILE"
-         , ""
-         , "For more information on the epub format:"
-         , "   epub2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm"
-         , "   epub3: http://www.idpf.org/epub/30/spec/epub30-publications.html"
-         , ""
-         , ""
-         , "Version " ++ (showVersion version) ++ "  Dino Morelli <dino@ui3.info>"
-         ]
+footer' :: InfoMod a
+footer' = footerDoc . Just . string $ (printf content (showVersion version) :: String)
+  where content = [here|Construct an EPUB zip archive from files in the current directory
+
+If run with DIR alone, epubzip will try to construct a name from the OPF package data for this book (see epubname). If run with DIR/FILE, epubzip will use that name for the destination file.
+
+You may have noticed that there is no epubunzip utility. Truth is, EPUBs are just zip files and you barely need epubzip either if you have the normal zip/unzip utilities installed. While not as fancy with file naming and leaving out dotfiles, this works for zipping:
+
+    $ cd DIR
+    $ zip -Xr9D ../EPUBFILE mimetype *
+
+And for unzipping, it's really just as easy:
+
+    $ mkdir TEMPDIR
+    $ cd TEMPDIR
+    $ unzip EPUBFILE
+
+For more information on the EPUB format:
+  EPUB2: http://idpf.org/epub/20/spec/OPF_2.0.1_draft.htm
+  EPUB3: http://www.idpf.org/epub/30/spec/epub30-publications.html
+
+
+Version %s  Dino Morelli <dino@ui3.info>|]
