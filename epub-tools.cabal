@@ -67,12 +67,12 @@ executable epubmeta
     , process
     , zip-archive
   other-modules:
-    EpubTools.EpubMeta.Display
     EpubTools.EpubMeta.Edit
     EpubTools.EpubMeta.Export
     EpubTools.EpubMeta.Import
     EpubTools.EpubMeta.Opts
     EpubTools.EpubMeta.Util
+    EpubTools.EpubMeta.View
     Paths_epub_tools
 
 executable epubname
