@@ -106,11 +106,12 @@ processBook opts formatters (oldPath:paths) _     priRes = do
 
         linkOutcomes <- sequence . map (doOneDest oldPath newName) $ destDirs
 
-        if ((all (== True) linkOutcomes) && opts.move.v)
-          then do
-            putStrLn "All links successfully created, removing original file"
-            removeLink oldPath
-          else putStrLn "One or more links failed, NOT removing original file"
+        when opts.move.v $
+          if all (== True) linkOutcomes
+            then do
+              putStrLn "All links successfully created, removing original file"
+              removeLink oldPath
+            else putStrLn "One or more links failed, NOT removing original file"
 
       return $ continue promptResult
 
