@@ -13,8 +13,7 @@ giving them this impressive power over our work.
 Never forget 2020 when Github (a Microsoft product) removed the popular
 open-source `youtube-dl` project, sparking enormous controversy. The issue is
 not that pushback eventually prompted reinstatement - Github can and will act
-like this against us at any time. Expect it and get your work away from
-Microsoft, Satya Nadella and their pals in the White House.
+like this against us at any time.
 
 ## !!!!! ATTENTION !!!!!
 
